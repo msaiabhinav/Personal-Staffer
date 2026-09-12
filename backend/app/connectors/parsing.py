@@ -112,6 +112,52 @@ def country(value: Any) -> str | None:
     return aliases.get(v, v if re.fullmatch(r"[A-Z]{2}", v) else None)
 
 
+_COUNTRY_NAMES = {
+    "UNITED STATES": "US",
+    "UNITED STATES OF AMERICA": "US",
+    "USA": "US",
+    "U.S.": "US",
+    "U.S.A.": "US",
+    "US": "US",
+    "CANADA": "CA",
+    "UNITED KINGDOM": "GB",
+    "UK": "GB",
+    "IRELAND": "IE",
+    "GERMANY": "DE",
+    "FRANCE": "FR",
+    "INDIA": "IN",
+    "AUSTRALIA": "AU",
+    "MEXICO": "MX",
+    "BRAZIL": "BR",
+    "NETHERLANDS": "NL",
+    "SPAIN": "ES",
+    "ITALY": "IT",
+    "SINGAPORE": "SG",
+    "JAPAN": "JP",
+    "PHILIPPINES": "PH",
+    "POLAND": "PL",
+    "ISRAEL": "IL",
+}
+
+
+def country_from_location(value: Any) -> str | None:
+    """Country evidenced by a free-text location such as "New York, New York, United States".
+
+    Only an explicit country token counts. Two-letter parts other than "US" are ignored because
+    they collide with US state codes ("US, CA, San Jose" is California, not Canada). "Remote"
+    alone establishes nothing, matching the policy that generic remote is insufficient.
+    """
+    if isinstance(value, dict):
+        value = value.get("name") or value.get("value")
+    if not isinstance(value, str):
+        return None
+    parts = [part.strip().upper() for part in re.split(r"[,|/;()\-]+", value) if part.strip()]
+    for part in parts:
+        if part in _COUNTRY_NAMES:
+            return _COUNTRY_NAMES[part]
+    return None
+
+
 def employment(value: Any) -> str | None:
     if isinstance(value, list):
         values = {employment(v) for v in value}

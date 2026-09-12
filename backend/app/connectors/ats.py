@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 from .base import BaseConnector, source_error, token
 from .contracts import Candidate, DiscoverResult, OpeningVerification, utcnow
-from .parsing import country, employment, exact_time, publication, salary
+from .parsing import country, country_from_location, employment, exact_time, publication, salary
 from .safe_http import SourceHTTPError
 
 
@@ -266,6 +266,8 @@ class GreenhouseConnector(BaseConnector):
             if str(m.get("name", "")).lower() in {"employment type", "employment_type", "job type"}
         ]
         emp_type = employment(types[0]) if len(types) == 1 else None
+        location_name = (p.get("location") or {}).get("name", "")
+        location_country = country_from_location(location_name)
         job = self._base_job(
             payload,
             title=p.get("title"),
@@ -274,7 +276,8 @@ class GreenhouseConnector(BaseConnector):
             application_url=p.get("absolute_url"),
             employer_url=p.get("absolute_url"),
             requisition_id=p.get("requisition_id"),
-            locations=[p.get("location", {}).get("name", "")],
+            locations=[location_name],
+            country_codes=[location_country] if location_country else [],
             employment_type=emp_type,
             publication=publication(p.get("first_published"), "first_published"),
             original_published_at=exact_time(p.get("first_published")),
@@ -289,7 +292,8 @@ class GreenhouseConnector(BaseConnector):
             publication=("first_published", p.get("first_published")),
             updated_at=("updated_at", p.get("updated_at")),
             employment_type=("metadata", types),
-            location=("location.name", p.get("location", {}).get("name")),
+            location=("location.name", location_name or None),
+            country_codes=("location.name", location_name if location_country else None),
             salary=("pay_input_ranges", p.get("pay_input_ranges")),
             application_url=("absolute_url", p.get("absolute_url")),
         )

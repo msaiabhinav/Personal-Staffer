@@ -11,7 +11,7 @@ from urllib.parse import urlsplit
 
 from .base import BaseConnector, source_error, token
 from .contracts import Candidate, DiscoverResult
-from .parsing import country, employment
+from .parsing import country, country_from_location, employment
 from .safe_http import SourceHTTPError
 
 
@@ -92,7 +92,7 @@ class WorkdayConnector(BaseConnector):
             country(location_country.get("descriptor"))
             if isinstance(location_country, dict)
             else country(location_country)
-        )
+        ) or country_from_location(p.get("location"))
         job = self._base_job(
             payload,
             title=p.get("title"),

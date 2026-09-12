@@ -546,3 +546,25 @@ def test_greenhouse_verify_opening_reports_closed_on_404_and_unknown_without_for
         FakeClient([{"id": "other", "absolute_url": "https://x.example/o", "questions": [1]}])
     )
     assert mismatch.verify_opening(job).status == "UNKNOWN"
+
+
+def test_country_from_location_reads_explicit_country_tokens_only():
+    from app.connectors.parsing import country_from_location
+
+    assert country_from_location("New York, New York, United States") == "US"
+    assert country_from_location("US, CA, San Jose, Rio Robles") == "US"  # CA is California here.
+    assert country_from_location("USA - Remote") == "US"
+    assert country_from_location("Ireland, Limerick") == "IE"
+    assert country_from_location({"name": "Tempe, Arizona, United States"}) == "US"
+    assert country_from_location("Remote") is None
+    assert country_from_location("Toronto, ON") is None  # No explicit country token.
+    assert country_from_location(None) is None
+
+
+def test_greenhouse_location_name_supplies_country_evidence():
+    data = {"id": "j1", "title": "Analyst", "content": "SQL", "location": {"name": "Dallas, Texas, United States"}}
+    job = GreenhouseConnector().normalize(fetched("greenhouse", data))
+    assert job.country_codes == ["US"]
+    assert job.field_evidence["country_codes"][0].field_path == "location.name"
+    remote = GreenhouseConnector().normalize(fetched("greenhouse", {**data, "location": {"name": "Remote"}}))
+    assert remote.country_codes == [] and "country_codes" not in remote.field_evidence
