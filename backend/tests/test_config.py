@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -25,3 +28,27 @@ def test_optional_config_states_and_no_synthetic_production():
 def test_unsafe_configuration_refused(values):
     with pytest.raises(ValidationError):
         Settings(_env_file=None, **values)
+
+
+ENV_EXAMPLE = Path(__file__).resolve().parents[2] / ".env.example"
+
+
+def test_documented_env_example_loads(monkeypatch):
+    # Regression: Literal[32]/Literal[72] rejected the string values every dotenv file supplies,
+    # so the README's `Copy-Item .env.example .env` path failed before the first migration.
+    for key in list(os.environ):
+        if key.upper() in {"CYCLE_DAYS", "MAX_POSTING_AGE_HOURS", "APP_ENV", "DEMO_MODE"}:
+            monkeypatch.delenv(key, raising=False)
+    config = Settings(_env_file=ENV_EXAMPLE)
+    assert (config.cycle_days, config.max_posting_age_hours) == (32, 72)
+    assert config.app_env == "local" and config.demo_mode is False
+
+
+def test_policy_constants_accept_env_strings_and_refuse_other_values(monkeypatch):
+    monkeypatch.setenv("CYCLE_DAYS", "32")
+    monkeypatch.setenv("MAX_POSTING_AGE_HOURS", "72")
+    config = Settings(_env_file=None)
+    assert (config.cycle_days, config.max_posting_age_hours) == (32, 72)
+    monkeypatch.setenv("CYCLE_DAYS", "33")
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)

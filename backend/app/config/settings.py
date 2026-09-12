@@ -36,8 +36,10 @@ class Settings(BaseSettings):
     daily_report_time: Literal["11:00"] = "11:00"
     daily_job_limit: int = Field(default=50, ge=1, le=50)
     company_daily_limit: int = Field(default=2, ge=1, le=2)
-    cycle_days: Literal[32] = 32
-    max_posting_age_hours: Literal[72] = 72
+    # Hard policy: exactly 32 and 72. Bounded ints (not Literal) so the documented .env
+    # string values "32"/"72" coerce while any other value is still refused.
+    cycle_days: int = Field(default=32, ge=32, le=32)
+    max_posting_age_hours: int = Field(default=72, ge=72, le=72)
     preferred_salary_usd: int = Field(default=80000, ge=0)
     everify_recheck_days: int = Field(default=30, ge=1, le=30)
     gmail_sync_interval_seconds: int = Field(default=300, ge=60)

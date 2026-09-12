@@ -1,14 +1,25 @@
+import pytest
 from fastapi.testclient import TestClient
 
+from app.config import get_settings
 from app.main import app
 
 
-def test_public_health_and_version_report_real_state():
-    with TestClient(app) as client:
-        assert client.get("/api/v1/health/live").json() == {"status": "alive"}
-        result = client.get("/api/v1/version").json()
-        assert result["release_artifacts"] == []
-        assert result["demo_mode"] is False
+@pytest.mark.parametrize("demo_mode", ["false", "true"])
+def test_public_health_and_version_report_real_state(monkeypatch, demo_mode):
+    # The process running this suite may itself be a DEMO_MODE container (the documented
+    # `docker compose run --rm api pytest` path), so pin the setting instead of assuming it.
+    monkeypatch.setenv("APP_ENV", "local")
+    monkeypatch.setenv("DEMO_MODE", demo_mode)
+    get_settings.cache_clear()
+    try:
+        with TestClient(app) as client:
+            assert client.get("/api/v1/health/live").json() == {"status": "alive"}
+            result = client.get("/api/v1/version").json()
+            assert result["release_artifacts"] == []
+            assert result["demo_mode"] is (demo_mode == "true")
+    finally:
+        get_settings.cache_clear()
 
 
 def test_unauthenticated_private_routes_are_rejected_without_database():

@@ -4,7 +4,9 @@ x-backend: &backend
     context: ../backend
     target: development
   image: personal-staffer-backend:0.1.0
-  env_file: ../.env
+  # Ordinary operation reads ../.env. The desktop demo scripts set STAFFER_ENV_FILE to an
+  # ignored .env.demo so a synthetic run never touches or reuses real local configuration.
+  env_file: ${STAFFER_ENV_FILE:-../.env}
   environment:
     DATABASE_URL: postgresql+psycopg://staffer:staffer-local@postgres:5432/staffer
     REDIS_URL: redis://redis:6379/0
@@ -44,6 +46,12 @@ services:
   api:
     <<: *backend
     ports: ["127.0.0.1:8000:8000"]
+    # The image's build context is backend/, but tests/test_security_review.py, tests/test_demo_database.py
+    # and tests/test_config.py load repository-root files relative to /app/tests (parents[2] == /).
+    # Read-only mounts let the documented `run --rm api pytest` command execute the whole suite locally.
+    volumes:
+      - ../scripts:/scripts:ro
+      - ../.env.example:/.env.example:ro
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health/ready')"]
       interval: 20s

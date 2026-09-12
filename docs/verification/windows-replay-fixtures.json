@@ -1,0 +1,132 @@
+﻿{
+  "corpus_version": "synthetic-1.0",
+  "synthetic_only": true,
+  "frozen_evaluation_time": "2026-09-12T15:00:00Z",
+  "metrics": {
+    "regression": {
+      "cases": 48,
+      "correct": 48,
+      "outcomes": {
+        "ELIGIBLE": 18,
+        "NEEDS_REVIEW": 13,
+        "INELIGIBLE": 17
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.2708333333333333
+    },
+    "heldout": {
+      "cases": 12,
+      "correct": 12,
+      "outcomes": {
+        "INELIGIBLE": 5,
+        "NEEDS_REVIEW": 5,
+        "ELIGIBLE": 2
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.4166666666666667
+    },
+    "all": {
+      "cases": 60,
+      "correct": 60,
+      "outcomes": {
+        "ELIGIBLE": 20,
+        "NEEDS_REVIEW": 18,
+        "INELIGIBLE": 22
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.3
+    }
+  },
+  "per_rule_labeled_metrics": {
+    "experience": {
+      "annotated_cases": 9,
+      "correct": 9,
+      "expected_fails": 6,
+      "detected_fails": 6,
+      "actual_fails": 6,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "sponsorship": {
+      "annotated_cases": 8,
+      "correct": 8,
+      "expected_fails": 4,
+      "detected_fails": 4,
+      "actual_fails": 4,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "clearance": {
+      "annotated_cases": 7,
+      "correct": 7,
+      "expected_fails": 4,
+      "detected_fails": 4,
+      "actual_fails": 4,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "employment": {
+      "annotated_cases": 3,
+      "correct": 3,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "country": {
+      "annotated_cases": 2,
+      "correct": 2,
+      "expected_fails": 1,
+      "detected_fails": 1,
+      "actual_fails": 1,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "everify": {
+      "annotated_cases": 5,
+      "correct": 5,
+      "expected_fails": 0,
+      "detected_fails": 0,
+      "actual_fails": 0,
+      "fail_precision": null,
+      "fail_recall": null
+    },
+    "freshness": {
+      "annotated_cases": 5,
+      "correct": 5,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "active_opening": {
+      "annotated_cases": 3,
+      "correct": 3,
+      "expected_fails": 1,
+      "detected_fails": 1,
+      "actual_fails": 1,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "role_relevance": {
+      "annotated_cases": 2,
+      "correct": 2,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    }
+  },
+  "failures": [],
+  "live_source_coverage": "NOT_VERIFIED_BY_SYNTHETIC_REPLAY",
+  "limitations": "Finite synthetic tests do not establish production accuracy; real evidence bundles and multi-day audit remain required."
+}
