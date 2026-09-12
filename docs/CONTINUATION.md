@@ -6,10 +6,11 @@ Branch `debug/windows-desktop` from `35338e6`; latest checkpoint commit is recor
 
 Next executable action, in order:
 
-1. With the app closed, run `scripts\verify_desktop_loop.ps1 -PassNumber 2` (and rerun loop 1 without `-SkipIntegration`) so both loops are complete with the on-device integration test; evidence lands in `docs/verification/`.
-2. Owner-performed Phase C checks from the WINDOWS_SETUP.md checklist: tray on/off, close-to-tray, tray Open/Exit, startup switch and sign-in behaviour, toast click, keyboard traversal, large fonts, offline/reconnect. Record outcomes in TEST_RESULTS.md.
-3. Decide on Google OAuth configuration for local testing (redirect `http://127.0.0.1:5555/api/v1/auth/google/callback`) or proceed to the HTTPS deployment phase; an installed release build only works against HTTPS.
-4. Push `debug/windows-desktop` after the loops pass (no force-push) and review the GitHub Actions result.
+1. Done: two complete verification loops passed; branch pushed; CI green except the deferred Android job.
+2. Owner: remaining physical checks - tray Open/Exit from the hidden-icons flyout, startup behaviour after sign-in, toast click (turn Windows Do Not Disturb off first), 150 % text size, a Pending save during an API outage and its reconnect. Record outcomes in TEST_RESULTS.md.
+3. Watch for the intermittent blank window surface; `e45f10f` forces a frame on show/activate as a first mitigation. If it recurs, capture the `flutter run` log and consider the Skia backend.
+4. Owner decision: configure Google OAuth for local testing (redirect `http://127.0.0.1:5555/api/v1/auth/google/callback`) and/or start the HTTPS deployment phase (Phase G) - an installed release build only works against HTTPS.
+5. Then Phase F: diagnose the Android CI compile failure (log requires repository access) before any Samsung work.
 
 ## First executable steps
 
