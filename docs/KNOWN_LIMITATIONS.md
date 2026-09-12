@@ -27,3 +27,5 @@ No incomplete item is hidden behind fabricated records or a hardcoded live-succe
 - `generated_plugin_registrant.*`/`generated_plugins.cmake` show EOL-only diffs after `flutter pub get` on a `core.autocrlf=true` checkout; no `.gitattributes` normalization exists yet.
 - The OpenAPI document and Swagger UI are served at `/api/v1/openapi.json` and `/api/v1/docs` (tests depend on the former); only the root `/openapi.json` and `/docs` are absent. The handoff's "disabled at runtime" wording overstates this.
 - Physical UI, tray, startup, protocol, toast and installer acceptance remain unverified on this host.
+- Windows 11 hides new notification-area icons under the taskbar chevron by default; the tray icon is present but must be revealed or dragged out. Toasts are suppressed while Windows Do Not Disturb is on.
+- Open defect: the Flutter view has twice gone blank (white, then black after resize) when the window was activated from another process after a long hidden period; not yet reproduced deterministically. See TEST_RESULTS.md.

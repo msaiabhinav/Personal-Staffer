@@ -59,7 +59,19 @@ bool FlutterWindow::OnCreate() {
       }
       const bool tray = std::get<bool>(t->second), startup = std::get<bool>(s->second);
       if (!SetStartup(startup)) { result->Error("STARTUP_FAILED", "Could not update startup preference"); return; }
+      const bool was_tray = tray_enabled_;
       UpdateTray(tray);
+      if (tray && !was_tray && tray_enabled_) {
+        // Windows 11 places new notification-area icons under the "hidden icons" chevron by
+        // default; a one-time balloon from the icon tells the user where it lives.
+        tray_data_.uFlags |= NIF_INFO;
+        tray_data_.dwInfoFlags = NIIF_INFO;
+        wcscpy_s(tray_data_.szInfoTitle, L"Personal Staffer stays in the tray");
+        wcscpy_s(tray_data_.szInfo,
+                 L"Closing the window keeps notifications running. Find this icon under the ^ hidden-icons button; right-click it for Open and Exit.");
+        Shell_NotifyIconW(NIM_MODIFY, &tray_data_);
+        tray_data_.uFlags &= ~NIF_INFO;
+      }
       HKEY key;
       if (RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\PersonalStaffer", 0, nullptr, 0,
                          KEY_SET_VALUE, nullptr, &key, nullptr) == ERROR_SUCCESS) {

@@ -508,7 +508,7 @@ class _DesktopPreferencesState extends State<DesktopPreferences> {
         contentPadding: EdgeInsets.zero,
         title: const Text('Keep notifications running when window closes'),
         subtitle: const Text(
-          'Keep Personal Staffer in the system tray. Use its menu to exit.',
+          'Keep Personal Staffer in the system tray. Windows usually places the icon under the taskbar’s “^” hidden-icons button; right-click it for Open and Exit, or drag it onto the taskbar to keep it visible.',
         ),
         value: tray,
         onChanged: ready ? (v) => change(v, startup) : null,
