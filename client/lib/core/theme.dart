@@ -61,6 +61,81 @@ class StafferPalette {
   );
 }
 
+/// Semantic hues used for color coding. Each kind of information keeps one hue in
+/// both modes: location = blue, arrangement = violet, compensation = green,
+/// experience = amber, alerts/priority = coral, reports = blue, applications = green.
+@immutable
+class StafferColors extends ThemeExtension<StafferColors> {
+  const StafferColors({
+    required this.blue,
+    required this.violet,
+    required this.green,
+    required this.amber,
+    required this.coral,
+    required this.sidebar,
+    required this.sidebarLow,
+    required this.onSidebar,
+    required this.onSidebarMuted,
+    required this.shadow,
+  });
+  final Color blue, violet, green, amber, coral;
+  final Color sidebar, sidebarLow, onSidebar, onSidebarMuted, shadow;
+
+  static const light = StafferColors(
+    blue: Color(0xff2563eb),
+    violet: Color(0xff6d4aff),
+    green: Color(0xff15803d),
+    amber: Color(0xffb45309),
+    coral: Color(0xffdc2626),
+    sidebar: Color(0xff0f1e33),
+    sidebarLow: Color(0xff16284a),
+    onSidebar: Color(0xffe9eff6),
+    onSidebarMuted: Color(0xff9db0c7),
+    shadow: Color(0x140f1e33),
+  );
+  static const dark = StafferColors(
+    blue: Color(0xff7aa7ff),
+    violet: Color(0xffb39dff),
+    green: Color(0xff5ddc8f),
+    amber: Color(0xfff5b14a),
+    coral: Color(0xffff8a80),
+    sidebar: Color(0xff070d16),
+    sidebarLow: Color(0xff0f1a2b),
+    onSidebar: Color(0xffe9eff6),
+    onSidebarMuted: Color(0xff8a9bb0),
+    shadow: Color(0x00000000),
+  );
+
+  /// Tinted background for a semantic hue (works on both light and dark surfaces).
+  Color tint(Color hue, Brightness brightness) =>
+      hue.withValues(alpha: brightness == Brightness.dark ? 0.20 : 0.12);
+
+  @override
+  StafferColors copyWith() => this;
+  @override
+  StafferColors lerp(ThemeExtension<StafferColors>? other, double t) {
+    if (other is! StafferColors) return this;
+    Color mix(Color a, Color b) => Color.lerp(a, b, t) ?? a;
+    return StafferColors(
+      blue: mix(blue, other.blue),
+      violet: mix(violet, other.violet),
+      green: mix(green, other.green),
+      amber: mix(amber, other.amber),
+      coral: mix(coral, other.coral),
+      sidebar: mix(sidebar, other.sidebar),
+      sidebarLow: mix(sidebarLow, other.sidebarLow),
+      onSidebar: mix(onSidebar, other.onSidebar),
+      onSidebarMuted: mix(onSidebarMuted, other.onSidebarMuted),
+      shadow: mix(shadow, other.shadow),
+    );
+  }
+}
+
+extension StafferColorsX on BuildContext {
+  StafferColors get colors =>
+      Theme.of(this).extension<StafferColors>() ?? StafferColors.light;
+}
+
 ThemeData stafferThemeFor(Brightness brightness) {
   final p = brightness == Brightness.dark
       ? StafferPalette.dark
@@ -102,14 +177,22 @@ ThemeData stafferThemeFor(Brightness brightness) {
   );
   final text = base.textTheme.apply(bodyColor: p.text, displayColor: p.text);
   const radius = 14.0;
+  final semantic = brightness == Brightness.dark
+      ? StafferColors.dark
+      : StafferColors.light;
   return base.copyWith(
+    extensions: [semantic],
     scaffoldBackgroundColor: p.background,
     canvasColor: p.background,
     dividerColor: p.border,
     textTheme: text.copyWith(
       headlineSmall: text.headlineSmall?.copyWith(
-        fontWeight: FontWeight.w600,
-        letterSpacing: -0.3,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.4,
+      ),
+      headlineMedium: text.headlineMedium?.copyWith(
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
       ),
       titleLarge: text.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       titleMedium: text.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -133,7 +216,8 @@ ThemeData stafferThemeFor(Brightness brightness) {
     cardTheme: CardThemeData(
       color: p.surface,
       surfaceTintColor: Colors.transparent,
-      elevation: 0,
+      shadowColor: semantic.shadow,
+      elevation: brightness == Brightness.dark ? 0 : 1.5,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),

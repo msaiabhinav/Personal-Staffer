@@ -198,7 +198,6 @@ class AppShell extends ConsumerWidget {
             .asData
             ?.value['unread_count'] ??
         0;
-    final scheme = Theme.of(context).colorScheme;
     final history = ref.watch(navigationHistoryProvider);
     Widget icon(int i, {bool selected = false}) {
       final glyph = Icon(selected ? navSelectedIcons[i] : navIcons[i]);
@@ -214,121 +213,83 @@ class AppShell extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, size) {
         final wide = size.maxWidth >= 1000;
-        final shell = Scaffold(
-          appBar: AppBar(
-            leadingWidth: 104,
-            leading: HistoryButtons(history: history),
-            titleSpacing: wide ? 8 : null,
-            title: wide
-                ? Row(
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: scheme.primary,
-                          borderRadius: BorderRadius.circular(9),
-                        ),
-                        child: Icon(
-                          Icons.auto_awesome,
-                          size: 20,
-                          color: scheme.onPrimary,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text('Personal Staffer'),
-                    ],
-                  )
-                : const Text('Personal Staffer'),
-            actions: [
-              if (repo.syncing)
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              const ThemeToggleButton(),
-              IconButton(
-                tooltip: 'Settings',
-                onPressed: () => context.push('/settings'),
-                icon: const Icon(Icons.settings_outlined),
+        final actions = [
+          if (repo.syncing)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
-              const SizedBox(width: 12),
-            ],
+            ),
+          const ThemeToggleButton(),
+          IconButton(
+            tooltip: 'Settings',
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.settings_outlined),
           ),
+          const SizedBox(width: 12),
+        ];
+        final content = Column(
+          children: [
+            if (wide)
+              // Header spans only the content column so the sidebar runs full height.
+              SizedBox(
+                height: 64,
+                child: Row(
+                  children: [
+                    HistoryButtons(history: history),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        navLabels[selected],
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    ...actions,
+                  ],
+                ),
+              ),
+            if (const bool.fromEnvironment('DEMO_MODE'))
+              const StatusStrip(
+                'DEMO · Synthetic local records',
+                icon: Icons.science_outlined,
+              ),
+            if (repo.offline || repo.operations.isNotEmpty)
+              StatusStrip(
+                '${repo.offline ? 'Offline · ' : ''}${repo.operations.length} pending change${repo.operations.length == 1 ? '' : 's'}',
+                icon: repo.offline ? Icons.cloud_off_outlined : Icons.sync,
+                action: TextButton(
+                  onPressed: () => context.push('/settings'),
+                  child: const Text('Review'),
+                ),
+              ),
+            Expanded(child: child),
+          ],
+        );
+        final shell = Scaffold(
+          appBar: wide
+              ? null
+              : AppBar(
+                  leadingWidth: 104,
+                  leading: HistoryButtons(history: history),
+                  title: const Text('Personal Staffer'),
+                  actions: actions,
+                ),
           body: SafeArea(
             child: Row(
               children: [
-                if (wide) ...[
-                  NavigationRail(
-                    extended: true,
-                    selectedIndex: selected,
-                    groupAlignment: -1,
-                    trailing: Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Divider(),
-                              const SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: () => context.push('/settings'),
-                                icon: const Icon(Icons.settings_outlined),
-                                label: const Text('Settings'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: scheme.onSurfaceVariant,
-                                  alignment: Alignment.centerLeft,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    onDestinationSelected: (i) => context.go(navPaths[i]),
-                    destinations: List.generate(
-                      navLabels.length,
-                      (i) => NavigationRailDestination(
-                        icon: icon(i),
-                        selectedIcon: icon(i, selected: true),
-                        label: Text(navLabels[i]),
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                      ),
-                    ),
+                if (wide)
+                  Sidebar(
+                    selected: selected,
+                    unread: unread is int ? unread : 0,
+                    onSelect: (i) => context.go(navPaths[i]),
                   ),
-                  const VerticalDivider(width: 1),
-                ],
                 Expanded(
                   child: Material(
                     color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Column(
-                      children: [
-                        if (const bool.fromEnvironment('DEMO_MODE'))
-                          const StatusStrip(
-                            'DEMO · Synthetic local records',
-                            icon: Icons.science_outlined,
-                          ),
-                        if (repo.offline || repo.operations.isNotEmpty)
-                          StatusStrip(
-                            '${repo.offline ? 'Offline · ' : ''}${repo.operations.length} pending change${repo.operations.length == 1 ? '' : 's'}',
-                            icon: repo.offline
-                                ? Icons.cloud_off_outlined
-                                : Icons.sync,
-                            action: TextButton(
-                              onPressed: () => context.push('/settings'),
-                              child: const Text('Review'),
-                            ),
-                          ),
-                        Expanded(child: child),
-                      ],
-                    ),
+                    child: content,
                   ),
                 ),
               ],
@@ -600,6 +561,239 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Wide-layout navigation: a navy sidebar in both appearance modes so the
+/// destinations, brand and account state read as one anchored surface.
+class Sidebar extends ConsumerWidget {
+  const Sidebar({
+    super.key,
+    required this.selected,
+    required this.unread,
+    required this.onSelect,
+  });
+  final int selected;
+  final int unread;
+  final ValueChanged<int> onSelect;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final scheme = Theme.of(context).colorScheme;
+    final repo = ref.watch(repositoryProvider);
+    final accent = Theme.of(context).brightness == Brightness.dark
+        ? scheme.primary
+        : const Color(0xff3fc1cb);
+    return Container(
+      width: 248,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [colors.sidebar, colors.sidebarLow],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [accent, accent.withValues(alpha: 0.7)],
+                    ),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    size: 20,
+                    color: Color(0xff04262a),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Personal Staffer',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: colors.onSidebar),
+                      ),
+                      Text(
+                        const bool.fromEnvironment('DEMO_MODE')
+                            ? 'Synthetic demo'
+                            : 'Private workspace',
+                        style: Theme.of(context).textTheme.labelSmall
+                            ?.copyWith(color: colors.onSidebarMuted),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+            child: Text(
+              'WORKSPACE',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: colors.onSidebarMuted,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          for (var i = 0; i < navLabels.length; i++)
+            SidebarItem(
+              icon: i == selected ? navSelectedIcons[i] : navIcons[i],
+              label: navLabels[i],
+              selected: i == selected,
+              badge: i == 0 && unread > 0 ? unread : null,
+              accent: accent,
+              onTap: () => onSelect(i),
+            ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: repo.offline
+                          ? colors.amber
+                          : repo.syncing
+                          ? colors.blue
+                          : colors.green,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      repo.offline
+                          ? 'Offline \u00b7 cached records'
+                          : repo.syncing
+                          ? 'Synchronizing\u2026'
+                          : 'Connected',
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: colors.onSidebar),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Settings',
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => context.push('/settings'),
+                    icon: Icon(
+                      Icons.settings_outlined,
+                      size: 20,
+                      color: colors.onSidebarMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SidebarItem extends StatelessWidget {
+  const SidebarItem({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    required this.accent,
+    this.badge,
+  });
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final Color accent;
+  final int? badge;
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final foreground = selected ? Colors.white : colors.onSidebarMuted;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: Material(
+        color: selected
+            ? Colors.white.withValues(alpha: 0.10)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          hoverColor: Colors.white.withValues(alpha: 0.06),
+          onTap: onTap,
+          child: Container(
+            height: 44,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 3,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: selected ? accent : Colors.transparent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(icon, size: 21, color: selected ? accent : foreground),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: foreground,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                  ),
+                ),
+                if (badge != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: accent,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '$badge',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: const Color(0xff04262a),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

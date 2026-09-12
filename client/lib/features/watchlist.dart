@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 import 'shared.dart';
 
 /// Priority employers the user watches. Entries are additional to the daily
@@ -132,8 +133,14 @@ class _WatchlistPageState extends ConsumerState<WatchlistPage> {
                         vertical: 6,
                       ),
                       leading: CircleAvatar(
-                        backgroundColor: theme.colorScheme.primaryContainer,
-                        foregroundColor: theme.colorScheme.onPrimaryContainer,
+                        backgroundColor: context.colors.tint(
+                          hueFor(context, label(entry['company'])),
+                          theme.brightness,
+                        ),
+                        foregroundColor: hueFor(
+                          context,
+                          label(entry['company']),
+                        ),
                         child: Text(
                           label(
                             entry['company'],
@@ -154,9 +161,12 @@ class _WatchlistPageState extends ConsumerState<WatchlistPage> {
                           children: [
                             StatusPill(
                               registered ? 'Registered' : 'Pending',
+                              icon: registered
+                                  ? Icons.verified_outlined
+                                  : Icons.hourglass_empty,
                               tone: registered
                                   ? PillTone.positive
-                                  : PillTone.neutral,
+                                  : PillTone.warning,
                             ),
                             Text(
                               registered

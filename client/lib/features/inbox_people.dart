@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 import 'shared.dart';
 
 class NotificationsPage extends ConsumerStatefulWidget {
@@ -46,7 +47,22 @@ class _NotificationsState extends ConsumerState<NotificationsPage> {
               itemBuilder: (context, index) {
                 final n = items[index];
                 final isUnread = n['read_at'] == null;
-                final scheme = Theme.of(context).colorScheme;
+                final colors = context.colors;
+                final target = label(n['target_type'], '');
+                final (IconData typeIcon, Color hue) = switch (target) {
+                  'jobs' => (Icons.work_outline, colors.amber),
+                  'applications' => (
+                    Icons.assignment_turned_in_outlined,
+                    colors.green,
+                  ),
+                  'reports' => (Icons.summarize_outlined, colors.blue),
+                  'reviews' => (Icons.rate_review_outlined, colors.violet),
+                  'search-runs' => (Icons.radar, colors.coral),
+                  _ => (
+                    Icons.notifications_none,
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                };
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   child: ListTile(
@@ -54,18 +70,28 @@ class _NotificationsState extends ConsumerState<NotificationsPage> {
                       horizontal: 18,
                       vertical: 8,
                     ),
-                    leading: CircleAvatar(
-                      backgroundColor: isUnread
-                          ? scheme.primaryContainer
-                          : scheme.surfaceContainerHigh,
-                      foregroundColor: isUnread
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
-                      child: Icon(
-                        isUnread
-                            ? Icons.mark_email_unread_outlined
-                            : Icons.drafts_outlined,
-                      ),
+                    leading: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        HueBadge(icon: typeIcon, hue: hue, size: 44),
+                        if (isUnread)
+                          Positioned(
+                            right: -2,
+                            top: -2,
+                            child: Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).colorScheme.primary,
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     title: Text(
                       label(n['title']),

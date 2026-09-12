@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 import 'shared.dart';
 
 const applicationStatuses = [
@@ -100,6 +101,19 @@ class ApplicationList extends StatelessWidget {
               vertical: 8,
               horizontal: 18,
             ),
+            leading: CircleAvatar(
+              backgroundColor: context.colors.tint(
+                hueFor(context, label(row['company'])),
+                Theme.of(context).brightness,
+              ),
+              foregroundColor: hueFor(context, label(row['company'])),
+              child: Text(
+                label(
+                  row['company'],
+                  '?',
+                ).trim().characters.first.toUpperCase(),
+              ),
+            ),
             title: Text(
               label(row['title']),
               style: Theme.of(context).textTheme.titleMedium,
@@ -143,25 +157,38 @@ class DashboardPage extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Wrap(
-          spacing: 24,
+          spacing: 16,
           runSpacing: 16,
-          children: object(data['counts']).entries
-              .map(
-                (e) => SizedBox(
-                  width: 160,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        e.value.toString(),
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      Text(friendly(e.key)),
-                    ],
-                  ),
+          children: [
+            StatTile(
+              label: 'Active applications',
+              value: label(data['total'], '0'),
+              icon: Icons.work_outline,
+              hue: context.colors.blue,
+            ),
+            ...object(data['counts']).entries.map((e) {
+              final key = e.key.toString().toUpperCase();
+              final colors = context.colors;
+              final (IconData icon, Color hue) = switch (key) {
+                'APPLIED' => (Icons.send_outlined, colors.blue),
+                'AWAITING_RESPONSE' => (Icons.hourglass_bottom, colors.amber),
+                'ASSESSMENT' => (Icons.quiz_outlined, colors.violet),
+                'INTERVIEWING' => (Icons.forum_outlined, colors.violet),
+                'OFFER' => (Icons.celebration_outlined, colors.green),
+                'REJECTED' => (Icons.cancel_outlined, colors.coral),
+                _ => (
+                  Icons.label_outline,
+                  Theme.of(context).colorScheme.primary,
                 ),
-              )
-              .toList(),
+              };
+              return StatTile(
+                label: friendly(e.key),
+                value: e.value.toString(),
+                icon: icon,
+                hue: hue,
+              );
+            }),
+          ],
         ),
         const SizedBox(height: 24),
         Text(

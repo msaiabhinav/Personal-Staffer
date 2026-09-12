@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 import 'shared.dart';
 import 'applications.dart';
 
@@ -72,7 +73,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 DropdownMenu<String>(
-                  width: 260,
+                  width: 290,
                   initialSelection: scope,
                   leadingIcon: const Icon(Icons.view_agenda_outlined),
                   label: const Text('Scope'),
@@ -93,7 +94,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                   onSelected: (v) => setState(() => scope = v ?? scope),
                 ),
                 DropdownMenu<String>(
-                  width: 190,
+                  width: 230,
                   initialSelection: hours,
                   leadingIcon: const Icon(Icons.schedule_outlined),
                   label: const Text('Freshness'),
@@ -108,7 +109,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                   onSelected: (v) => setState(() => hours = v ?? hours),
                 ),
                 DropdownMenu<String>(
-                  width: 200,
+                  width: 240,
                   initialSelection: arrangement,
                   leadingIcon: const Icon(Icons.laptop_outlined),
                   label: const Text('Arrangement'),
@@ -246,11 +247,24 @@ class JobRow extends ConsumerWidget {
     final locations = job['locations'] is List
         ? (job['locations'] as List).join(' · ')
         : label(job['locations']);
+    final colors = context.colors;
+    final accentBar = job['application_id'] != null
+        ? colors.green
+        : state['is_saved'] == true
+        ? theme.colorScheme.primary
+        : job['availability'] != 'ACTIVE'
+        ? colors.amber
+        : null;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onOpen,
-        child: Padding(
+        child: Container(
+          decoration: accentBar == null
+              ? null
+              : BoxDecoration(
+                  border: Border(left: BorderSide(color: accentBar, width: 4)),
+                ),
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,21 +315,30 @@ class JobRow extends ConsumerWidget {
                 runSpacing: 8,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  StatusPill(locations, icon: Icons.place_outlined),
+                  StatusPill(
+                    locations,
+                    icon: Icons.place_outlined,
+                    tone: PillTone.info,
+                  ),
                   StatusPill(
                     friendly(job['work_arrangement']),
                     icon: Icons.laptop_outlined,
+                    tone: PillTone.violet,
                   ),
                   if (fields['salary'] != null)
                     StatusPill(
                       salaryLabel(fields['salary']),
                       icon: Icons.payments_outlined,
-                      tone: PillTone.positive,
+                      // Green only for disclosed pay; undisclosed stays neutral.
+                      tone: salaryLabel(fields['salary']) == 'Not stated'
+                          ? PillTone.neutral
+                          : PillTone.positive,
                     ),
                   if (fields['experience'] != null)
                     StatusPill(
                       '${fields['experience']}',
                       icon: Icons.timeline_outlined,
+                      tone: PillTone.warning,
                     ),
                   if (job['availability'] != 'ACTIVE')
                     StatusPill(

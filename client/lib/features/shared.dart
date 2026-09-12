@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 
 class ResourceView extends ConsumerStatefulWidget {
   const ResourceView({super.key, required this.route, required this.builder});
@@ -217,8 +218,13 @@ class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // On wide layouts the shell header already names the destination.
+    final showTitle = MediaQuery.sizeOf(context).width < 1000;
+    if (!showTitle && subtitle == null && trailing == null) {
+      return const SizedBox(height: 12);
+    }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+      padding: EdgeInsets.fromLTRB(24, showTitle ? 20 : 16, 24, 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,12 +232,13 @@ class PageHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: theme.textTheme.headlineSmall),
+                if (showTitle)
+                  Text(title, style: theme.textTheme.headlineSmall),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 6),
+                  if (showTitle) const SizedBox(height: 6),
                   Text(
                     subtitle!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
@@ -246,7 +253,7 @@ class PageHeader extends StatelessWidget {
   }
 }
 
-enum PillTone { neutral, positive, warning, accent }
+enum PillTone { neutral, positive, warning, accent, info, violet, danger }
 
 /// Small rounded status label; never relies on color alone because it carries text.
 class StatusPill extends StatelessWidget {
@@ -255,30 +262,51 @@ class StatusPill extends StatelessWidget {
     super.key,
     this.tone = PillTone.neutral,
     this.icon,
+    this.hue,
   });
   final String text;
   final PillTone tone;
   final IconData? icon;
+
+  /// Explicit semantic hue; overrides [tone].
+  final Color? hue;
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final (Color background, Color foreground) = switch (tone) {
-      PillTone.positive => (
-        scheme.primary.withValues(alpha: 0.16),
-        scheme.onPrimaryContainer,
-      ),
-      PillTone.warning => (
-        scheme.tertiary.withValues(alpha: 0.18),
-        scheme.tertiary,
-      ),
-      PillTone.accent => (scheme.primary, scheme.onPrimary),
-      PillTone.neutral => (
-        scheme.surfaceContainerHigh,
-        scheme.onSurfaceVariant,
-      ),
-    };
+    final colors = context.colors;
+    final brightness = Theme.of(context).brightness;
+    final Color foreground;
+    final Color background;
+    if (hue != null) {
+      foreground = hue!;
+      background = colors.tint(hue!, brightness);
+    } else {
+      switch (tone) {
+        case PillTone.positive:
+          foreground = colors.green;
+          background = colors.tint(colors.green, brightness);
+        case PillTone.warning:
+          foreground = colors.amber;
+          background = colors.tint(colors.amber, brightness);
+        case PillTone.info:
+          foreground = colors.blue;
+          background = colors.tint(colors.blue, brightness);
+        case PillTone.violet:
+          foreground = colors.violet;
+          background = colors.tint(colors.violet, brightness);
+        case PillTone.danger:
+          foreground = colors.coral;
+          background = colors.tint(colors.coral, brightness);
+        case PillTone.accent:
+          foreground = scheme.onPrimary;
+          background = scheme.primary;
+        case PillTone.neutral:
+          foreground = scheme.onSurfaceVariant;
+          background = scheme.surfaceContainerHigh;
+      }
+    }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(999),
@@ -288,7 +316,7 @@ class StatusPill extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(icon, size: 14, color: foreground),
-            const SizedBox(width: 4),
+            const SizedBox(width: 5),
           ],
           Text(
             text,
@@ -299,6 +327,100 @@ class StatusPill extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Rounded icon badge tinted with a semantic hue (list leading slots, tiles).
+class HueBadge extends StatelessWidget {
+  const HueBadge({
+    super.key,
+    required this.icon,
+    required this.hue,
+    this.size = 40,
+  });
+  final IconData icon;
+  final Color hue;
+  final double size;
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: context.colors.tint(hue, Theme.of(context).brightness),
+      borderRadius: BorderRadius.circular(size * 0.3),
+    ),
+    child: Icon(icon, color: hue, size: size * 0.5),
+  );
+}
+
+/// Compact metric tile for dashboards and summaries.
+class StatTile extends StatelessWidget {
+  const StatTile({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.hue,
+    this.onTap,
+  });
+  final String label, value;
+  final IconData icon;
+  final Color hue;
+  final VoidCallback? onTap;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      width: 200,
+      child: Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Row(
+              children: [
+                HueBadge(icon: icon, hue: hue, size: 44),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(value, style: theme.textTheme.headlineMedium),
+                      Text(
+                        label,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Stable hue for a name (company avatars), drawn from the semantic set.
+Color hueFor(BuildContext context, String name) {
+  final c = context.colors;
+  final options = [
+    c.blue,
+    c.violet,
+    c.green,
+    c.amber,
+    c.coral,
+    Theme.of(context).colorScheme.primary,
+  ];
+  var hash = 0;
+  for (final unit in name.toLowerCase().codeUnits) {
+    hash = (hash * 31 + unit) & 0x7fffffff;
+  }
+  return options[hash % options.length];
 }
 
 class StatusStrip extends StatelessWidget {
