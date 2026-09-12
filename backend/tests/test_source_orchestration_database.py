@@ -12,7 +12,17 @@ from test_pipeline_mapping import normalized, opening
 from test_reports_database import seed_owner, seed_source
 
 from app.connectors.contracts import Candidate, DiscoverResult, FetchResult, Health
-from app.db.models import ConnectorRun, EmployerGroup, Job, JobSnapshot, SearchRun, SourceRegistry, User, WorkItem
+from app.db.models import (
+    ConnectorRun,
+    EmployerGroup,
+    Job,
+    JobEvaluation,
+    JobSnapshot,
+    SearchRun,
+    SourceRegistry,
+    User,
+    WorkItem,
+)
 from app.jobs.orchestration import run_source_batched
 from app.workers.schedule import schedule_due
 
@@ -153,3 +163,32 @@ def test_retry_after_persists_skips_provider_and_prevents_early_schedule(pg_engi
         assert (
             session.scalar(select(func.count()).select_from(WorkItem).where(WorkItem.task_type == "SEARCH_SOURCE")) == 0
         )
+
+
+def test_rescan_of_unchanged_postings_appends_no_snapshot_or_evaluation(pg_engine):
+    # Regression: the first live board (288 postings) accumulated ~5 evaluations per job within
+    # minutes because every scheduled rescan re-ingested identical content.
+    user, source, tenant, group = seeded(pg_engine)
+    factory = sessionmaker(pg_engine, expire_on_commit=False)
+    connector = DatabaseFixtureConnector(pg_engine, user, source, tenant, group)
+    first = run_source_batched(factory, source, user, connector=connector)
+    assert first.counts["persisted"] == 2
+    second = run_source_batched(factory, source, user, connector=connector)
+    assert second.id != first.id and second.counts["persisted"] == 2
+    assert second.counts["NEEDS_REVIEW"] == 2  # Retained decisions are still reported per run.
+    with Session(pg_engine) as session:
+        assert session.scalar(select(func.count()).select_from(Job)) == 2
+        assert session.scalar(select(func.count()).select_from(JobSnapshot)) == 2
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == 2
+
+    class ChangedConnector(DatabaseFixtureConnector):
+        def normalize(self, fetched):
+            base = super().normalize(fetched)
+            return base.model_copy(update={"description_text": base.description_text + "\nUpdated: now hybrid."})
+
+    changed = ChangedConnector(pg_engine, user, source, tenant, group)
+    run_source_batched(factory, source, user, connector=changed)
+    with Session(pg_engine) as session:
+        # Changed content still produces a new immutable snapshot and evaluation per job.
+        assert session.scalar(select(func.count()).select_from(JobSnapshot)) == 4
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == 4

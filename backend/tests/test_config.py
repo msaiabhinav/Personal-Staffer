@@ -6,8 +6,26 @@ from pydantic import ValidationError
 
 from app.config.settings import Settings
 
+INTEGRATION_ENV = (
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_REDIRECT_URI",
+    "GMAIL_REDIRECT_URI",
+    "OWNER_ALLOWED_EMAIL",
+    "TOKEN_ENCRYPTION_KEY",
+    "FCM_CREDENTIALS_FILE",
+    "FCM_PROJECT_ID",
+    "PEOPLE_SEARCH_PROVIDER",
+    "PEOPLE_SEARCH_API_KEY",
+    "USAJOBS_API_KEY",
+    "USAJOBS_USER_AGENT",
+)
 
-def test_optional_config_states_and_no_synthetic_production():
+
+def test_optional_config_states_and_no_synthetic_production(monkeypatch):
+    # The suite may run inside a live-local container that carries real integration values.
+    for key in INTEGRATION_ENV:
+        monkeypatch.delenv(key, raising=False)
     config = Settings(_env_file=None)
     assert all(config.integration_state(x) == "NOT_CONFIGURED" for x in ["google", "gmail", "people", "fcm", "usajobs"])
     with pytest.raises(ValidationError):

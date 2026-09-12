@@ -471,6 +471,45 @@ def _map_evidence(
     )
 
 
+_VOLATILE_NORMALIZED_FIELDS = {"fetched_at", "raw_sha256", "observed_at"}
+
+
+def _unchanged_evaluation(session, source_record, prior_snapshot, normalized, opening, content_hash, user_id):
+    """Return the retained evaluation when this fetch repeats the current snapshot exactly.
+
+    Identity of content requires the same source record, the same description hash and
+    completeness, the same normalized structured fields (fetch time excluded) and the same
+    opening status. Anything else, or a missing evaluation for the user, falls through to a
+    new immutable snapshot and evaluation.
+    """
+    if source_record is None or prior_snapshot is None or prior_snapshot.source_id != source_record.id:
+        return None
+    if (
+        prior_snapshot.content_hash != content_hash
+        or prior_snapshot.content_complete != normalized.description_complete
+    ):
+        return None
+    previous = prior_snapshot.structured_fields.get("normalized")
+    if not isinstance(previous, dict):
+        return None
+    current = normalized.model_dump(mode="json")
+    if any(previous.get(k) != v for k, v in current.items() if k not in _VOLATILE_NORMALIZED_FIELDS):
+        return None
+    prior_opening = (source_record.link_evidence or {}).get("opening") or {}
+    if prior_opening.get("status") != opening.status or prior_opening.get("actionable") != opening.actionable:
+        return None
+    return session.scalar(
+        select(JobEvaluation)
+        .where(
+            JobEvaluation.job_id == prior_snapshot.job_id,
+            JobEvaluation.snapshot_id == prior_snapshot.id,
+            JobEvaluation.user_id == user_id,
+        )
+        .order_by(JobEvaluation.evaluated_at.desc(), JobEvaluation.id)
+        .limit(1)
+    )
+
+
 def ingest_normalized(
     session: Session, source: SourceRegistry, normalized: NormalizedJob, opening: OpeningVerification, *, user_id: UUID
 ) -> tuple[Job, JobEvaluation]:
@@ -579,6 +618,19 @@ def ingest_normalized(
     old_publication = None
     if prior_snapshot and prior_snapshot.structured_fields.get("job_evidence"):
         old_publication = JobEvidence.model_validate(prior_snapshot.structured_fields["job_evidence"]).publication
+    unchanged = _unchanged_evaluation(
+        session, source_record, prior_snapshot, normalized, opening, content_hash, user_id
+    )
+    if unchanged is not None:
+        # Scheduled rescans see most postings unchanged. Appending a snapshot and a full
+        # evaluation for identical content every 15 minutes to 4 hours grew rule history
+        # without bound; delivery re-evaluates retained evidence when time matters.
+        source_record.last_seen = normalized.fetched_at
+        source_record.link_evidence = {
+            **(source_record.link_evidence or {}),
+            "opening": opening.model_dump(mode="json"),
+        }
+        return job, unchanged
     if source_record is None:
         source_record = JobSource(
             job_id=job.id,
