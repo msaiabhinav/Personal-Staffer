@@ -21,7 +21,9 @@ flutter --suppress-analytics run -d windows --dart-define=API_BASE_URL=http://12
 
 The production API origin must use HTTPS. No provider or backend secrets belong in `--dart-define`. The runtime cache refuses to open unless the linked SQLite provides the encryption `cipher` pragma. Cache keys and opaque session credentials are held in platform secure storage. Cache namespaces separate backend origins and explicit demo/live builds.
 
-A credentialless demonstration is optional and visibly synthetic. Start the local backend with both `APP_ENV=local` and `DEMO_MODE=true`, run its `demo-seed` command, and add `--dart-define=DEMO_MODE=true` to a debug Windows run. The app also verifies the server's demo state; production builds never silently populate samples.
+`scripts\check_desktop_prerequisites.ps1` (repository root) prints a read-only PASS/WARN/FAIL table for Git, Docker Desktop and its running engine, Compose, WSL 2, exact Flutter 3.47.4/Dart 3.13.3, Visual Studio C++ tools, Windows SDK, CMake, Ninja and Inno Setup 6. It installs nothing. Building Windows plugins also requires symlink support, which means Windows Developer Mode (Settings > System > For developers) or an elevated shell.
+
+A credentialless demonstration is optional and visibly synthetic. `scripts\start_desktop_demo.ps1` performs the whole sequence below in an isolated Compose project using an ignored `.env.demo`; `scripts\stop_desktop_demo.ps1` stops it and keeps the demo database volume. Start the local backend with both `APP_ENV=local` and `DEMO_MODE=true`, run its `demo-seed` command, and add `--dart-define=DEMO_MODE=true` to a debug Windows run. The app also verifies the server's demo state; production builds never silently populate samples.
 
 ## Installer and update
 

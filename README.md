@@ -25,6 +25,23 @@ docker compose -f deployment/compose.local.yml run --rm api python -m app.cli de
 docker compose -f deployment/compose.local.yml run --rm -e TEST_DATABASE_URL=postgresql+psycopg://staffer:staffer-local@postgres:5432/staffer api pytest
 ```
 
+### Windows desktop demo scripts
+
+On the Windows laptop, PowerShell scripts wrap the same steps in an isolated Compose project (`personal-staffer-demo`) with an ignored `.env.demo` (APP_ENV=local, DEMO_MODE=true, no credentials). Your real `.env` is never read or modified.
+
+```powershell
+scripts\check_desktop_prerequisites.ps1        # read-only report; installs nothing
+scripts\start_desktop_demo.ps1 -BackendOnly    # build, migrate once, seed, verify readiness
+scripts\start_desktop_demo.ps1                 # ...then flutter run -d windows in DEMO_MODE
+scripts\stop_desktop_demo.ps1                  # stops containers; demo volumes are kept (-DeleteData removes them)
+```
+
+The full backend suite runs against the demo PostgreSQL/Redis from the same project; `scripts/` and `.env.example` are mounted read-only into the local `api` service so root-script tests collect:
+
+```powershell
+docker compose -p personal-staffer-demo -f deployment/compose.local.yml run --rm --no-deps -e TEST_DATABASE_URL=postgresql+psycopg://staffer:staffer-local@postgres:5432/staffer_test api pytest
+```
+
 `demo-seed` refuses production and refuses any database containing a non-demo owner. It creates clearly synthetic priority jobs; choose **Priority** in the feed. These are fictional records, including fictional E-Verify evidence. Use a separate database for real operation. Keep DEMO_MODE=false for real use.
 
 ## Native client
@@ -49,7 +66,7 @@ The supplied Git remote is configured on branch `feature/personal-staffer-core`.
 
 ## Verification and remaining activation
 
-Two full debugging passes are recorded in docs/TEST_RESULTS.md. Each backend pass ran 401 successful tests and explicitly skipped 51 PostgreSQL tests; each final native pass ran 20 successful tests. Run `python scripts/verify_backend.py --pass-number 1` from the root to reproduce the backend checks. The final security regression run passed 404 tests with the same 51 database skips. Use a real isolated TEST_DATABASE_URL to execute the database gates.
+On the target Windows laptop (branch `debug/windows-desktop`) the complete backend suite executed on real PostgreSQL/Redis with 458 passed and 0 skipped, and Flutter 3.47.4 analysis plus 20 tests passed; the Windows application build still awaits the Visual Studio C++ toolchain. Two earlier Linux debugging passes are recorded in docs/TEST_RESULTS.md. Each backend pass ran 401 successful tests and explicitly skipped 51 PostgreSQL tests; each final native pass ran 20 successful tests. Run `python scripts/verify_backend.py --pass-number 1` from the root to reproduce the backend checks. The final security regression run passed 404 tests with the same 51 database skips. Use a real isolated TEST_DATABASE_URL to execute the database gates.
 
 An unsigned Android release compilation artifact is provided as build evidence; it needs a configured HTTPS backend and your protected signing identity before private installation. Windows compilation and Windows/Samsung device acceptance are pending. Google consent, actual E-Verify employer evidence and provider/deployment configuration remain required. See docs/CONTINUATION.md for the exact next steps and limits.
 

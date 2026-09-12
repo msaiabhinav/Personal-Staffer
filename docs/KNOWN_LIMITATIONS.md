@@ -15,3 +15,12 @@ The repository contains a working-code implementation checkpoint, not a producti
 - Python compatibility deprecation warnings are retained in test output. Advisory scans cannot establish zero vulnerabilities.
 
 No incomplete item is hidden behind fabricated records or a hardcoded live-success state. Local demo mode is explicitly synthetic and refuses nonlocal deployment and mixed real-user data.
+
+## Windows desktop-debug checkpoint (12 September 2026)
+
+- Visual Studio "Desktop development with C++" (MSVC, Windows 10/11 SDK, CMake, Ninja) is not installed on the target laptop; `flutter doctor` fails that category. Installation needs administrator elevation and has not been performed by the agent.
+- Windows Developer Mode is off, so unprivileged symlink creation is blocked and `flutter pub get` reports "Building with plugins requires symlink support". Windows builds cannot proceed until it is enabled (Settings → System → For developers) or builds run elevated.
+- Docker Desktop 4.85.0 on this laptop crashed at startup with undeletable stale AF_UNIX socket files (`%LOCALAPPDATA%\Docker\run\*`, `%LOCALAPPDATA%\docker-secrets-engine\engine.sock`; Windows error 1920). Workaround applied: the stale directories were renamed aside (`run.stale-20260912`, `run.stale2-20260912`, `docker-secrets-engine.stale-20260912`) and the unrelated "Docker AI" preference was disabled. Fresh sockets were recreated; the problem may recur on the next Docker restart and is outside this repository.
+- `generated_plugin_registrant.*`/`generated_plugins.cmake` show EOL-only diffs after `flutter pub get` on a `core.autocrlf=true` checkout; no `.gitattributes` normalization exists yet.
+- The OpenAPI document and Swagger UI are served at `/api/v1/openapi.json` and `/api/v1/docs` (tests depend on the former); only the root `/openapi.json` and `/docs` are absent. The handoff's "disabled at runtime" wording overstates this.
+- Physical UI, tray, startup, protocol, toast and installer acceptance remain unverified on this host.

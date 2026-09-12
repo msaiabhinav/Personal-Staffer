@@ -61,3 +61,29 @@ The optional requirements audit found one unique advisory in markdownify 0.13.1 
 
 
 Final regression after the optional JobSpy security guard: **404 passed, 51 PostgreSQL tests skipped, three upstream deprecation warnings**, 4.32 seconds. Three additional tests prove known-vulnerable/unqualified/missing-package behavior without invoking the source runner. Frozen-lock, full lint and formatting checks passed; existing default dependency versions and exported requirements stayed unchanged. Evidence: `verification/backend-final-tests.log` and `verification/backend-final-tests.xml`.
+
+
+## Windows desktop-debug checkpoint — 12 September 2026 (branch `debug/windows-desktop`)
+
+First execution on the target Asus Vivobook Pro 15 (Windows 11 Home 26200, 24 GB RAM). Docker Desktop 4.85.0 / engine 29.6.2 (WSL 2), Compose v5.3.1, Git 2.53.0, Flutter 3.47.4 / Dart 3.13.3 installed at `C:\Users\crick\dev\flutter` (official archive, SHA-256 `31173300481bd06e377fd55ee84214689648b1817563efd7b450b7b78bdf351a` verified against the release manifest).
+
+| Check | Command (repo root unless noted) | Result |
+|---|---|---|
+| Prerequisite report | `scripts\check_desktop_prerequisites.ps1` | Exit 1 as designed: Visual Studio C++ tooling, Windows SDK, CMake and Ninja absent; Inno Setup absent (WARN). |
+| Isolated demo backend | `scripts\start_desktop_demo.ps1 -BackendOnly` | Image built; PostgreSQL 17.11 and Redis 7.4.6 healthy; `alembic upgrade head` explicit; API/worker/scheduler/dispatcher started; `demo-seed` created 2 synthetic priority jobs; live 200, ready 200, version 200 with `demo_mode=true`, `/jobs` and `/notifications` 401, root `/openapi.json` and `/docs` 404. |
+| Complete backend suite on real services | `docker compose -p personal-staffer-demo -f deployment/compose.local.yml run --rm --no-deps -e TEST_DATABASE_URL=postgresql+psycopg://staffer:staffer-local@postgres:5432/staffer_test api pytest -ra` | **458 passed, 0 skipped, 25 upstream deprecation warnings**, 26.3 s. Every previously skipped PostgreSQL test executed. Log: `verification/windows-backend-loop-1.log`. |
+| Lint / format (CI-equivalent, host ruff 0.16.7 from `backend/`) | `ruff check app tests ../scripts`; `ruff format --check app tests ../scripts` | All checks passed; 111 files formatted. |
+| Policy replay | `run --rm api python -m app.cli replay-fixtures` | 48/48 regression, 12/12 held-out, 0 hard-rule false accepts. `verification/windows-replay-fixtures.json`. |
+| Demo HTTP smoke on PostgreSQL | `run --rm -e DATABASE_URL=...staffer_test -e APP_ENV=local -e DEMO_MODE=true api python /scripts/smoke_demo.py` | Passed after an explicit `alembic upgrade head` on `staffer_test`. |
+| Flutter (client/) | `flutter pub get --enforce-lockfile`; `flutter analyze`; `flutter test` | Lock resolved; analyzer clean; **20 passed** on the Windows host. `pub get` exits 1 only because Windows plugin symlinks need Developer Mode (see limitations). |
+| `git diff --check` | | Clean. |
+
+Defects found and corrected on this host (each with a regression test):
+
+1. `Settings.cycle_days`/`max_posting_age_hours` were `Literal[32]`/`Literal[72]`; dotenv supplies strings, so the README's `Copy-Item .env.example .env` path failed at the first `alembic upgrade head`. CI never loaded an env file, which is why it passed. Fixed with bounded ints (any value other than 32/72 still refused); `test_documented_env_example_loads` and `test_policy_constants_accept_env_strings_and_refuse_other_values`.
+2. The documented in-container `pytest` command could not collect `test_security_review.py` (and `test_demo_database.py`) because the image's build context excludes `scripts/`. Local Compose now mounts `scripts/` and `.env.example` read-only into `api`.
+3. `test_public_health_and_version_report_real_state` assumed the test process was not a demo container; it now pins `DEMO_MODE` for both branches.
+
+Environmental observations, not code defects: Docker Desktop on Windows copies files as mode 0755, so `ruff` inside the image reports EXE002 for every module and a spurious first-party `alembic` import ordering; the CI-equivalent host run is the lint authority. The `demo-seed` path emits a Pydantic serializer warning (`decision` expected enum, got `str`) — recorded, not yet fixed.
+
+Not executed on this host yet: `flutter build windows` (debug/release), the Windows app itself, encrypted-storage integration test, installer packaging. These wait on the Visual Studio C++ toolchain and Developer Mode (administrator actions).

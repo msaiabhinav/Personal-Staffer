@@ -1,5 +1,21 @@
 # Personal Staffer build checkpoint
 
+## Windows desktop-debug checkpoint — 12 September 2026
+
+Branch `debug/windows-desktop` (from published `35338e6`), first checkpoint commit `509b39e`. Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress, not accepted**.
+
+| State | Change at this checkpoint |
+|---|---|
+| Implemented | Isolated demo tooling: `scripts/check_desktop_prerequisites.ps1`, `scripts/start_desktop_demo.ps1`, `scripts/stop_desktop_demo.ps1`; `deployment/compose.local.yml` selects an ignored `.env.demo` through `STAFFER_ENV_FILE` and mounts `scripts/`/.env.example read-only into the local `api` service. Settings policy constants accept dotenv strings while still refusing any value other than 32/72. |
+| Automated-test verified | On real PostgreSQL 17.11 and Redis 7.4.6 in Docker Desktop: **458 passed, 0 skipped**. Every formerly skipped PostgreSQL test executed. CI-equivalent Ruff lint/format clean. Policy replay 60/60. Demo HTTP smoke on PostgreSQL passed. Flutter 3.47.4 analyzer clean and 20 tests passed on Windows. |
+| Live-source verified | Unchanged. |
+| Device verified | Backend containers and HTTP checks executed on the Windows laptop. **The Windows application has not been built or launched here yet**; no UI, tray, startup, toast, protocol, encrypted-storage or installer acceptance. |
+| Not configured | Unchanged (Google owner/OAuth, FCM, People, USAJOBS, deployment endpoint, backups, signing). Inno Setup 6 not installed. |
+| Blocked | Visual Studio C++ desktop toolchain and Windows Developer Mode require administrator action by the user before `flutter build windows` can run. |
+
+Defects corrected here (regression tests added): dotenv `Literal` policy constants broke the documented startup; in-container pytest could not collect root-script tests; version-endpoint test assumed non-demo environment. See TEST_RESULTS.md.
+
+
 Date: 2026-09-12. Branch: `feature/personal-staffer-core`. Origin: `https://github.com/msaiabhinav/Personal-Staffer.git` (publicly readable, empty when inspected). This is a substantial source-code build checkpoint; **the full product has not passed release acceptance**. Implementation checkpoint: `a852668e07ad85ddbd883e2a1c7e99334ef97473`. No remote push or production deployment has occurred.
 
 ## Evidence states
