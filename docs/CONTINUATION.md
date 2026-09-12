@@ -1,6 +1,6 @@
 # Continue this checkpoint
 
-Read BUILD_STATUS.md, TEST_RESULTS.md, REQUIREMENTS.md and the complete BUILD_SPECIFICATION.md. Continue the existing source; do not regenerate it. Branch: `feature/personal-staffer-core`; origin is the user-supplied public, initially empty Personal-Staffer repository. No remote push or deployment has occurred. Commit and artifact identities will be added after final packaging.
+Read BUILD_STATUS.md, TEST_RESULTS.md, REQUIREMENTS.md and the complete BUILD_SPECIFICATION.md. Continue the existing source; do not regenerate it. Branch: `feature/personal-staffer-core`; origin is the user-supplied public, initially empty Personal-Staffer repository. No remote push or deployment has occurred. Implementation checkpoint commit: `a852668e07ad85ddbd883e2a1c7e99334ef97473`. The source ZIP and Git bundle preserve this implementation; the handoff manifest records the final export commit. The unsigned Android artifact SHA-256 is `823f076beefd0f80b33e6bed35c070eefda4dbff30539c3306ee0b64fe5655dd`.
 
 ## First executable steps
 

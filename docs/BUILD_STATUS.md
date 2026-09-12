@@ -1,6 +1,6 @@
 # Personal Staffer build checkpoint
 
-Date: 2026-09-12. Branch: `feature/personal-staffer-core`. Origin: `https://github.com/msaiabhinav/Personal-Staffer.git` (publicly readable, empty when inspected). This is a substantial source-code build checkpoint; **the full product has not passed release acceptance**. No remote push or production deployment has occurred.
+Date: 2026-09-12. Branch: `feature/personal-staffer-core`. Origin: `https://github.com/msaiabhinav/Personal-Staffer.git` (publicly readable, empty when inspected). This is a substantial source-code build checkpoint; **the full product has not passed release acceptance**. Implementation checkpoint: `a852668e07ad85ddbd883e2a1c7e99334ef97473`. No remote push or production deployment has occurred.
 
 ## Evidence states
 
