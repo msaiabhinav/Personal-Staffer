@@ -517,3 +517,32 @@ def test_absent_optional_jobspy_is_still_not_configured(monkeypatch):
     assert connector.health().state == "NOT_CONFIGURED"
     assert connector.discover().errors[0].code == "JOBSPY_NOT_CONFIGURED"
     assert client.calls == []
+
+
+def test_greenhouse_verify_opening_uses_job_board_api_not_javascript_page():
+    # Employer pages that embed Greenhouse render client-side; the board API is authoritative.
+    payload = {
+        "id": "j1",
+        "title": "Analyst",
+        "absolute_url": "https://boards.greenhouse.io/example/jobs/j1",
+        "questions": [{"label": "Resume", "required": True}],
+    }
+    connector = GreenhouseConnector(FakeClient([payload]))
+    job = connector.normalize(fetched("greenhouse", {"id": "j1", "title": "Analyst", "content": "SQL"}))
+    check = connector.verify_opening(job)
+    assert check.status == "ACTIVE" and check.identity_match and check.actionable
+    assert "boards-api.greenhouse.io/v1/boards/example/jobs/j1?questions=true" in connector.client.calls[0][0]
+    assert check.application_url == payload["absolute_url"]
+
+
+def test_greenhouse_verify_opening_reports_closed_on_404_and_unknown_without_form():
+    connector = GreenhouseConnector(FakeClient([HTTPResult(404, b"{}", "https://boards-api.greenhouse.io/x", {})]))
+    job = connector.normalize(fetched("greenhouse", {"id": "j1", "title": "Analyst", "content": "SQL"}))
+    assert connector.verify_opening(job).status == "CLOSED"
+    no_form = GreenhouseConnector(FakeClient([{"id": "j1", "absolute_url": "https://x.example/j1", "questions": []}]))
+    check = no_form.verify_opening(job)
+    assert check.status == "UNKNOWN" and check.identity_match and not check.actionable
+    mismatch = GreenhouseConnector(
+        FakeClient([{"id": "other", "absolute_url": "https://x.example/o", "questions": [1]}])
+    )
+    assert mismatch.verify_opening(job).status == "UNKNOWN"

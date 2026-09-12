@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     max_posting_age_hours: int = Field(default=72, ge=72, le=72)
     preferred_salary_usd: int = Field(default=80000, ge=0)
     everify_recheck_days: int = Field(default=30, ge=1, le=30)
+    # Owner decision (ADR 0003): INFORMATIONAL shows E-Verify evidence honestly without withholding.
+    everify_gate: Literal["REQUIRED", "INFORMATIONAL"] = "REQUIRED"
     gmail_sync_interval_seconds: int = Field(default=300, ge=60)
     gmail_backfill_days: int = Field(default=30, ge=1, le=90)
     worker_concurrency: int = Field(default=2, ge=1, le=8)

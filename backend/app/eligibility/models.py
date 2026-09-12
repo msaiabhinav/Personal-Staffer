@@ -164,6 +164,9 @@ class Policy(Contract):
     max_posting_age_hours: int = Field(default=72, ge=1, le=72)
     clock_tolerance_seconds: int = Field(default=300, ge=0, le=300)
     everify_recheck_days: int = Field(default=30, ge=1)
+    # REQUIRED withholds any job without matching confirmed legal-employer evidence (PR-05).
+    # INFORMATIONAL keeps the evidence and its honest label but never withholds on it (ADR 0003).
+    everify_gate: Literal["REQUIRED", "INFORMATIONAL"] = "REQUIRED"
     opening_recheck_hours: int = Field(default=24, ge=1)
     preferred_salary_usd: Decimal = Decimal(80000)
     maximum_exact_experience: Decimal = Decimal(4)

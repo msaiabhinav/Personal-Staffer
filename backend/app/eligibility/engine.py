@@ -203,6 +203,22 @@ def _freshness(job: JobEvidence, now: datetime, policy: Policy) -> RuleResult:
 
 
 def _everify(job: JobEvidence, now: datetime, policy: Policy, allow_synthetic: bool) -> RuleResult:
+    strict = _everify_strict(job, now, policy, allow_synthetic)
+    if policy.everify_gate == "REQUIRED" or strict.decision == "PASS":
+        return strict
+    # Informational mode: the fact and its reason stay visible, but the gate does not withhold.
+    return RuleResult(
+        rule="everify",
+        rule_version=strict.rule_version,
+        decision="PASS",
+        reason_code=strict.reason_code + "_INFORMATIONAL",
+        message=strict.message + " E-Verify is informational for this owner; delivery is not withheld.",
+        evidence=strict.evidence,
+        flags=[*strict.flags, "EVERIFY_INFORMATIONAL"],
+    )
+
+
+def _everify_strict(job: JobEvidence, now: datetime, policy: Policy, allow_synthetic: bool) -> RuleResult:
     ev = job.everify
     refs = [ref(job, field="legal_entity_id"), ref(job, field="everify")]
     if (job.synthetic or ev.synthetic) and not allow_synthetic:

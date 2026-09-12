@@ -220,6 +220,7 @@ def reevaluate_job(session: Session, job_id: UUID, user_id: UUID, *, now=None) -
             skill_vocabulary=profile.skills if profile else None,
             preferred_salary_usd=settings.preferred_salary_usd,
             everify_recheck_days=settings.everify_recheck_days,
+            everify_gate=settings.everify_gate,
         ),
         allow_synthetic=settings.app_env == "local" and settings.demo_mode,
     )

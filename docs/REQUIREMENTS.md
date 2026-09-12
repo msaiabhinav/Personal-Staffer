@@ -8,7 +8,7 @@ Statuses distinguish code from executed verification. Every requirement remains 
 | PR-02 | Single-user identity; no resume required; Gmail selected. | backend/app/auth; app/demo.py | signed OIDC and owner/session contracts; PostgreSQL and live consent pending |
 | PR-03 | U.S. jobs, remote/hybrid/onsite, role-family and skill-based discovery. | app/eligibility; app/relevance; app/api/router.py | synthetic role/geography/skills cases |
 | PR-04 | Complete JD, confirmed full-time, verified freshness within 72 hours. | app/eligibility; app/connectors; app/jobs | freshness/full-time/completeness tests; real delivery not verified |
-| PR-05 | Confirmed E-Verify legal employer; unknown employers withheld. | app/api/admin.py; app/jobs/pipeline.py; EVerifyEvidence | proof-free approval refused; no real entity confirmed |
+| PR-05 | Confirmed E-Verify legal employer; unknown employers withheld. Superseded for this owner by ADR 0003: `EVERIFY_GATE=INFORMATIONAL` shows the evidence state without withholding. | app/api/admin.py; app/jobs/pipeline.py; app/eligibility/engine.py; EVerifyEvidence | proof-free approval refused; both gate modes tested; no real entity confirmed |
 | PR-06 | Exclude explicit sponsorship restrictions; unstated sponsorship permitted. | app/eligibility/text_rules.py | sponsorship exclusion/negation/silence tests |
 | PR-07 | Exclude required clearance; preferred-only clearance flagged. | app/eligibility/text_rules.py | clearance/negation/preferred-only tests |
 | PR-08 | Exactly four years allowed; 4+ and higher required experience excluded. | app/eligibility/text_rules.py | exact4 vs4+ and alternative/required-skill tests |

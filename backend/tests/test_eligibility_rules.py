@@ -6,6 +6,7 @@ from test_eligibility_corpus import CORPUS, NOW
 
 from app.eligibility import JobEvidence, PublicationEvidence, Salary, evaluate_job, salary_band
 from app.eligibility.dedupe import JobIdentity, canonical_destination, compare_identity, identity_tombstones
+from app.eligibility.models import Policy
 from app.relevance import analyze_relevance, canonicalize_skills
 
 
@@ -172,6 +173,24 @@ def test_republication_requires_check_and_update_never_refreshes_age():
 def test_explicit_recheck_deadline_can_be_shorter_than_policy():
     ev = job_with().everify.model_copy(update={"recheck_due_at": NOW - timedelta(seconds=1)})
     assert "EVERIFY_STALE" in evaluate_job(job_with(everify=ev), now=NOW, allow_synthetic=True).reason_codes
+
+
+def test_everify_informational_mode_never_withholds_but_keeps_honest_fact():
+    # ADR 0003: the owner chose not to gate delivery on E-Verify. The evidence fact stays UNKNOWN
+    # and the reason is retained; REQUIRED mode (the specification default) still withholds.
+    unknown = job_with().everify.model_copy(update={"status": "UNKNOWN"})
+    job = job_with(everify=unknown)
+    strict = evaluate_job(job, now=NOW, allow_synthetic=True)
+    assert strict.decision == "NEEDS_REVIEW" and "EVERIFY_NOT_CONFIRMED" in strict.reason_codes
+    relaxed = evaluate_job(job, now=NOW, allow_synthetic=True, policy=Policy(everify_gate="INFORMATIONAL"))
+    assert relaxed.decision == "ELIGIBLE"
+    everify_rule = next(r for r in relaxed.rules if r.rule == "everify")
+    assert everify_rule.decision == "PASS" and everify_rule.reason_code == "EVERIFY_NOT_CONFIRMED_INFORMATIONAL"
+    assert "EVERIFY_INFORMATIONAL" in everify_rule.flags
+    assert next(f for f in relaxed.facts if f.field == "everify").state == "UNKNOWN"
+    # Confirmed evidence is unchanged in either mode; a confirmation is never invented.
+    confirmed = evaluate_job(job_with(), now=NOW, allow_synthetic=True, policy=Policy(everify_gate="INFORMATIONAL"))
+    assert next(r for r in confirmed.rules if r.rule == "everify").reason_code == "EVERIFY_CONFIRMED"
 
 
 def identity(identifier="one", **changes):

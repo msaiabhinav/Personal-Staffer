@@ -7,7 +7,7 @@ import time
 from urllib.parse import urlencode
 
 from .base import BaseConnector, source_error, token
-from .contracts import Candidate, DiscoverResult, utcnow
+from .contracts import Candidate, DiscoverResult, OpeningVerification, utcnow
 from .parsing import country, employment, exact_time, publication, salary
 from .safe_http import SourceHTTPError
 
@@ -200,6 +200,62 @@ class GreenhouseConnector(BaseConnector):
             return self._fetched(candidate, p, complete=bool(p.get("content")), url=result.final_url)
         except (SourceHTTPError, ValueError, KeyError, TypeError) as exc:
             return self._fetch_failed(candidate, exc)
+
+    def verify_opening(self, job_source):
+        # Employer career pages that embed Greenhouse render the posting with JavaScript, so
+        # the generic HTML check cannot see the title or an Apply control. The Job Board API is
+        # the authoritative source instead: it returns a live posting by id together with its
+        # application questions, and answers 404 once the opening closes.
+        url = (
+            f"https://boards-api.greenhouse.io/v1/boards/{token(job_source.tenant)}/jobs/"
+            f"{token(job_source.external_id)}?questions=true"
+        )
+        target = job_source.application_url
+        try:
+            result, p = self._json(url)
+        except SourceHTTPError as exc:
+            status = exc.status
+            if status in (404, 410):
+                return OpeningVerification(
+                    status="CLOSED",
+                    application_url=target,
+                    final_url=url,
+                    evidence_text="Greenhouse Job Board API no longer lists this job id",
+                    http_status=status,
+                )
+            return OpeningVerification(
+                status="UNKNOWN", application_url=target, final_url=url, evidence_text=exc.code, http_status=status
+            )
+        except (ValueError, KeyError, TypeError):
+            return OpeningVerification(
+                status="UNKNOWN", application_url=target, evidence_text="Greenhouse detail payload unreadable"
+            )
+        identity = str(p.get("id")) == str(job_source.external_id)
+        absolute = p.get("absolute_url")
+        questions = p.get("questions")
+        actionable = identity and bool(absolute) and isinstance(questions, list) and len(questions) > 0
+        if identity and actionable:
+            return OpeningVerification(
+                status="ACTIVE",
+                identity_match=True,
+                actionable=True,
+                application_url=absolute or target,
+                final_url=result.final_url,
+                evidence_text=(
+                    f"Greenhouse Job Board API lists job {job_source.external_id} with "
+                    f"{len(questions)} application question(s) and absolute_url"
+                ),
+                http_status=result.status_code,
+            )
+        return OpeningVerification(
+            status="UNKNOWN",
+            identity_match=identity,
+            actionable=False,
+            application_url=absolute or target,
+            final_url=result.final_url,
+            evidence_text="Greenhouse detail lacks an application form or absolute_url",
+            http_status=result.status_code,
+        )
 
     def normalize(self, payload):
         p = payload.payload
