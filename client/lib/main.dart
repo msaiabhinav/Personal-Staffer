@@ -15,7 +15,7 @@ Future<void> main() async {
   try {
     const origin = String.fromEnvironment(
       'API_BASE_URL',
-      defaultValue: 'http://127.0.0.1:8000',
+      defaultValue: 'http://127.0.0.1:5555',
     );
     const secrets = FlutterSecureStorage();
     final session = Session(validateApiOrigin(origin), secrets);

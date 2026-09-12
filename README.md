@@ -17,7 +17,7 @@ docker compose -f deployment/compose.local.yml run --rm api alembic upgrade head
 docker compose -f deployment/compose.local.yml up -d api worker scheduler dispatcher
 ```
 
-Migrations are explicit. API, worker and scheduler do not race to migrate. Local API binds `127.0.0.1:8000`; PostgreSQL and Redis have no host-published ports. The local backend image includes test dependencies so the documented pytest command works.
+Migrations are explicit. API, worker and scheduler do not race to migrate. Local API binds `127.0.0.1:5555` (host port `STAFFER_API_PORT`, container port 8000); PostgreSQL and Redis have no host-published ports. The local backend image includes test dependencies so the documented pytest command works.
 
 ```powershell
 docker compose -f deployment/compose.local.yml run --rm api python -m app.cli replay-fixtures
@@ -52,7 +52,7 @@ From `client/`, install the documented Flutter 3.47.4 toolchain and platform pre
 flutter pub get --enforce-lockfile
 flutter analyze
 flutter test
-flutter run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:8000 --dart-define=DEMO_MODE=true
+flutter run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:5555 --dart-define=DEMO_MODE=true
 ```
 
 For real use, set an HTTPS API origin and omit DEMO_MODE. Google sign-in and Gmail consent are separate. Provider secrets belong only on the backend; never place them in Flutter defines. See `docs/WINDOWS_SETUP.md` and `docs/ANDROID_SETUP.md` for exact build, installation, notification and update checks.

@@ -45,7 +45,8 @@ services:
     mem_limit: 384m
   api:
     <<: *backend
-    ports: ["127.0.0.1:8000:8000"]
+    # Host port is configurable; the container always listens on 8000 internally.
+    ports: ["127.0.0.1:${STAFFER_API_PORT:-5555}:8000"]
     # The image's build context is backend/, but tests/test_security_review.py, tests/test_demo_database.py
     # and tests/test_config.py load repository-root files relative to /app/tests (parents[2] == /).
     # Read-only mounts let the documented `run --rm api pytest` command execute the whole suite locally.

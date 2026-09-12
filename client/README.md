@@ -8,7 +8,7 @@ Use Flutter 3.47.4 / Dart 3.13.3 and the committed `pubspec.lock`. All direct pa
 flutter pub get --enforce-lockfile
 flutter analyze
 flutter test
-flutter run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:8000
+flutter run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:5555
 ```
 
 For SDKs that probe cloud-host metadata, the normal `CI=true` environment flag short-circuits Flutter's optional Azure bot check. Current engineering invocations also use `--suppress-analytics`.

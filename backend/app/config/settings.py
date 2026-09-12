@@ -12,7 +12,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False, hide_input_in_errors=True)
     app_env: Literal["local", "staging", "production"] = "local"
-    public_base_url: str = "http://127.0.0.1:8000"
+    public_base_url: str = "http://127.0.0.1:5555"
     database_url: str = Field(default="postgresql+psycopg://staffer:staffer-local@127.0.0.1:5432/staffer", repr=False)
     redis_url: str = Field(default="redis://127.0.0.1:6379/0", repr=False)
     google_client_id: str = ""

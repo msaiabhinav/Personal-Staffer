@@ -9,7 +9,7 @@ Next executable action, in order:
 1. User: enable Windows Developer Mode and install Visual Studio 2022 Build Tools with the "Desktop development with C++" workload (Windows 11 SDK and C++ CMake tools included). Both need elevation.
 2. Rerun `scripts\check_desktop_prerequisites.ps1` until only Inno Setup is WARN, then `scripts\start_desktop_demo.ps1` (no `-BackendOnly`) to build and launch the Windows app in DEMO_MODE.
 3. Exercise every node in the handoff's Phase C list, fixing one defect at a time with a regression test, then run the two Phase D loops (backend loop 1 evidence already exists in `verification/windows-backend-loop-1.log`).
-4. Install Inno Setup 6 and run `client	ooluild_windows.ps1 -ApiBaseUrl http://127.0.0.1:8000` only for an unsigned development installer; record SHA-256 values.
+4. Install Inno Setup 6 and run `client	ooluild_windows.ps1 -ApiBaseUrl http://127.0.0.1:5555` only for an unsigned development installer; record SHA-256 values.
 
 
 Read BUILD_STATUS.md, TEST_RESULTS.md, REQUIREMENTS.md and the complete BUILD_SPECIFICATION.md. Continue the existing source; do not regenerate it. Branch: `feature/personal-staffer-core`; origin is the user-supplied public, initially empty Personal-Staffer repository. No remote push or deployment has occurred. Implementation checkpoint commit: `a852668e07ad85ddbd883e2a1c7e99334ef97473`. The source ZIP and Git bundle preserve this implementation; the handoff manifest records the final export commit. The unsigned Android artifact SHA-256 is `823f076beefd0f80b33e6bed35c070eefda4dbff30539c3306ee0b64fe5655dd`.

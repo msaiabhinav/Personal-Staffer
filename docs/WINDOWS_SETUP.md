@@ -14,7 +14,7 @@ flutter --suppress-analytics doctor -v
 flutter --suppress-analytics pub get --enforce-lockfile
 flutter --suppress-analytics analyze
 flutter --suppress-analytics test
-flutter --suppress-analytics run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:8000
+flutter --suppress-analytics run -d windows --dart-define=API_BASE_URL=http://127.0.0.1:5555
 ```
 
 `CI=true` is the upstream Flutter bot-detector configuration; it short-circuits the optional Azure instance-metadata probe. An initial tool invocation in the engineering environment was rejected automatically for that probe. After read-only inspection of `flutter_tools/lib/src/base/bot_detector.dart`, the standard CI configuration prevented that network request and normal generation/dependency/test commands were allowed. No review control was disabled.

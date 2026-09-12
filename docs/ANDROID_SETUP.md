@@ -16,7 +16,7 @@ flutter test
 flutter run -d YOUR_DEVICE_ID --dart-define=API_BASE_URL=https://YOUR-AUTHORIZED-SERVER
 ```
 
-For a debug emulator, `http://10.0.2.2:8000` reaches a backend listening on the host. For a USB device with ADB port reverse, `adb reverse tcp:8000 tcp:8000` allows `http://127.0.0.1:8000` in debug. Release builds require HTTPS; cleartext is disabled in the release manifest. App data backup is disabled to avoid restoring encrypted bytes without the device key. No iOS or web substitute is included.
+For a debug emulator, `http://10.0.2.2:5555` reaches a backend listening on the host. For a USB device with ADB port reverse, `adb reverse tcp:5555 tcp:5555` allows `http://127.0.0.1:5555` in debug. Release builds require HTTPS; cleartext is disabled in the release manifest. App data backup is disabled to avoid restoring encrypted bytes without the device key. No iOS or web substitute is included.
 
 ## Signing
 

@@ -7,7 +7,7 @@
   Uses an ignored .env.demo generated from .env.example (APP_ENV=local, DEMO_MODE=true, blank owner
   identity). The real .env is never read, created or modified. Compose runs under its own project
   name so demo containers and volumes are separate from ordinary local operation. The API binds only
-  to 127.0.0.1:8000; PostgreSQL and Redis publish no host ports.
+  to 127.0.0.1:5555 (override with STAFFER_API_PORT); PostgreSQL and Redis publish no host ports.
 
 .PARAMETER BackendOnly
   Start and verify the backend but do not run the Flutter Windows app.
@@ -35,7 +35,9 @@ $ComposeFile = Join-Path $RepoRoot 'deployment\compose.local.yml'
 $EnvExample = Join-Path $RepoRoot '.env.example'
 $EnvDemo = Join-Path $RepoRoot '.env.demo'
 $ProjectName = 'personal-staffer-demo'
-$ApiBase = 'http://127.0.0.1:8000'
+$ApiPort = if ($env:STAFFER_API_PORT) { [int]$env:STAFFER_API_PORT } else { 5555 }
+$env:STAFFER_API_PORT = "$ApiPort"
+$ApiBase = "http://127.0.0.1:$ApiPort"
 
 function Write-Step { param([string]$Message) Write-Host "==> $Message" -ForegroundColor Cyan }
 
