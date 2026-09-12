@@ -5,7 +5,7 @@ configfile: pyproject.toml
 testpaths: tests
 plugins: anyio-4.15.1, asyncio-1.4.0, respx-0.23.1
 asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
-collected 458 items
+collected 459 items
 
 tests/test_api_contracts.py ...........                                  [  2%]
 tests/test_auth_email_people_postgres.py .........                       [  4%]
@@ -32,10 +32,10 @@ tests/test_email_parser.py ..............                                [ 69%]
 tests/test_email_security_database.py ...                                [ 70%]
 tests/test_fcm_contracts.py ......                                       [ 71%]
 tests/test_http_contract.py .....                                        [ 72%]
-tests/test_notification_destinations.py ...........                      [ 75%]
+tests/test_notification_destinations.py ...........                      [ 74%]
 tests/test_oauth_proxy_callback.py ..                                    [ 75%]
 tests/test_people_discovery.py ...........                               [ 77%]
-tests/test_pipeline_mapping.py ........                                  [ 79%]
+tests/test_pipeline_mapping.py .........                                 [ 79%]
 tests/test_readiness.py .....                                            [ 80%]
 tests/test_reports_database.py ........                                  [ 82%]
 tests/test_reports_selection.py ...........                              [ 84%]
@@ -59,31 +59,5 @@ tests/test_workers_database.py ......                                    [100%]
   /app/.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
     from ._compat import httpx2
 
-tests/test_demo_database.py::test_demo_http_workflow_and_repeated_smoke_are_durable
-tests/test_reports_database.py::test_report_concurrency_caps_membership_and_idempotent_outbox
-tests/test_reports_database.py::test_priority_overlap_bypasses_quota_and_regular_company_cycle
-tests/test_reports_database.py::test_new_profile_and_current_closure_block_old_eligible_decision
-tests/test_reports_database.py::test_group_requisitions_remain_distinct_and_source_retry_reuses_snapshot_identity
-tests/test_reports_database.py::test_known_cross_source_destination_stays_suppressed_even_after_new_cycle
-tests/test_reports_database.py::test_last_publication_uses_actual_local_checks_and_quarantines_similarity
-tests/test_reports_database.py::test_salary_selection_prefers_high_then_newest_display
-tests/test_reports_database.py::test_finalized_report_membership_and_partial_failure_are_real
-  /app/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
-    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='decision', input_value='ELIGIBLE', input_type=str])
-    return self.__pydantic_serializer__.to_python(
-
-tests/test_reports_database.py: 8 warnings
-tests/test_source_orchestration_database.py: 3 warnings
-  /app/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
-    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='decision', input_value='NEEDS_REVIEW', input_type=str])
-    return self.__pydantic_serializer__.to_python(
-
-tests/test_reports_database.py::test_new_profile_and_current_closure_block_old_eligible_decision
-tests/test_reports_database.py::test_known_cross_source_destination_stays_suppressed_even_after_new_cycle
-  /app/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
-    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='decision', input_value='INELIGIBLE', input_type=str])
-    return self.__pydantic_serializer__.to_python(
-
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
----------------------- generated xml file: /tmp/loop1.xml ----------------------
-====================== 458 passed, 25 warnings in 26.34s =======================
+======================= 459 passed, 3 warnings in 26.98s =======================

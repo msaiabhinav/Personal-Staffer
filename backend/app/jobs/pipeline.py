@@ -34,7 +34,15 @@ from app.db.models import (
 from app.db.models import EVerifyEvidence as DBEVerify
 from app.eligibility import evaluate_job
 from app.eligibility.dedupe import JobIdentity, canonical_destination, compare_identity
-from app.eligibility.models import EVerifyEvidence, EvidenceRef, Fact, JobEvidence, OpeningEvidence, Policy
+from app.eligibility.models import (
+    EVerifyEvidence,
+    EvidenceRef,
+    Fact,
+    FinalDecision,
+    JobEvidence,
+    OpeningEvidence,
+    Policy,
+)
 from app.eligibility.models import RuleResult as EvidenceRule
 
 
@@ -114,7 +122,9 @@ def _identity_resolution_matches(review, *, content_hash, source_identity, requi
 
 def _finalize_evaluation(evaluation):
     decisions = {r.decision for r in evaluation.rules}
-    evaluation.decision = (
+    # Attribute assignment skips validation, so assign the enum member itself; a bare
+    # string here made every later model_dump() emit a Pydantic serializer warning.
+    evaluation.decision = FinalDecision(
         "INELIGIBLE" if "FAIL" in decisions else "NEEDS_REVIEW" if decisions & {"UNKNOWN", "REVIEW"} else "ELIGIBLE"
     )
     if evaluation.decision != "ELIGIBLE":

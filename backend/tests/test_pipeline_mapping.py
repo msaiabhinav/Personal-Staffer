@@ -1,5 +1,6 @@
 """Pure mapping checks exercise the real ingestion adapters without a fake SQL database."""
 
+import warnings
 from types import SimpleNamespace
 from uuid import uuid4
 
@@ -7,6 +8,7 @@ from test_eligibility_corpus import CORPUS, NOW
 
 from app.connectors.contracts import FieldEvidence, NormalizedJob, OpeningVerification
 from app.eligibility import JobEvidence, evaluate_job
+from app.eligibility.models import FinalDecision
 from app.jobs.pipeline import (
     _compare_namespaced,
     _complete_review,
@@ -102,6 +104,19 @@ def test_profile_changes_restrict_previously_eligible_role():
     assert evaluation.decision == "INELIGIBLE"
     assert evaluation.rules[-1].reason_code == "PROFILE_FAMILY_NOT_SELECTED"
     assert evaluation.rules[-1].rule_version == "profile-3"
+
+
+def test_finalized_decision_is_enum_and_serializes_without_warnings():
+    # Regression: a bare string assigned to Evaluation.decision bypassed validation and made
+    # every model_dump() (persisted evidence, demo seed) emit a Pydantic serializer warning.
+    evaluation = evaluate_job(JobEvidence.model_validate(CORPUS["cases"][0]["bundle"]), now=NOW, allow_synthetic=True)
+    profile = SimpleNamespace(id=uuid4(), version=1, role_families=["Analytics engineering"])
+    evaluation = _finalize_evaluation(_profile_rules(evaluation, profile, NOW))
+    assert isinstance(evaluation.decision, FinalDecision)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        dumped = evaluation.model_dump(mode="json")
+    assert dumped["decision"] == "INELIGIBLE"
 
 
 def test_repost_boolean_at_source_level_is_not_per_opening_evidence():
