@@ -487,3 +487,33 @@ def test_catalog_usajobs_reads_validated_settings_and_allows_explicit_override(m
     connector = get_connector("usajobs")
     assert connector.api_key == "from-dotenv" and connector.user_agent == "owner@example.com"
     assert get_connector("usajobs", api_key="explicit").api_key == "explicit"
+
+
+@pytest.mark.parametrize("version,code", [("1.1.82", "BLOCKED_SECURITY"), ("99.0.0", "JOBSPY_VERSION_UNQUALIFIED")])
+def test_installed_jobspy_security_gate_never_starts_subprocess_or_source(monkeypatch, version, code):
+    from app.connectors import jobspy_adapter
+
+    monkeypatch.setattr(jobspy_adapter.importlib.util, "find_spec", lambda _: object())
+    monkeypatch.setattr(jobspy_adapter.importlib.metadata, "version", lambda _: version)
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("Blocked JobSpy must never invoke a subprocess or source")
+
+    monkeypatch.setattr(jobspy_adapter.subprocess, "run", unexpected)
+    client = FakeClient([])
+    connector = JobSpyConnector(client, enabled=True)
+    result = connector.discover("data analyst")
+    assert connector.health().state == "BLOCKED" and result.errors[0].code == code
+    assert not result.candidates and not result.coverage["complete_listing"]
+    assert client.calls == []
+
+
+def test_absent_optional_jobspy_is_still_not_configured(monkeypatch):
+    from app.connectors import jobspy_adapter
+
+    monkeypatch.setattr(jobspy_adapter.importlib.util, "find_spec", lambda _: None)
+    client = FakeClient([])
+    connector = JobSpyConnector(client, enabled=True)
+    assert connector.health().state == "NOT_CONFIGURED"
+    assert connector.discover().errors[0].code == "JOBSPY_NOT_CONFIGURED"
+    assert client.calls == []

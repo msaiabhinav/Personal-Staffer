@@ -1,0 +1,142 @@
+{
+  "observed_at": "2026-09-12T05:30:38.158931+00:00",
+  "kind": "REAL_INSTALLED_PACKAGE_INTERFACE_QUALIFICATION",
+  "live_scraping_performed": false,
+  "python": "3.12.14",
+  "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+  "package_version": "1.1.82",
+  "requires_dist": [
+    "NUMPY (==1.26.3)",
+    "beautifulsoup4 (>=4.12.2,<5.0.0)",
+    "markdownify (>=0.13.1,<0.14.0)",
+    "pandas (>=2.1.0,<3.0.0)",
+    "pydantic (>=2.3.0,<3.0.0)",
+    "regex (>=2024.4.28,<2025.0.0)",
+    "requests (>=2.31.0,<3.0.0)",
+    "tls-client (>=1.0.1,<2.0.0)"
+  ],
+  "signature": "(site_name: 'str | list[str] | Site | list[Site] | None' = None, search_term: 'str | None' = None, google_search_term: 'str | None' = None, location: 'str | None' = None, distance: 'int | None' = 50, is_remote: 'bool' = False, job_type: 'str | None' = None, easy_apply: 'bool | None' = None, results_wanted: 'int' = 15, country_indeed: 'str' = 'usa', proxies: 'list[str] | str | None' = None, ca_cert: 'str | None' = None, description_format: 'str' = 'markdown', linkedin_fetch_description: 'bool | None' = False, linkedin_company_ids: 'list[int] | None' = None, offset: 'int | None' = 0, hours_old: 'int' = None, enforce_annual_salary: 'bool' = False, verbose: 'int' = 0, user_agent: 'str' = None, **kwargs) -> 'pd.DataFrame'",
+  "baseline_package_versions_changed": {},
+  "added_locked_packages": {
+    "beautifulsoup4": "4.15.0",
+    "markdownify": "0.13.1",
+    "numpy": "1.26.3",
+    "pandas": "2.3.3",
+    "python-jobspy": "1.1.82",
+    "pytz": "2026.3.post1",
+    "regex": "2024.11.6",
+    "soupsieve": "2.9.2",
+    "tls-client": "1.0.1"
+  },
+  "sites": [
+    {
+      "site": "glassdoor",
+      "signature_bind": "PASS",
+      "options": {
+        "site_name": [
+          "glassdoor"
+        ],
+        "search_term": "data analyst",
+        "location": "United States",
+        "country_indeed": "USA",
+        "results_wanted": 50,
+        "offset": 0,
+        "description_format": "html",
+        "enforce_annual_salary": false,
+        "verbose": 0,
+        "proxies": null,
+        "hours_old": 72
+      },
+      "health": "DEGRADED",
+      "qualification_observation": "Pre-audit interface check; later runtime security guard now blocks execution"
+    },
+    {
+      "site": "google",
+      "signature_bind": "PASS",
+      "options": {
+        "site_name": [
+          "google"
+        ],
+        "search_term": "data analyst",
+        "location": "United States",
+        "country_indeed": "USA",
+        "results_wanted": 50,
+        "offset": 0,
+        "description_format": "html",
+        "enforce_annual_salary": false,
+        "verbose": 0,
+        "proxies": null,
+        "google_search_term": "data analyst jobs in United States since 3 days ago"
+      },
+      "health": "DEGRADED",
+      "qualification_observation": "Pre-audit interface check; later runtime security guard now blocks execution"
+    },
+    {
+      "site": "indeed",
+      "signature_bind": "PASS",
+      "options": {
+        "site_name": [
+          "indeed"
+        ],
+        "search_term": "data analyst",
+        "location": "United States",
+        "country_indeed": "USA",
+        "results_wanted": 50,
+        "offset": 0,
+        "description_format": "html",
+        "enforce_annual_salary": false,
+        "verbose": 0,
+        "proxies": null,
+        "hours_old": 72
+      },
+      "health": "DEGRADED",
+      "qualification_observation": "Pre-audit interface check; later runtime security guard now blocks execution"
+    },
+    {
+      "site": "zip_recruiter",
+      "signature_bind": "PASS",
+      "options": {
+        "site_name": [
+          "zip_recruiter"
+        ],
+        "search_term": "data analyst",
+        "location": "United States",
+        "country_indeed": "USA",
+        "results_wanted": 50,
+        "offset": 0,
+        "description_format": "html",
+        "enforce_annual_salary": false,
+        "verbose": 0,
+        "proxies": null,
+        "hours_old": 72
+      },
+      "health": "DEGRADED",
+      "qualification_observation": "Pre-audit interface check; later runtime security guard now blocks execution"
+    }
+  ],
+  "network_policy": "Python socket connects blocked; scrape_jobs never invoked",
+  "limitations": [
+    "Python 3.12 only for optional group because upstream pins NumPy 1.26.3",
+    "No live source transport, rate-limit, access or result completeness qualification"
+  ],
+  "installation_scope": "Separate scratch environment; default backend environment unchanged",
+  "default_activation": "DISABLED",
+  "activation_status": "BLOCKED_SECURITY",
+  "audit": {
+    "status": "KNOWN_VULNERABILITY",
+    "audited_packages": 72,
+    "raw_advisory_records": 2,
+    "unique_advisories": 1,
+    "package": "markdownify==0.13.1",
+    "advisory": "CVE-2025-46656",
+    "fixed_version": "0.14.1",
+    "upstream_constraint": ">=0.13.1,<0.14.0",
+    "compatible_fix_available": false
+  },
+  "runtime_guard": {
+    "pinned_version": "BLOCKED_SECURITY",
+    "unqualified_versions": "JOBSPY_VERSION_UNQUALIFIED",
+    "absent_dependency": "NOT_CONFIGURED",
+    "subprocess_and_source_execution": "REFUSED"
+  }
+}

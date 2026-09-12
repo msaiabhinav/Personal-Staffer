@@ -24,3 +24,6 @@ artifacts/
 # Retained verification evidence (reviewed; never raw provider secrets).
 !docs/verification/*.log
 .ruff_cache/
+
+# Kotlin compiler session state.
+.kotlin/

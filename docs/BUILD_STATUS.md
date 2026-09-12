@@ -6,12 +6,12 @@ Date: 2026-09-12. Branch: `feature/personal-staffer-core`. Origin: `https://gith
 
 | State | What is established |
 |---|---|
-| Implemented | Modular FastAPI/PostgreSQL backend, 49-table schema and three migrations; evidence rules; ATS adapters; reports/priority/cycles; durable work/outbox; application snapshots/corrections; OAuth/Gmail/People domains; Flutter Windows/Android client; deployment/backup/install scripts. Specialized-directory coverage and JobSpy activation remain partial. |
-| Automated-test verified | Two assembled backend debugging passes: each 401 passed, 51 PostgreSQL tests explicitly skipped. Both passed all 72 isolated module imports and synthetic corpus replay. Lint/format findings corrected; final gates pass. Native preflight: 19 tests and analyzer pass; two final native passes are being recorded. |
+| Implemented | Modular FastAPI/PostgreSQL backend, 49-table schema and three migrations; evidence rules; ATS adapters; reports/priority/cycles; durable work/outbox; application snapshots/corrections; OAuth/Gmail/People domains; Flutter Windows/Android client; deployment/backup/install scripts. Specialized-directory coverage remains partial. Optional JobSpy package/interface qualification succeeded, but its pinned markdownify dependency has an upstream vulnerability and activation is blocked. |
+| Automated-test verified | Two assembled backend debugging passes: each 401 passed, 51 PostgreSQL tests explicitly skipped. Both passed all 72 isolated module imports and synthetic corpus replay. Lint/format findings corrected; final gates pass. The final security-guard regression run passed 404 tests with 51 PostgreSQL skips. Both final native passes: analyzer clean and 20 tests passed, including startup secret redaction. |
 | Live-source verified | Bounded public access experiment on 30 employers plus E-Verify; 11 complete ATS job payloads retained and normalized, with additional Lever/Workday/SmartRecruiters access observations. This proves observed source shape only. No live source-to-PostgreSQL delivery is verified. |
-| Device verified | None. Windows install/toast/startup/key storage and Samsung install/FCM/sync checks need real platforms. Android release compilation is underway; compilation does not establish device acceptance. |
+| Device verified | None. Windows install/toast/startup/key storage and Samsung install/FCM/sync checks need real platforms. Final Android release compilation succeeded for three ABIs. The APK is unsigned with a placeholder HTTPS backend; it is not install-ready and does not establish device acceptance. |
 | Not configured | Allowed Google owner and OAuth client/grant; FCM; People provider key; optional USAJOBS; deployment endpoint/VPS; off-server restic destination; signing identity. |
-| Blocked | Local PostgreSQL/Redis execution and Docker are unavailable in this environment. Production DNS-pinned source fetch cannot resolve public DNS here. E-Verify public endpoints returned access errors. Windows build requires a Windows host; Samsung requires the device. |
+| Blocked | Local PostgreSQL/Redis execution and Docker are unavailable in this environment. Production DNS-pinned source fetch cannot resolve public DNS here. E-Verify public endpoints returned access errors. JobSpy activation is BLOCKED_SECURITY pending a compatible patched dependency. Windows build requires a Windows host; Samsung requires the device. |
 
 ## Milestones and exit gates
 
@@ -24,7 +24,7 @@ Date: 2026-09-12. Branch: `feature/personal-staffer-core`. Origin: `https://gith
 | M4 daily/priority | ATS adapters, registry, report salary order/caps, shared cycles, priority pools, schedules and source health implemented. | Multi-day coverage pilot, database concurrency execution, specialized/JobSpy qualification. |
 | M5 Gmail | Read-only consent flow, bounded page sync, trusted sender checks, matching/review/correction and reconnect states implemented. | Actual owner consent, provider smoke and database effects/lifecycle checks. |
 | M6 People | Optional public search adapter, retained relationship evidence, alphabetical groups, committed request budget and UI implemented. | Key-enabled result/terms/cost pilot; provider selection remains conditional. |
-| M7 Android/sync | Shared native screens, encrypted cache, account-bound pending operations, resnapshot/tombstones and FCM hooks implemented. | Final build outcome, Samsung install and cross-device/offline/notification acceptance. |
+| M7 Android/sync | Shared native screens, encrypted cache, account-bound pending operations, resnapshot/tombstones and FCM hooks implemented. | Signed/configured APK, Samsung install and cross-device/offline/notification acceptance. |
 | M8 operations | Pinned dependencies/images/actions, security fixes, production roles/TLS topology, backup/restore tools, CI, requirements.txt/Readme.txt and continuation docs supplied. | Real containers/deployment, off-server encrypted restore, signatures and update/uninstall acceptance. |
 
 ## Debugging and security checkpoint

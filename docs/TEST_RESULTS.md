@@ -1,6 +1,6 @@
 # Verification results — 12 September 2026
 
-This record distinguishes executed behavior from prepared database, provider and device checks. No skipped test is counted as a pass. The user requested two debugging loops after the first assembled build attempt; both backend loops ran, with fixes and relevant gates rerun inside the second loop. Native final loops are being recorded separately.
+This record distinguishes executed behavior from prepared database, provider and device checks. No skipped test is counted as a pass. The user requested two debugging loops after the first assembled build attempt; both backend loops ran, with fixes and relevant gates rerun inside the second loop. Both final native loops also ran successfully and their exact logs are retained.
 
 ## Backend debugging loops
 
@@ -37,8 +37,27 @@ The 51 skipped tests require actual PostgreSQL. They cover migrations/history gu
 
 ## Native build and tests
 
-Flutter 3.47.4 / Dart 3.13.3 dependencies are locked. Preflight analyzer and 19 tests passed, covering navigation/tabs, refresh/retry identifiers, first-view/save revision, account races, frozen resnapshots/tombstones, and an actual encrypted SQLite reopen/wrong-key test on Linux. Android release compilation is underway. Final native loop logs and artifact outcome will be appended here. Windows/Samsung cache-key and lifecycle results remain unverified regardless of Linux tests or Android compilation.
+Flutter 3.47.4 / Dart 3.13.3 dependencies are locked. Both final native passes had a clean analyzer and 20 passing tests, covering navigation/tabs, refresh/retry identifiers, first-view/save revision, account races, frozen resnapshots/tombstones, and an actual encrypted SQLite reopen/wrong-key test on Linux. Final Android release compilation succeeded. Exact native loop logs are `verification/native-pass-1.log` and `verification/native-pass-2.log`. The final artifact outcome is recorded below. Windows/Samsung cache-key and lifecycle results remain unverified regardless of Linux tests or Android compilation.
 
 ## Prepared gates that have not executed
 
 CI has real PostgreSQL/Redis services, explicit migrations, full suite, HTTP demo smoke with APP_ENV=local/DEMO_MODE=true, logical dump into a clean database and retained-state comparison. Windows runner compiles an unsigned release; Android runner compiles a development APK. Workflow YAML preparation is not a remote CI success. Container execution, actual encrypted restic restore, platform installer/update/uninstall, Google grant renewal, FCM lifecycle, live People result quality and multi-day report coverage remain release gates.
+
+
+## Final Android artifact
+
+`Personal-Staffer-0.1.0-unsigned.apk`: 62,268,066 bytes; SHA-256 `823f076beefd0f80b33e6bed35c070eefda4dbff30539c3306ee0b64fe5655dd`. Final build exited 0 in 80.7 seconds after the first uncached toolchain build. Actual native application and sqlite3mc libraries exist for arm64-v8a, armeabi-v7a and x86_64.
+
+The artifact uses `https://backend-not-configured.invalid`, FCM disabled and demo mode disabled. It has no signing certificate: apksigner exited 1 with the expected unsigned rejection. It cannot be installed as a private release until configured and signed. Actual APK manifest inspection confirmed cleartext disabled, backup disabled and no debuggable=true flag. Recognized private-key/token patterns produced no matches in scanned ZIP entries; this is a limited pattern scan. Metadata: `verification/android-artifact.json`.
+
+Nonfatal upstream build warnings (Firebase/Kotlin API transition, SDK XML and optional Cupertino icon font lookup) remain documented in ANDROID_SETUP. Windows compilation and actual Samsung/Windows lifecycle tests have not executed.
+
+
+## Optional JobSpy qualification and security blocker
+
+A separate Python 3.12 environment installed actual python-jobspy 1.1.82; all four allowed-source query argument sets bind to its real scrape_jobs signature. No scraping ran and no default runtime package version changed. The optional group supports Python 3.12 only because upstream pins NumPy 1.26.3.
+
+The optional requirements audit found one unique advisory in markdownify 0.13.1 (two duplicate entries in the audit response): [CVE-2025-46656 / GHSA-7mpr-5m44-h73r](https://github.com/advisories/GHSA-7mpr-5m44-h73r). The patched version is 0.14.1; JobSpy requires a version below 0.14.0. No dependency constraint or advisory was suppressed. Optional activation remains BLOCKED_SECURITY and the production/default dependency set remains unchanged. Qualification/audit evidence is retained in `verification/jobspy-package-qualification.json` and `verification/jobspy-pip-audit.json`. Runtime refusal has dedicated regression coverage in the final backend test run.
+
+
+Final regression after the optional JobSpy security guard: **404 passed, 51 PostgreSQL tests skipped, three upstream deprecation warnings**, 4.32 seconds. Three additional tests prove known-vulnerable/unqualified/missing-package behavior without invoking the source runner. Frozen-lock, full lint and formatting checks passed; existing default dependency versions and exported requirements stayed unchanged. Evidence: `verification/backend-final-tests.log` and `verification/backend-final-tests.xml`.

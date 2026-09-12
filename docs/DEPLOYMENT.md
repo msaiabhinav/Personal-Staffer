@@ -1,6 +1,6 @@
 # Deployment and activation
 
-No VPS has been accessed or deployed during this build. Docker Compose definitions parse as YAML, but Docker execution and TLS issuance are unverified here. Inventory CPU/RAM/disk, existing services, available ports, domain, admin access and off-server backups before deployment. Start with at least enough RAM for the documented service limits (about4GiB plus OS headroom), measure load and reduce concurrency if necessary; this is a planning bound, not a benchmark.
+No VPS has been accessed or deployed during this build. Docker Compose definitions parse as YAML, but Docker execution and TLS issuance are unverified here. Inventory CPU/RAM/disk, existing services, available ports, domain, admin access and off-server backups before deployment. The configured container memory ceilings total about 5.6 GiB before OS headroom. These are limits, not measured reservations or a hardware recommendation; measure actual load and size the host or lower concurrency before activation.
 
 ## Local setup
 

@@ -49,6 +49,8 @@ The supplied Git remote is configured on branch `feature/personal-staffer-core`.
 
 ## Verification and remaining activation
 
-Two full debugging passes are recorded in docs/TEST_RESULTS.md. Each backend pass ran 401 successful tests and explicitly skipped 51 PostgreSQL tests; each native pass ran 19 successful tests. Run `python scripts/verify_backend.py --pass-number 1` from the root to reproduce the backend checks. Use a real isolated TEST_DATABASE_URL to execute the database gates.
+Two full debugging passes are recorded in docs/TEST_RESULTS.md. Each backend pass ran 401 successful tests and explicitly skipped 51 PostgreSQL tests; each final native pass ran 20 successful tests. Run `python scripts/verify_backend.py --pass-number 1` from the root to reproduce the backend checks. The final security regression run passed 404 tests with the same 51 database skips. Use a real isolated TEST_DATABASE_URL to execute the database gates.
 
 An unsigned Android release compilation artifact is provided as build evidence; it needs a configured HTTPS backend and your protected signing identity before private installation. Windows compilation and Windows/Samsung device acceptance are pending. Google consent, actual E-Verify employer evidence and provider/deployment configuration remain required. See docs/CONTINUATION.md for the exact next steps and limits.
+
+Optional JobSpy activation is blocked by an upstream dependency vulnerability; its pinned qualification record and runtime refusal are documented in docs/JOBSPY_SETUP.md.

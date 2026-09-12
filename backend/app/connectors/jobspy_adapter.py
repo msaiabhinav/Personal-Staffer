@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -34,6 +35,25 @@ class JobSpyConnector(BaseConnector):
                 last_error=SourceError(
                     code="JOBSPY_NOT_CONFIGURED",
                     message="Install optional JobSpy dependency and explicitly enable this source",
+                ),
+            )
+
+        elif runner is None:
+            try:
+                installed_version = importlib.metadata.version("python-jobspy")
+            except importlib.metadata.PackageNotFoundError:
+                installed_version = "unknown"
+            known_block = installed_version == "1.1.82"
+            self._health = Health(
+                source_type=self.source_type,
+                state="BLOCKED",
+                last_error=SourceError(
+                    code="BLOCKED_SECURITY" if known_block else "JOBSPY_VERSION_UNQUALIFIED",
+                    message=(
+                        "JobSpy 1.1.82 requires markdownify below 0.14.0, excluding the CVE-2025-46656 fix in 0.14.1. Live source execution is blocked."
+                        if known_block
+                        else "This installed JobSpy version has not passed dependency and source qualification. Live source execution is blocked."
+                    ),
                 ),
             )
 
@@ -81,9 +101,9 @@ class JobSpyConnector(BaseConnector):
             return json.loads(output.read(8 * 1024 * 1024))
 
     def discover(self, query="", tenant="USA", cursor=None):
-        if self.health().state == "NOT_CONFIGURED":
+        if self.health().state in {"NOT_CONFIGURED", "BLOCKED"}:
             return DiscoverResult(
-                errors=[self.health().last_error], coverage={"state": "NOT_CONFIGURED", "complete_listing": False}
+                errors=[self.health().last_error], coverage={"state": self.health().state, "complete_listing": False}
             )
         try:
             offset = int(cursor or "0")

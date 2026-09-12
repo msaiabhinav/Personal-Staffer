@@ -40,3 +40,10 @@ The following remain genuine qualification items:
 6. Fixed-endpoint provider clients also depend on upstream library behavior and provider response bounds. Credentialed endpoint behavior and high-volume resource exhaustion have not undergone load testing. Dependency audit outputs are reported separately; a passing scan does not establish absence of vulnerabilities.
 
 No credentials were invented, production accounts enrolled, paid services purchased, protection bypassed, backup repository initialized, or external deployment performed for this review.
+
+
+Final client startup review removed raw exception text because malformed secure-storage JSON errors can contain session input. A native widget regression proves the sentinel token and FormatException are not displayed; both final native passes contain 20 passing tests. Actual Android manifest/native-library/signature inspection is recorded in TEST_RESULTS. The unsigned placeholder-endpoint APK is compilation evidence, not a configured production binary.
+
+## Subsequent optional package audit
+
+The isolated JobSpy qualification imported version 1.1.82 and matched all four site interfaces, but its optional dependency audit found CVE-2025-46656 in markdownify 0.13.1. Two raw advisory records represented the same unique vulnerability. JobSpy requires markdownify below 0.14.0, excluding the 0.14.1 fix; no compatible patch can resolve within that constraint. The optional lock/export is retained as evidence, not a production installation recommendation. The default dependency set remains unchanged. Real-package execution now returns BLOCKED_SECURITY without a subprocess/source call; unreviewed versions are also refused, while absent packages remain NOT_CONFIGURED. The latest focused connector run passed 51 tests including these guards. See JOBSPY_SETUP.md and the unmodified audit JSON.

@@ -17,7 +17,7 @@ Statuses distinguish code from executed verification. Every requirement remains 
 | PR-11 | Shared 32-day employer rotation; permanent duplicate/repost suppression. | app/reports; app/eligibility/dedupe.py; app/jobs | shared-cycle/dedupe unit tests; DB constraints pending |
 | PR-12 | Priority watchlist, university and Connecticut alerts, independent of daily quota/rotation. | app/reports; app/jobs; WatchlistEntry | priority triggers tested; live priority release not verified |
 | PR-13 | Dedicated NYC and Bay Area startup discovery pools. | app/connectors/catalog.py; app/cli.py; app/jobs | verified pool evidence required; full company-location pilot pending |
-| PR-14 | JobSpy excluding LinkedIn plus direct employer, ATS and specialized sources. | app/connectors | ATS/SafeHTTP71 scoped tests + real payload replay; specialized/JobSpy access partial |
+| PR-14 | JobSpy excluding LinkedIn plus direct employer, ATS and specialized sources. | app/connectors | ATS/SafeHTTP74 scoped tests + real payload replay; specialized coverage partial; JobSpy package qualified but BLOCKED_SECURITY |
 | PR-15 | Full job details, evidence, source links and original application destination. | JobSnapshot/JobSource; api job/application details; client job view | retained links and evidence code; complete DB/native workflow pending |
 | PR-16 | Up to ten relevant public LinkedIn people per job; relationship evidence; no ranking. | app/people; client People | public-search adapter/evidence grouping tests; provider not configured |
 | PR-17 | Exact five-item navigation and Homepage's two tabs. | client/lib/main.dart; client/lib/features | Flutter exact navigation/tabs tests |

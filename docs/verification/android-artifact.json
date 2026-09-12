@@ -1,0 +1,35 @@
+{
+  "artifact": "Personal-Staffer-0.1.0-unsigned.apk",
+  "bytes": 62268066,
+  "sha256": "823f076beefd0f80b33e6bed35c070eefda4dbff30539c3306ee0b64fe5655dd",
+  "compiled_for": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "native_libraries": [
+    "lib/arm64-v8a/libapp.so",
+    "lib/arm64-v8a/libsqlite3mc.so",
+    "lib/armeabi-v7a/libapp.so",
+    "lib/armeabi-v7a/libsqlite3mc.so",
+    "lib/x86_64/libapp.so",
+    "lib/x86_64/libsqlite3mc.so"
+  ],
+  "api_origin": "https://backend-not-configured.invalid",
+  "fcm_enabled": false,
+  "signature_verifier_exit": 1,
+  "signature_output": "DOES NOT VERIFY\nERROR: Missing META-INF/MANIFEST.MF\n",
+  "manifest_dump_exit": 0,
+  "secret_pattern_scan": {
+    "patterns": [
+      "private_key_pem",
+      "openai_secret",
+      "google_access_token",
+      "aws_access_key"
+    ],
+    "findings": [],
+    "limit": "Recognized-pattern scan; not an exhaustive proof against every possible secret."
+  },
+  "status": "Unsigned compile artifact; not installable or connected to a live backend.",
+  "expected_unsigned_rejection": true
+}

@@ -10,7 +10,7 @@ Read BUILD_STATUS.md, TEST_RESULTS.md, REQUIREMENTS.md and the complete BUILD_SP
 4. Configure one real direct/ATS source and import actual reviewed legal-employer/E-Verify evidence. Run-search, inspect withheld/evidence results, build one constrained report, then conduct the multi-day pilot. A retained real payload or a candidate pool flag is not employer proof.
 5. Configure secure backend domain/Google OAuth and allowed owner, then ask the user to complete Google consent in the system browser. Gmail needs their consent later, never their password in chat. Continue manual tracking if consent/provider is unavailable.
 6. Activate FCM and test Samsung plus Windows sync/offline/reconnect/notification lifecycle. Supply a legitimate public-search key only after the provider's result/terms pilot; retain request budgets and uncertainty labels.
-7. Qualify specialized directory discovery and a pinned JobSpy environment. Keep LinkedIn job scraping disabled. Expand real labeled cases toward the specification's corpus/pilot targets.
+7. Qualify specialized directory discovery. JobSpy 1.1.82 is pinned and interface-tested but its upstream markdownify constraint excludes the CVE-2025-46656 fix; wait for a compatible reviewed upstream release and rerun package/security qualification before enabling it. Keep LinkedIn job scraping disabled. Expand real labeled cases toward the specification's corpus/pilot targets.
 8. Deploy only to an authorized host; configure off-server encrypted backups, run an actual restore drill, then qualify signed installer/APK updates. No paid service or hosting has been purchased.
 
 ## Code and commands
