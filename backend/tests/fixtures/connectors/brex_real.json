@@ -1,0 +1,102 @@
+{
+  "provenance": {
+    "employer_name": "Brex",
+    "pool_candidate": "BAY_AREA_CANDIDATE",
+    "source_type": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/brex/jobs?content=true",
+    "observed_at": "2026-09-12T04:32:02.706997+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 2613727,
+    "final_url": "https://boards-api.greenhouse.io/v1/boards/brex/jobs?content=true",
+    "content_type": "application/json",
+    "raw_sha256": "637bc5575d0d5e678c5998e0bc20b80dbf0a9ac2f82945e7b3c050c011324f74",
+    "outcome": "FETCHED",
+    "job_count": 273,
+    "with_description": 273,
+    "with_published": 273
+  },
+  "job": {
+    "absolute_url": "https://www.brex.com/careers/8709977002?gh_jid=8709977002",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "internal_job_id": 6479385002,
+    "location": {
+      "name": "S\u00e3o Paulo, S\u00e3o Paulo, Brazil"
+    },
+    "metadata": [
+      {
+        "id": 108496618002,
+        "name": "Job Post Department",
+        "value": "People",
+        "value_type": "single_select"
+      }
+    ],
+    "id": 8709977002,
+    "updated_at": "2026-09-01T13:41:21-04:00",
+    "requisition_id": "JR101485",
+    "title": "Candidate Experience Analyst",
+    "company_name": "Brex",
+    "first_published": "2026-08-13T19:29:40-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;p&gt;&lt;strong&gt;Why join us&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;Brex is the intelligent finance platform that enables companies to spend smarter and move faster in more than 200 markets. By combining global corporate cards and banking with intuitive spend management, bill pay, and travel software, Brex enables founders and finance teams to accelerate operations, gain real-time visibility, and control spend effortlessly. Brex\u2019s AI-native automation and world-class service eliminate manual expense and accounting tasks for customers so they can focus on what matters most. Tens of thousands of the world&#39;s best companies run on Brex, including DoorDash, Coinbase, Robinhood, Zoom, Plaid, Reddit, and SeatGeek.&lt;/p&gt;\n&lt;p&gt;Working at Brex allows you to push your limits, challenge the status quo, and collaborate with some of the brightest minds in the industry. We\u2019re committed to building a diverse team and inclusive culture and believe your potential should only be limited by how big you can dream. We make this a reality by empowering you with the tools, resources, and support you need to grow your career.&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;span style=&quot;font-family: arial, helvetica, sans-serif; font-size: 12pt;&quot;&gt;&lt;strong&gt;Recruiting at Brex&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;Recruiting is where every career at Brex begins. We\u2019re the first point of connection for future builders and leaders, helping candidates see what\u2019s possible. We partner with leaders across the company to find exceptional talent and build high-performing teams. We move quickly, think strategically, and take pride in creating a thoughtful, welcoming candidate experience from the very first contact. We don\u2019t just fill roles, we shape the culture at Brex, finding the next generation of builders and leaders.&lt;/p&gt;\n&lt;h3&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;strong&gt;What you\u2019ll do&lt;/strong&gt;&lt;/span&gt;&lt;/h3&gt;\n&lt;p&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;You\u2019ll join a team that cares deeply about people, precision, and impact. In this role, you\u2019ll help bring exceptional leaders to Brex and see firsthand how hiring shapes our company\u2019s future. You\u2019ll grow your skills in recruiting, build trusted relationships with senior leaders, and be part of a collaborative, fast-moving team that values good judgment, curiosity, and continuous learning.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;strong&gt;Where you\u2019ll work&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;This role will be based in our Sao, Paulo office. We are a hybrid environment that combines the energy and connections of being in the office with the benefits and flexibility of working from home. We currently require a minimum of three coordinated days in the office per week, Monday, Wednesday and Thursday. As a perk, we also have up to four weeks per year of fully remote work!&lt;/p&gt;\n&lt;p&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;strong&gt;Responsibilities&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Coordinate complex, multi-stakeholder interview schedules across time zones with precision and discretion.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Serve as the main point of contact for candidates, ensuring a professional, engaging, and confidential experience from first conversation to offer.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Partner closely with recruiters, hiring leaders, and Executive Assistants to align priorities, anticipate conflicts, and maintain clear communication.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Apply sound judgment to navigate last-minute changes, sensitive information, and competing demands with professionalism and tact.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Streamline processes by identifying inefficiencies and implementing improvements that enhance speed, accuracy, and candidate experience.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Support recruiting projects, inclusive of system audits, tool management, data pulls and reviews.&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Communicate proactively and effectively across teams to build trust, ensure alignment, and maintain a high bar for quality and service.&lt;/span&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h3&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;strong&gt;Requirements&lt;/strong&gt;&lt;/span&gt;&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;2+ years of experience as a Recruiting Coordinator, ideally supporting senior-level stakeholders&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Experience with recruiting tools such as Google Calendar, Greenhouse, ModernLoop and Gem&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Exceptional written and verbal communication skills, with the ability to represent Brex with polish and professionalism&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Strong organizational skills and attention to detail, with experience managing multiple priorities under tight deadlines&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Proven ability to handle sensitive information with discretion and good judgment&lt;/span&gt;&lt;/li&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Solutions-oriented mindset and proactive approach to problem-solving&lt;/span&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h3&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;strong&gt;Bonus Points&amp;nbsp;&lt;/strong&gt;&lt;/span&gt;&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;&lt;span style=&quot;font-size: 12pt; font-family: arial, helvetica, sans-serif;&quot;&gt;Bring some technical comfort with AI and automation tooling like ATS APIs, Claude, Zapier and ChatGPT&lt;/span&gt;&lt;/li&gt;\n&lt;/ul&gt;&lt;div class=&quot;content-conclusion&quot;&gt;&lt;p&gt;&lt;em&gt;Please be aware, job-seekers may be at risk of targeting by malicious actors looking for personal data. Brex recruiters will only reach out via LinkedIn or email with a&amp;nbsp;&lt;a class=&quot;c-link&quot; href=&quot;http://brex.com/&quot; target=&quot;_blank&quot; data-stringify-link=&quot;http://brex.com&quot; data-sk=&quot;tooltip_parent&quot;&gt;brex.com&lt;/a&gt;&amp;nbsp;domain. Any outreach claiming to be from Brex via other sources should be ignored.&lt;/em&gt;&lt;/p&gt;&lt;/div&gt;",
+    "departments": [
+      {
+        "id": 4030321002,
+        "name": "People",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "offices": [
+      {
+        "id": 4045812002,
+        "name": "New York, NY",
+        "location": "New York, New York, United States",
+        "child_ids": [],
+        "parent_id": 4041334002
+      },
+      {
+        "id": 4017244002,
+        "name": "Salt Lake City, UT",
+        "location": "Salt Lake City, Utah, United States",
+        "child_ids": [],
+        "parent_id": 4041334002
+      },
+      {
+        "id": 4084807002,
+        "name": "San Francisco, CA",
+        "location": "San Francisco, California, United States",
+        "child_ids": [],
+        "parent_id": 4041334002
+      },
+      {
+        "id": 4084811002,
+        "name": "Seattle, WA",
+        "location": "Seattle, Washington, United States",
+        "child_ids": [],
+        "parent_id": 4041334002
+      },
+      {
+        "id": 4015967002,
+        "name": "Vancouver",
+        "location": "Vancouver, British Columbia, Canada",
+        "child_ids": [],
+        "parent_id": 4041335002
+      }
+    ],
+    "ai_disclaimer": null,
+    "include_ai_disclaimer": null,
+    "ai_opt_out_request_url": null
+  }
+}

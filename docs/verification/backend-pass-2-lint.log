@@ -1,0 +1,4 @@
+EXE002 The file is executable but no shebang is present
+--> /workspace/scratch/6135d527c987/Personal-Staffer-local/scripts/smoke_demo.py:1:1
+
+Found 1 error.

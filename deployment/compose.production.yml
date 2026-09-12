@@ -1,0 +1,88 @@
+name: personal-staffer-production
+x-backend: &backend
+  image: personal-staffer-backend:0.1.0
+  build:
+    context: ../backend
+    target: production
+  env_file: ../.env.production
+  restart: unless-stopped
+  networks: [backend, egress]
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+  mem_limit: 1g
+  volumes: ["../.secrets:/run/staffer-secrets:ro"]
+services:
+  postgres:
+    image: postgres:17.11@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      POSTGRES_DB: staffer
+    secrets: [postgres_admin_password, owner_password, app_password]
+    volumes: ["pgdata:/var/lib/postgresql/data", "./init:/docker-entrypoint-initdb.d:ro"]
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d staffer"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    mem_limit: 1g
+  redis:
+    image: redis:7.4.6@sha256:a9cc41d6d01da2aa26c219e4f99ecbeead955a7b656c1c499cce8922311b2514
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
+    networks: [backend]
+    volumes: ["redisdata:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    mem_limit: 384m
+  api:
+    <<: *backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health/ready')"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]
+  scheduler:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery_app", "beat", "--loglevel=INFO", "--schedule=/tmp/celerybeat-schedule"]
+  dispatcher:
+    <<: *backend
+    command: ["python", "-m", "app.cli", "dispatch-loop"]
+  caddy:
+    image: caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN for TLS}
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy_data:/data", "caddy_config:/config"]
+    networks: [egress]
+    restart: unless-stopped
+    mem_limit: 192m
+secrets:
+  postgres_admin_password:
+    file: ../.secrets/postgres_admin_password
+  owner_password:
+    file: ../.secrets/owner_password
+  app_password:
+    file: ../.secrets/app_password
+networks:
+  backend:
+    internal: true
+  egress:
+volumes:
+  pgdata:
+  redisdata:
+  caddy_data:
+  caddy_config:

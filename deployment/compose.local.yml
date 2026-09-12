@@ -1,0 +1,63 @@
+name: personal-staffer-local
+x-backend: &backend
+  build:
+    context: ../backend
+    target: development
+  image: personal-staffer-backend:0.1.0
+  env_file: ../.env
+  environment:
+    DATABASE_URL: postgresql+psycopg://staffer:staffer-local@postgres:5432/staffer
+    REDIS_URL: redis://redis:6379/0
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  restart: unless-stopped
+  mem_limit: 1g
+services:
+  postgres:
+    image: postgres:17.11@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+    environment:
+      POSTGRES_USER: staffer
+      POSTGRES_PASSWORD: staffer-local
+      POSTGRES_DB: staffer
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U staffer -d staffer"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    mem_limit: 1g
+  redis:
+    image: redis:7.4.6@sha256:a9cc41d6d01da2aa26c219e4f99ecbeead955a7b656c1c499cce8922311b2514
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
+    volumes: ["redisdata:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    mem_limit: 384m
+  api:
+    <<: *backend
+    ports: ["127.0.0.1:8000:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health/ready')"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]
+  scheduler:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery_app", "beat", "--loglevel=INFO", "--schedule=/tmp/celerybeat-schedule"]
+  dispatcher:
+    <<: *backend
+    command: ["python", "-m", "app.cli", "dispatch-loop"]
+volumes:
+  pgdata:
+  redisdata:

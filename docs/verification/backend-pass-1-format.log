@@ -1,0 +1,19 @@
+unformatted: File would be reformatted
+  --> /workspace/scratch/6135d527c987/Personal-Staffer-local/scripts/verify_backend.py:58:25
+   |
+57 |         module = ".".join(path.relative_to(backend).with_suffix("").parts)
+   -         commands.append(
+   -             (f"import-{module}", ["uv", "run", "python", "-c", f"import {module}"])
+   -         )
+58 +         commands.append((f"import-{module}", ["uv", "run", "python", "-c", f"import {module}"]))
+59 |     results = []
+--------------------------------------------------------------------------------
+74 |             except (OSError, subprocess.TimeoutExpired) as exc:
+   -                 output.write(
+   -                     f"Verification command unavailable or timed out: {type(exc).__name__}\n"
+   -                 )
+75 +                 output.write(f"Verification command unavailable or timed out: {type(exc).__name__}\n")
+76 |                 code = 125
+   |
+
+1 file would be reformatted, 110 files already formatted

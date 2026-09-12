@@ -1,0 +1,3464 @@
+{
+  "corpus_version": "synthetic-1.0",
+  "synthetic_only": true,
+  "frozen_evaluation_time": "2026-09-12T15:00:00Z",
+  "notice": "All employers, jobs, URLs, E-Verify records, snapshots and source claims are synthetic. This is NOT real source validation. Heldout group was reserved during corpus construction; finite synthetic regression success is not production accuracy.",
+  "cases": [
+    {
+      "id": "synthetic-001",
+      "name": "Complete full-time US relevant opening with exact evidence",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Complete full-time US relevant opening with exact evidence",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {
+        "experience": "PASS",
+        "sponsorship": "PASS"
+      },
+      "bundle": {
+        "id": "synthetic-001",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-001",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-002",
+      "name": "Sponsorship silence is not stated",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Sponsorship silence is not stated",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {
+        "sponsorship": "PASS"
+      },
+      "bundle": {
+        "id": "synthetic-002",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-002",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-003",
+      "name": "Failed retrieval cannot establish sponsorship silence",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Failed retrieval cannot establish sponsorship silence",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "sponsorship": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-003",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": false,
+        "snapshot_id": "synthetic-snapshot-003",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-004",
+      "name": "No sponsorship now or in the future",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "No sponsorship now or in the future",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "sponsorship": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-004",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nWe do not provide sponsorship now or in the future.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-004",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-005",
+      "name": "No visa transfers",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "No visa transfers",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "sponsorship": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-005",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nNo visa transfers.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-005",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-006",
+      "name": "Citizens only",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Citizens only",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "sponsorship": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-006",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nUS citizens only.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-006",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-007",
+      "name": "STEM OPT explicit exclusion",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "STEM OPT explicit exclusion",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "sponsorship": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-007",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nSTEM OPT candidates are not eligible.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-007",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-008",
+      "name": "Ordinary US work authorization allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Ordinary US work authorization allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-008",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nApplicants must be authorized to work in the U.S.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-008",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-009",
+      "name": "Sponsorship available",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Sponsorship available",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-009",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nVisa sponsorship is available.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-009",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-010",
+      "name": "Quoted no sponsorship example needs review",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Quoted no sponsorship example needs review",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "sponsorship": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-010",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nExample policy wording: \"No sponsorship available\".",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-010",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-011",
+      "name": "Exact four years allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Exact four years allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-011",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n4 years required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-011",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-012",
+      "name": "Four plus years excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-1",
+      "label_rationale": "Four plus years excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-012",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n4+ years required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-012",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-1",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-013",
+      "name": "At least four excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "At least four excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-013",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nAt least 4 years experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-013",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-014",
+      "name": "Minimum four excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Minimum four excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-014",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nMinimum 4 years experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-014",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-015",
+      "name": "More than four excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "More than four excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-015",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nMore than 4 years experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-015",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-016",
+      "name": "Two to four required allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Two to four required allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-016",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2\u20134 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-016",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-017",
+      "name": "Up to four allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Up to four allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-017",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nUp to 4 years experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-017",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-018",
+      "name": "Required three to five excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Required three to five excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-018",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n3\u20135 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-018",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-019",
+      "name": "Three plus allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Three plus allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-019",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n3+ years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-019",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-020",
+      "name": "One plus allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "One plus allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-020",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n1+ years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-020",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-021",
+      "name": "Five preferred two required allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Five preferred two required allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-021",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\n5 years experience preferred.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-021",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-022",
+      "name": "Separate required SQL years cannot be hidden",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Separate required SQL years cannot be hidden",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "experience": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-022",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\n5 years SQL experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-022",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-023",
+      "name": "Education alternatives require applicability evidence",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Education alternatives require applicability evidence",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "experience": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-023",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nBachelor's plus 5 years OR master's plus 2 years required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-023",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-024",
+      "name": "Absent experience requires review",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-2",
+      "label_rationale": "Absent experience requires review",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "experience": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-024",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nSQL knowledge required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-024",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-2",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-025",
+      "name": "No prior experience required allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "No prior experience required allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-025",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\nNo prior experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-025",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-026",
+      "name": "Required Secret clearance excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Required Secret clearance excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "clearance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-026",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nSecret clearance required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-026",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-027",
+      "name": "Ability to obtain clearance excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Ability to obtain clearance excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "clearance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-027",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nMust be able to obtain a security clearance.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-027",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-028",
+      "name": "Required Public Trust excluded",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Required Public Trust excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "clearance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-028",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nPublic Trust required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-028",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-029",
+      "name": "Preferred clearance allowed with flag",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Preferred clearance allowed with flag",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {
+        "clearance": "PASS"
+      },
+      "bundle": {
+        "id": "synthetic-029",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nSecret clearance preferred.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-029",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-030",
+      "name": "Explicit no clearance required passes",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Explicit no clearance required passes",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-030",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nNo clearance required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-030",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-031",
+      "name": "Routine background and drug checks allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Routine background and drug checks allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-031",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nA background check and drug screen are required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-031",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-032",
+      "name": "Quoted clearance needs review",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Quoted clearance needs review",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "clearance": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-032",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nExample: \"Secret clearance required\".",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-032",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-033",
+      "name": "DOE Q clearance required fails",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "DOE Q clearance required fails",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "clearance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-033",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nDOE Q clearance required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-033",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-034",
+      "name": "Clearance unknown requiredness needs review",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Clearance unknown requiredness needs review",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "clearance": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-034",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nResponsibilities\nContact HR about security clearance.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-034",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-035",
+      "name": "Full-time metadata explicit contract JD fails",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Full-time metadata explicit contract JD fails",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "employment": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-035",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nThis is a contract position.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-035",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-036",
+      "name": "Part time fails",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-3",
+      "label_rationale": "Part time fails",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "employment": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-036",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-036",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-3",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "PART_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-037",
+      "name": "Permanent staffing with payroll entity passes",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Permanent staffing with payroll entity passes",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-037",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-037",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true,
+        "staffing": true,
+        "permanent_placement": true,
+        "payroll_entity_verified": true
+      }
+    },
+    {
+      "id": "synthetic-038",
+      "name": "Staffing payroll entity absent withheld",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Staffing payroll entity absent withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "employment": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-038",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-038",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true,
+        "staffing": true,
+        "permanent_placement": true,
+        "payroll_entity_verified": false
+      }
+    },
+    {
+      "id": "synthetic-039",
+      "name": "Consulting employer is not consulting engagement",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Consulting employer is not consulting engagement",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-039",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.\nWe are a consulting company serving hospitals.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-039",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-040",
+      "name": "Generic remote without country withheld",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Generic remote without country withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "country": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-040",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-040",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-041",
+      "name": "Explicit US global remote allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Explicit US global remote allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-041",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-041",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US",
+          "CA",
+          "GB"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-042",
+      "name": "Non-US opening fails",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Non-US opening fails",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "country": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-042",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-042",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "CA"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-043",
+      "name": "Brand parent approval cannot approve subsidiary",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Brand parent approval cannot approve subsidiary",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "everify": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-043",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-043",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-unrelated-parent",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-044",
+      "name": "E-Verify search miss unknown",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "E-Verify search miss unknown",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "everify": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-044",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-044",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "UNKNOWN",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-045",
+      "name": "Stale E-Verify withheld",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Stale E-Verify withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "everify": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-045",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-045",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-08-12T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-046",
+      "name": "Conflicting E-Verify withheld",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Conflicting E-Verify withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "everify": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-046",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-046",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFLICTING",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-047",
+      "name": "Proof-free E-Verify boolean rejected",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Proof-free E-Verify boolean rejected",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "everify": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-047",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-047",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": null,
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-048",
+      "name": "Exactly 72 hours is allowed",
+      "synthetic": true,
+      "split": "regression",
+      "template_group": "regression-template-4",
+      "label_rationale": "Exactly 72 hours is allowed",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-048",
+        "title": "Revenue Analyst",
+        "description": "Responsibilities\nBuild SQL dashboards to analyze revenue and pricing data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-048",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-regression-template-4",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-09T15:00:00Z",
+          "latest": "2026-09-09T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-049",
+      "name": "Beyond 72 hours excluded",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Beyond 72 hours excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "freshness": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-049",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-049",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-09T14:59:59Z",
+          "latest": "2026-09-09T14:59:59Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-050",
+      "name": "First seen never substitutes publication",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "First seen never substitutes publication",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "freshness": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-050",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-050",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "FIRST_SEEN",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true,
+        "first_seen_at": "2026-09-12T15:00:00Z"
+      }
+    },
+    {
+      "id": "synthetic-051",
+      "name": "Date interval crossing boundary withheld",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Date interval crossing boundary withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "freshness": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-051",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-051",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-09T07:00:00Z",
+          "latest": "2026-09-10T03:00:00Z",
+          "precision": "DATE",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-052",
+      "name": "Known repost suppressed despite new timestamp",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Known repost suppressed despite new timestamp",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "freshness": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-052",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-052",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-12T14:00:00Z",
+          "latest": "2026-09-12T14:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true,
+        "known_repost": true
+      }
+    },
+    {
+      "id": "synthetic-053",
+      "name": "Four minutes future tolerates clock skew",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Four minutes future tolerates clock skew",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-053",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-053",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-12T15:04:00Z",
+          "latest": "2026-09-12T15:04:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-054",
+      "name": "Six minutes future withheld",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Six minutes future withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "freshness": "REVIEW"
+      },
+      "bundle": {
+        "id": "synthetic-054",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-054",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-12T15:06:00Z",
+          "latest": "2026-09-12T15:06:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-055",
+      "name": "HTTP 200 closed page excluded",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "HTTP 200 closed page excluded",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "active_opening": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-055",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-055",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "CLOSED",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-056",
+      "name": "HTTP 403 is unknown not closed",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "HTTP 403 is unknown not closed",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "active_opening": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-056",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-056",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 403
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-057",
+      "name": "Generic careers redirect withheld",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Generic careers redirect withheld",
+      "expected_decision": "NEEDS_REVIEW",
+      "expected_rules": {
+        "active_opening": "UNKNOWN"
+      },
+      "bundle": {
+        "id": "synthetic-057",
+        "title": "Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-057",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200,
+          "generic_careers_redirect": true
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-058",
+      "name": "Faculty excluded despite analytics words",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Faculty excluded despite analytics words",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "role_relevance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-058",
+        "title": "Assistant Professor of AI",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-058",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-059",
+      "name": "Incidental healthcare keyword does not qualify",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Incidental healthcare keyword does not qualify",
+      "expected_decision": "INELIGIBLE",
+      "expected_rules": {
+        "role_relevance": "FAIL"
+      },
+      "bundle": {
+        "id": "synthetic-059",
+        "title": "Healthcare Receptionist",
+        "description": "Answer telephones and schedule patient appointments.\n2 years reception experience required.\nOur hospital has data dashboards.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-059",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    },
+    {
+      "id": "synthetic-060",
+      "name": "Senior title allowed when actual requirements qualify",
+      "synthetic": true,
+      "split": "heldout",
+      "template_group": "heldout-template-albatross",
+      "label_rationale": "Senior title allowed when actual requirements qualify",
+      "expected_decision": "ELIGIBLE",
+      "expected_rules": {},
+      "bundle": {
+        "id": "synthetic-060",
+        "title": "Senior Revenue Analyst",
+        "description": "What you will do\nDevelop forecasting reports and evaluate sales performance data.\nRequired qualifications\n2 years analytics experience required.",
+        "description_complete": true,
+        "snapshot_id": "synthetic-snapshot-060",
+        "source_url": "https://fixture.invalid/job/fixture",
+        "fetched_at": "2026-09-12T15:00:00Z",
+        "employer_group_id": "synthetic-heldout-template-albatross",
+        "legal_entity_id": "synthetic-legal-entity",
+        "country_codes": [
+          "US"
+        ],
+        "employment_type": "FULL_TIME",
+        "work_arrangement": "REMOTE",
+        "publication": {
+          "earliest": "2026-09-11T15:00:00Z",
+          "latest": "2026-09-11T15:00:00Z",
+          "precision": "EXACT",
+          "kind": "ORIGINAL",
+          "source_field": "published_at",
+          "source_timezone": "UTC"
+        },
+        "everify": {
+          "status": "CONFIRMED",
+          "legal_entity_id": "synthetic-legal-entity",
+          "legal_name": "Synthetic Example Employer; Not a Real Company",
+          "source_reference": "synthetic://official-register",
+          "evidence_hash": "synthetic-sha256-abcdef",
+          "checked_at": "2026-09-11T15:00:00Z",
+          "method": "SYNTHETIC_TEST_ONLY",
+          "reviewer": "synthetic-fixture-author",
+          "identity_match": true,
+          "synthetic": true
+        },
+        "opening": {
+          "status": "ACTIVE",
+          "application_url": "https://fixture.invalid/job/fixture/apply",
+          "identity_match": true,
+          "actionable": true,
+          "checked_at": "2026-09-12T15:00:00Z",
+          "evidence_text": "SYNTHETIC: named opening has an enabled application form",
+          "http_status": 200
+        },
+        "synthetic": true
+      }
+    }
+  ]
+}

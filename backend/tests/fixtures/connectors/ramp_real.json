@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "employer_name": "Ramp",
+    "pool_candidate": "NYC_CANDIDATE",
+    "source_type": "ashby",
+    "url": "https://api.ashbyhq.com/posting-api/job-board/ramp?includeCompensation=true",
+    "observed_at": "2026-09-12T04:31:45.306886+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 2632756,
+    "final_url": "https://api.ashbyhq.com/posting-api/job-board/ramp?includeCompensation=true",
+    "content_type": "application/json; charset=utf-8",
+    "raw_sha256": "60d5baf2bcafda3c5f794f96a46c869a6ac666e0dd5ebff7b24c0fc7be097b87",
+    "outcome": "FETCHED",
+    "job_count": 145,
+    "with_description": 145,
+    "with_published": 145
+  },
+  "job": {
+    "id": "b614563f-3ce6-4dca-b5ba-0e5a6c8bda27",
+    "title": "Software Engineer, Forward Deployed AI Solutions",
+    "department": "Engineering",
+    "team": "Forward Deployed",
+    "employmentType": "FullTime",
+    "location": "New York, NY (HQ)",
+    "shouldDisplayCompensationOnJobPostings": true,
+    "secondaryLocations": [],
+    "publishedAt": "2026-07-28T17:56:57.225+00:00",
+    "isListed": true,
+    "isRemote": true,
+    "workplaceType": "Hybrid",
+    "address": {
+      "postalAddress": {
+        "addressRegion": "NY",
+        "addressCountry": "USA",
+        "addressLocality": "New York City"
+      }
+    },
+    "jobUrl": "https://jobs.ashbyhq.com/ramp/b614563f-3ce6-4dca-b5ba-0e5a6c8bda27",
+    "applyUrl": "https://jobs.ashbyhq.com/ramp/b614563f-3ce6-4dca-b5ba-0e5a6c8bda27/application",
+    "descriptionHtml": "<h1><strong>About Ramp</strong></h1><p style=\"min-height:1.5em\">Ramp is building the smart infrastructure for finance teams, embedded in the transaction flow of every dollar a business spends. We automate how over $200B in annualized spend flows in and out of 70,000+ companies: authorizing payments, flagging risk, categorizing spend, and closing books.</p><p style=\"min-height:1.5em\">The problems are high-stakes, data-dense, and unforgiving.</p><p style=\"min-height:1.5em\">We hire people with high agency and high urgency. We look for slope over intercept. We care less about where you trained and more about what you\u2019ve built. At Ramp, everyone is a builder who owns problems end to end and makes consequential decisions that shape the outcome.</p><p style=\"min-height:1.5em\">The median Ramp customer saves 5% and grows revenue 16% in their first year \u2013 far in excess of businesses operating without Ramp. We believe every ambitious company deserves the same.</p><p style=\"min-height:1.5em\">If you want to build systems that directly shape how companies move and manage billions, Ramp is the place to do it.</p><p style=\"min-height:1.5em\"></p><h1>About the Role</h1><p style=\"min-height:1.5em\">As a software engineer on the AI Solutions team, you will co-lead customer engagements with an <strong>AI Solutions Strategist</strong>. The <strong>Strategist</strong> owns business discovery, ROI narrative, stakeholder alignment, and rollout planning. The <strong>engineer</strong> owns technical discovery, solution design, prototyping, implementation, and production readiness.</p><p style=\"min-height:1.5em\">This is a deeply client-facing role. You will spend significant time with customers and end users, moving projects from bootcamp and workflow discovery through implementation, launch, and steady production usage.</p><p style=\"min-height:1.5em\"></p><h2>What You\u2019ll Do</h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Translate customer goals into clear <strong>system requirements</strong> and <strong>non-functional requirements</strong> covering security, privacy, reliability, performance, scalability, and cost.</p></li><li><p style=\"min-height:1.5em\">Partner directly with customers to understand current workflows, constraints, systems, data quality, and adoption blockers.</p></li><li><p style=\"min-height:1.5em\">Create and maintain solution architecture artifacts:</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">System context and data flow diagrams</p></li><li><p style=\"min-height:1.5em\">Integration plan across Ramp and customer systems</p></li><li><p style=\"min-height:1.5em\">Security model covering permissions, access patterns, and auditability</p></li><li><p style=\"min-height:1.5em\">Evaluation plan covering quality metrics, acceptance tests, and red-teaming</p></li><li><p style=\"min-height:1.5em\">Operational plan covering monitoring, alerting, incident response, and runbooks</p></li></ul></li><li><p style=\"min-height:1.5em\">Leverage <strong>core Ramp primitives</strong> to build efficiently, reusing existing product capabilities wherever possible.</p></li><li><p style=\"min-height:1.5em\">Prototype and validate workflows with end users to de-risk the approach and prove product-market fit.</p></li><li><p style=\"min-height:1.5em\">Drive projects from bootcamp and technical discovery through implementation, production launch, and operational handoff.</p></li><li><p style=\"min-height:1.5em\">Ensure deployed workflows are reliable, supportable, measurable, and adopted by customer teams.</p></li><li><p style=\"min-height:1.5em\">Convert deployments into reusable patterns, components, and playbooks for future AI Solutions projects.</p></li></ul><h2>What You Need</h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Experience shipping production software in high-ownership environments.</p></li><li><p style=\"min-height:1.5em\">Ability to work directly with enterprise customers from discovery through production implementation.</p></li><li><p style=\"min-height:1.5em\">Experience in solutions architecture, technical consulting, forward deployed engineering, or pre-sales engineering.</p></li><li><p style=\"min-height:1.5em\">Strong fundamentals in ML/GenAI, including problem decomposition, evaluation, and deployment trade-offs.</p></li><li><p style=\"min-height:1.5em\">Strong coding ability in at least one of: Python, TypeScript/JavaScript, Java, Go, or similar.</p></li><li><p style=\"min-height:1.5em\">Ability to design secure, scalable systems and produce clear technical documentation.</p></li><li><p style=\"min-height:1.5em\">Comfort working across APIs, integrations, data pipelines, customer systems, and cloud infrastructure.</p></li><li><p style=\"min-height:1.5em\">Experience with cloud architecture on AWS, GCP, or Azure, and distributed systems patterns.</p></li><li><p style=\"min-height:1.5em\">Experience building LLM systems, including RAG, agents, monitoring, and evals.</p></li><li><p style=\"min-height:1.5em\">Willingness to travel up to ~50% as needed, flexible based on project needs and client needs</p></li><li><p style=\"min-height:1.5em\"><strong>Nice to have: </strong>Familiarity with finance operations workflows such as AP, procurement, expenses, close, reconciliation, and reporting.</p></li></ul><p style=\"min-height:1.5em\"></p><p style=\"min-height:1.5em\"></p><h2><strong>Benefits available to all full-time Ramp employees (Global)</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Flexible PTO</p></li><li><p style=\"min-height:1.5em\">Centralized home-office equipment ordering</p></li><li><p style=\"min-height:1.5em\">Health and wellness stipend</p></li><li><p style=\"min-height:1.5em\">Budget for intra-office travel</p></li><li><p style=\"min-height:1.5em\">Weekly coffee stipend</p></li></ul><p style=\"min-height:1.5em\"></p><h2><strong>United States</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">100% medical, dental &amp; vision insurance coverage for you, with partial coverage for dependents</p></li><li><p style=\"min-height:1.5em\">One Medical annual membership</p></li><li><p style=\"min-height:1.5em\">401(k), including employer match on contributions made while employed by Ramp</p></li><li><p style=\"min-height:1.5em\">Fertility HRA (up to $10,000 per year)</p></li><li><p style=\"min-height:1.5em\">Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay</p></li><li><p style=\"min-height:1.5em\">Pet insurance</p></li><li><p style=\"min-height:1.5em\">In-office perks: lunch, snacks, drinks, and more</p></li><li><p style=\"min-height:1.5em\">Relocation expense coverage to NYC or SF (if needed)</p><p style=\"min-height:1.5em\"></p></li></ul><h2><strong>Canada</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Group medical, dental, and vision coverage through Sun Life</p></li><li><p style=\"min-height:1.5em\">Life, AD&amp;D, and disability coverage</p></li><li><p style=\"min-height:1.5em\">Fertility drug coverage (up to $4,000 lifetime)</p></li><li><p style=\"min-height:1.5em\">Group Retirement Plan with employer match (RRSP + DPSP)</p></li><li><p style=\"min-height:1.5em\">Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay, with additional time available at reduced pay</p></li><li><p style=\"min-height:1.5em\">Employee Assistance Program and virtual care through Lumino Health</p></li></ul><p style=\"min-height:1.5em\"></p><h2><strong>United Kingdom</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Private medical insurance through Freedom Elite</p></li><li><p style=\"min-height:1.5em\">Virtual GP and at-home care via eMed x Livi</p></li><li><p style=\"min-height:1.5em\">Workplace pension through Penfold, with salary sacrifice option</p></li><li><p style=\"min-height:1.5em\">Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay with additional time available at reduced pay</p></li></ul><p style=\"min-height:1.5em\"></p><h2><strong>Referral Instructions</strong></h2><p style=\"min-height:1.5em\">If you are being referred for the role, please contact that person to apply on your behalf.</p><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\">\u00a0</div><h2><strong>Other notices</strong></h2><p style=\"min-height:1.5em\">Pursuant to the San Francisco Fair Chance Ordinance, we will consider for employment qualified applicants with arrest and conviction records.</p><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\">\u00a0</div><p style=\"min-height:1.5em\"><em>Beware of recruiting scams: Ramp will only contact you through official @</em><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Ramp.com\"><em>Ramp.com</em></a><em> email addresses and will never ask for payment or sensitive personal information during the hiring process.</em></p><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\">\u00a0</div><p style=\"min-height:1.5em\"><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://ramp.com/legal/applicant-privacy-notice\">Ramp Applicant Privacy Notice</a></p>",
+    "descriptionPlain": "ABOUT RAMP\n\nRamp is building the smart infrastructure for finance teams, embedded in the transaction flow of every dollar a business spends. We automate how over $200B in annualized spend flows in and out of 70,000+ companies: authorizing payments, flagging risk, categorizing spend, and closing books.\n\nThe problems are high-stakes, data-dense, and unforgiving.\n\nWe hire people with high agency and high urgency. We look for slope over intercept. We care less about where you trained and more about what you\u2019ve built. At Ramp, everyone is a builder who owns problems end to end and makes consequential decisions that shape the outcome.\n\nThe median Ramp customer saves 5% and grows revenue 16% in their first year \u2013 far in excess of businesses operating without Ramp. We believe every ambitious company deserves the same.\n\nIf you want to build systems that directly shape how companies move and manage billions, Ramp is the place to do it.\n\n\n\n\nABOUT THE ROLE\n\nAs a software engineer on the AI Solutions team, you will co-lead customer engagements with an AI Solutions Strategist. The Strategist owns business discovery, ROI narrative, stakeholder alignment, and rollout planning. The engineer owns technical discovery, solution design, prototyping, implementation, and production readiness.\n\nThis is a deeply client-facing role. You will spend significant time with customers and end users, moving projects from bootcamp and workflow discovery through implementation, launch, and steady production usage.\n\n\n\n\nWHAT YOU\u2019LL DO\n\n - Translate customer goals into clear system requirements and non-functional requirements covering security, privacy, reliability, performance, scalability, and cost.\n\n - Partner directly with customers to understand current workflows, constraints, systems, data quality, and adoption blockers.\n\n - Create and maintain solution architecture artifacts:\n   \n   - System context and data flow diagrams\n   \n   - Integration plan across Ramp and customer systems\n   \n   - Security model covering permissions, access patterns, and auditability\n   \n   - Evaluation plan covering quality metrics, acceptance tests, and red-teaming\n   \n   - Operational plan covering monitoring, alerting, incident response, and runbooks\n\n - Leverage core Ramp primitives to build efficiently, reusing existing product capabilities wherever possible.\n\n - Prototype and validate workflows with end users to de-risk the approach and prove product-market fit.\n\n - Drive projects from bootcamp and technical discovery through implementation, production launch, and operational handoff.\n\n - Ensure deployed workflows are reliable, supportable, measurable, and adopted by customer teams.\n\n - Convert deployments into reusable patterns, components, and playbooks for future AI Solutions projects.\n\n\nWHAT YOU NEED\n\n - Experience shipping production software in high-ownership environments.\n\n - Ability to work directly with enterprise customers from discovery through production implementation.\n\n - Experience in solutions architecture, technical consulting, forward deployed engineering, or pre-sales engineering.\n\n - Strong fundamentals in ML/GenAI, including problem decomposition, evaluation, and deployment trade-offs.\n\n - Strong coding ability in at least one of: Python, TypeScript/JavaScript, Java, Go, or similar.\n\n - Ability to design secure, scalable systems and produce clear technical documentation.\n\n - Comfort working across APIs, integrations, data pipelines, customer systems, and cloud infrastructure.\n\n - Experience with cloud architecture on AWS, GCP, or Azure, and distributed systems patterns.\n\n - Experience building LLM systems, including RAG, agents, monitoring, and evals.\n\n - Willingness to travel up to ~50% as needed, flexible based on project needs and client needs\n\n - Nice to have: Familiarity with finance operations workflows such as AP, procurement, expenses, close, reconciliation, and reporting.\n\n\n\n\n\n\nBENEFITS AVAILABLE TO ALL FULL-TIME RAMP EMPLOYEES (GLOBAL)\n\n - Flexible PTO\n\n - Centralized home-office equipment ordering\n\n - Health and wellness stipend\n\n - Budget for intra-office travel\n\n - Weekly coffee stipend\n\n\n\n\nUNITED STATES\n\n - 100% medical, dental & vision insurance coverage for you, with partial coverage for dependents\n\n - One Medical annual membership\n\n - 401(k), including employer match on contributions made while employed by Ramp\n\n - Fertility HRA (up to $10,000 per year)\n\n - Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay\n\n - Pet insurance\n\n - In-office perks: lunch, snacks, drinks, and more\n\n - Relocation expense coverage to NYC or SF (if needed)\n   \n   \n\n\nCANADA\n\n - Group medical, dental, and vision coverage through Sun Life\n\n - Life, AD&D, and disability coverage\n\n - Fertility drug coverage (up to $4,000 lifetime)\n\n - Group Retirement Plan with employer match (RRSP + DPSP)\n\n - Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay, with additional time available at reduced pay\n\n - Employee Assistance Program and virtual care through Lumino Health\n\n\n\n\nUNITED KINGDOM\n\n - Private medical insurance through Freedom Elite\n\n - Virtual GP and at-home care via eMed x Livi\n\n - Workplace pension through Penfold, with salary sacrifice option\n\n - Parental leave: up to 16 weeks (birthing + bonding) or 8 weeks (bonding only) at 100% pay with additional time available at reduced pay\n\n\n\n\nREFERRAL INSTRUCTIONS\n\nIf you are being referred for the role, please contact that person to apply on your behalf.\n\n\u00a0\n\n\nOTHER NOTICES\n\nPursuant to the San Francisco Fair Chance Ordinance, we will consider for employment qualified applicants with arrest and conviction records.\n\n\u00a0\n\nBeware of recruiting scams: Ramp will only contact you through official @Ramp.com http://Ramp.com email addresses and will never ask for payment or sensitive personal information during the hiring process.\n\n\u00a0\n\nRamp Applicant Privacy Notice https://ramp.com/legal/applicant-privacy-notice",
+    "compensation": {
+      "compensationTierSummary": "$189K \u2013 $330K \u2022 Offers Equity",
+      "scrapeableCompensationSalarySummary": "$189K - $330K",
+      "compensationTiers": [
+        {
+          "id": "cc6a8ada-5fed-4277-9624-44a647c64df0",
+          "tierSummary": "$189K \u2013 $330K \u2022 Offers Equity",
+          "title": null,
+          "additionalInformation": null,
+          "components": [
+            {
+              "id": "b9a7414f-9d5f-47cc-80b0-c519deef31ac",
+              "summary": "Offers Equity",
+              "compensationType": "EquityPercentage",
+              "interval": "NONE",
+              "currencyCode": null,
+              "minValue": null,
+              "maxValue": null
+            },
+            {
+              "id": "9904fe15-c307-400e-a1ad-aaa151022062",
+              "summary": "$189K \u2013 $330K",
+              "compensationType": "Salary",
+              "interval": "1 YEAR",
+              "currencyCode": "USD",
+              "minValue": 189000,
+              "maxValue": 330000
+            }
+          ]
+        }
+      ],
+      "summaryComponents": [
+        {
+          "compensationType": "EquityPercentage",
+          "interval": "NONE",
+          "currencyCode": null,
+          "minValue": null,
+          "maxValue": null
+        },
+        {
+          "compensationType": "Salary",
+          "interval": "1 YEAR",
+          "currencyCode": "USD",
+          "minValue": 189000,
+          "maxValue": 330000
+        }
+      ]
+    }
+  }
+}

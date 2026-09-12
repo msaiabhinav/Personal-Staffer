@@ -1,0 +1,109 @@
+name: Personal Staffer validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.11@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_USER: staffer
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: staffer_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U staffer -d staffer_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7.4.6@sha256:a9cc41d6d01da2aa26c219e4f99ecbeead955a7b656c1c499cce8922311b2514
+        ports: ['6379:6379']
+    env:
+      DATABASE_URL: postgresql+psycopg://staffer:ci-only-password@127.0.0.1:5432/staffer_test
+      TEST_DATABASE_URL: postgresql+psycopg://staffer:ci-only-password@127.0.0.1:5432/staffer_test
+      REDIS_URL: redis://127.0.0.1:6379/0
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - run: python -m pip install uv==0.12.11
+      - run: uv sync --frozen
+      - run: uv run ruff check app tests ../scripts
+      - run: uv run ruff format --check app tests ../scripts
+      - run: uv run alembic upgrade head
+      - run: uv run pytest --junitxml=test-results.xml
+      - run: uv run python -m app.cli replay-fixtures
+      - run: uv run python ../scripts/smoke_demo.py
+        env:
+          PYTHONPATH: .
+          APP_ENV: 'local'
+          DEMO_MODE: 'true'
+      - name: Logical backup and clean restore drill
+        run: |
+          docker exec ${{ job.services.postgres.id }} pg_dump -U staffer -d staffer_test -Fc --no-owner > "$RUNNER_TEMP/staffer.dump"
+          docker exec ${{ job.services.postgres.id }} createdb -U staffer staffer_restore
+          docker exec -i ${{ job.services.postgres.id }} pg_restore -U staffer -d staffer_restore --no-owner --exit-on-error < "$RUNNER_TEMP/staffer.dump"
+          uv run python ../scripts/check_restore.py
+        env:
+          RESTORE_DATABASE_URL: postgresql+psycopg://staffer:ci-only-password@127.0.0.1:5432/staffer_restore
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: backend-test-results
+          path: backend/test-results.xml
+  flutter:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      CI: 'true'
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+          cache: true
+      - run: flutter --suppress-analytics pub get --enforce-lockfile
+      - run: flutter --suppress-analytics analyze
+      - run: flutter --suppress-analytics test
+      - name: Windows release compilation (unsigned)
+        if: runner.os == 'Windows'
+        run: flutter --suppress-analytics build windows --release
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: runner.os == 'Windows'
+        with:
+          name: personal-staffer-windows-unsigned
+          path: client/build/windows/x64/runner/Release/
+  android:
+    runs-on: ubuntu-latest
+    env:
+      CI: 'true'
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+      - run: flutter --suppress-analytics pub get --enforce-lockfile
+      - name: Compile development APK (not a signed private distribution)
+        run: flutter --suppress-analytics build apk --debug
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: personal-staffer-android-debug
+          path: client/build/app/outputs/flutter-apk/app-debug.apk

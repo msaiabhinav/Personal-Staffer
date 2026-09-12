@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-09-12T04:55:09.314903+00:00",
+  "source_type": "ashby",
+  "tenant": "ramp",
+  "mechanism": "production-dns-pinned-SafeHTTPClient",
+  "health": {
+    "source_type": "ashby",
+    "state": "FAILED",
+    "last_success_at": null,
+    "last_error": {
+      "code": "DNS_UNAVAILABLE",
+      "message": "Public source DNS resolution failed",
+      "retryable": true,
+      "http_status": null,
+      "retry_after": null
+    },
+    "retry_after": null
+  },
+  "result": {
+    "candidates": [],
+    "next_cursor": null,
+    "coverage": {
+      "complete_listing": false
+    },
+    "errors": [
+      {
+        "code": "DNS_UNAVAILABLE",
+        "message": "Public source DNS resolution failed",
+        "retryable": true,
+        "http_status": null,
+        "retry_after": null
+      }
+    ],
+    "source_timestamp": "2026-09-12T04:55:09.314896Z"
+  }
+}

@@ -1,0 +1,2 @@
+# Preserve exact captured command output; source files still receive whitespace checks.
+docs/verification/*.log -whitespace

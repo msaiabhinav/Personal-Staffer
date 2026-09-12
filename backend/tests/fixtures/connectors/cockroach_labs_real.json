@@ -1,0 +1,68 @@
+{
+  "provenance": {
+    "employer_name": "Cockroach Labs",
+    "pool_candidate": "NYC_CANDIDATE",
+    "source_type": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/cockroachlabs/jobs?content=true",
+    "observed_at": "2026-09-12T04:31:51.349908+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 257714,
+    "final_url": "https://boards-api.greenhouse.io/v1/boards/cockroachlabs/jobs?content=true",
+    "content_type": "application/json",
+    "raw_sha256": "675af68b2c3597b01c7d88ae9b2257edc8597fec9e27212f5029d5a6184524d5",
+    "outcome": "FETCHED",
+    "job_count": 20,
+    "with_description": 20,
+    "with_published": 20
+  },
+  "job": {
+    "absolute_url": "https://www.cockroachlabs.com/careers/job/?gh_jid=8079608",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "education": "education_optional",
+    "internal_job_id": 3500423,
+    "location": {
+      "name": "New York, NY"
+    },
+    "metadata": null,
+    "id": 8079608,
+    "updated_at": "2026-07-28T13:56:58-04:00",
+    "requisition_id": "REV468",
+    "title": "Deal Desk Manager, AMER",
+    "company_name": "Cockroach Labs",
+    "first_published": "2026-07-28T13:56:58-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;div class=&quot;job-post-container&quot; style=&quot;position: relative; background-color: white; padding: 20px; max-width: 1000px; margin: 0 auto; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); min-height: 500px; border: 5px solid #0037A5;&quot;&gt;\n&lt;div style=&quot;position: absolute; top: 0; left: 2; width: 200px; height: 300px; margin-top: 30px; opacity: 1; z-index: 1;&quot;&gt;&amp;nbsp;&lt;/div&gt;\n&lt;div class=&quot;job-post-content&quot; style=&quot;position: relative; z-index: 2;&quot;&gt;\n&lt;h1 style=&quot;font-family: Arial, sans-serif; color: #333; line-height: 1.2; margin-top: 20px;&quot;&gt;&lt;img style=&quot;max-width: 100%;&quot; src=&quot;https://cdn.builtin.com/cdn-cgi/image/f=auto,fit=contain,w=200,h=200,q=100/https://builtinaustin.com/sites/www.builtinaustin.com/files/2024-02/Cockroach%20Labs%20logo.png&quot; alt=&quot;&quot; width=&quot;71&quot;&gt;&lt;/h1&gt;\n&lt;h1 style=&quot;text-align: center;&quot;&gt;Category-defining tech.&amp;nbsp;Career-defining work.&lt;/h1&gt;\n&lt;p style=&quot;text-align: center;&quot;&gt;Lots of tech companies disrupt. But, many fail when they try to scale. We&#39;re different. CockroachDB makes it easier for companies to build and scale apps. This is how and why we&#39;re helping some of the most innovative companies on the planet. We tackle problems head-on and focus on solutions that create lasting impact.&amp;nbsp;&lt;/p&gt;\n&lt;h3 style=&quot;text-align: center;&quot;&gt;Because when our customers win, we all win.&amp;nbsp;&lt;/h3&gt;\n&lt;p&gt;&amp;nbsp;&lt;/p&gt;\n&lt;hr&gt;\n&lt;h2&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;strong&gt;The Role&lt;/strong&gt;&lt;/span&gt;&lt;/h2&gt;\n&lt;p&gt;This high-visibility position as a Deal Desk Manager will lead the strategy, execution, and continuous improvement of Cockroach Labs&#39; deal desk function. Reporting to the Director, Commercial Operations, you&#39;ll serve as a trusted strategic advisor to sales leadership on our largest, most complex, and non-standard transactions \u2014 balancing deal velocity with sound commercial and financial judgment.&lt;/p&gt;\n&lt;p&gt;Beyond structuring individual deals, you&#39;ll own the deal desk playbook: the pricing guardrails, approval workflows, and cross-functional processes that scale as we grow. You&#39;ll partner closely with Legal, Finance, Product Management, Marketing, and Professional Services to drive high-stakes deals across the finish line. This role involves extensive interaction with senior executives and requires someone highly motivated, detail-oriented, and comfortable operating with autonomy in a fast-paced, high-growth environment.&lt;/p&gt;\n&lt;h2&gt;&lt;strong&gt;You Will&lt;/strong&gt;&lt;/h2&gt;\n&lt;ul&gt;\n&lt;li&gt;Serve as the primary point of escalation and strategic advisor for complex, high-value, and non-standard deal structures, guiding the sales organization from opportunity to close&lt;/li&gt;\n&lt;li&gt;Own and continuously improve deal desk processes, pricing frameworks, approval matrices, and quote-to-cash workflows to increase deal velocity without sacrificing governance&lt;/li&gt;\n&lt;li&gt;Partner cross-functionally with Legal, Finance, Product, Marketing, and Professional Services to structure commercially sound, operationally executable agreements&lt;/li&gt;\n&lt;li&gt;Establish and enforce deal governance, pricing policy, and discounting guardrails, and advise leadership on exceptions and their downstream impact&lt;/li&gt;\n&lt;li&gt;Provide deal structuring guidance that maximizes revenue, margin, and strategic value while managing risk&lt;/li&gt;\n&lt;li&gt;Develop reporting and analytics on deal trends, cycle times, discounting, and desk performance to inform GTM leadership decisions&lt;/li&gt;\n&lt;li&gt;Drive enablement for the sales organization on deal structuring best practices, pricing, and approval processes&lt;/li&gt;\n&lt;li&gt;Champion continuous improvement of CPQ and deal desk tooling in partnership with Revenue Operations&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h2&gt;&lt;strong&gt;The Expectations&lt;/strong&gt;&lt;/h2&gt;\n&lt;p&gt;In your first 30 days, you will complete general and sales onboarding programs, familiarize yourself with our message and product, and get an in-depth understanding of current revenue operations and systems.&lt;/p&gt;\n&lt;p&gt;In your first 60 days, you will gain hands-on experience with our systems (particularly Salesforce), processing procedures, and the Deal Desk workflow. Begin assisting with and processing standard requests.&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;After 90 days, you will independently manage all deal desk requests and contribute to cross-functional&amp;nbsp;projects and team initiatives.&amp;nbsp;&lt;/p&gt;\n&lt;h2&gt;&lt;strong&gt;You Have&lt;/strong&gt;&lt;/h2&gt;\n&lt;ul&gt;\n&lt;li&gt;8-12+ years of experience in Deal Desk, financial analysis, sales operations, revenue operations, pricing, or related fields, including experience with complex deal structuring&lt;/li&gt;\n&lt;li&gt;Demonstrated ability to influence and build trust with senior sales and cross-functional leaders&lt;/li&gt;\n&lt;li&gt;Experience defining and scaling deal desk processes, policies, and governance in a high-growth environment&lt;/li&gt;\n&lt;li&gt;Strong customer-focused attitude with a proactive and energetic work ethic&lt;/li&gt;\n&lt;li&gt;Excellent communication and interpersonal skills, with the ability to distill complexity for executive audiences&lt;/li&gt;\n&lt;li&gt;Superior organizational skills with the ability to manage multiple high-priority deals with attention to detail&lt;/li&gt;\n&lt;li&gt;Comfortable in a dynamic, fast-paced, high-growth technology environment&lt;/li&gt;\n&lt;li&gt;Bachelor&#39;s degree (BA or BS) required&lt;/li&gt;\n&lt;li&gt;Proficiency in Salesforce CRM; experience with Salesforce CPQ strongly preferred&lt;/li&gt;\n&lt;/ul&gt;\n&lt;hr&gt;\n&lt;p&gt;Cockroach Labs is proud to be an Equal Opportunity Employer building a diverse and inclusive workforce. If you need additional accommodations to feel comfortable during your interview process, please email us at &lt;a href=&quot;mailto:accessibility@cockroachlabs.com&quot;&gt;accessibility@cockroachlabs.com&lt;/a&gt;.&lt;/p&gt;\n&lt;p&gt;Cockroach Labs has a hybrid work model, with Roachers that are local to one of our offices coming in on Mondays, Tuesdays, and Thursdays and working flexibly the rest of the week. While we\u2019ve learned valuable lessons working remotely, nothing can replace the connection, creativity, and fun that occurs when Roachers get together and we are committed to fostering a workplace that encourages collaboration and allows us all to do our best work.&lt;/p&gt;\n&lt;hr&gt;\n&lt;h1&gt;Benefits&lt;/h1&gt;\n&lt;ul&gt;\n&lt;li&gt;Stock Options&lt;/li&gt;\n&lt;li&gt;Medical Insurance&lt;/li&gt;\n&lt;li&gt;Vision Insurance&lt;/li&gt;\n&lt;li&gt;Dental Insurance&lt;/li&gt;\n&lt;li&gt;Life and Disability Insurance&lt;/li&gt;\n&lt;li&gt;Professional Development Funds&lt;/li&gt;\n&lt;li&gt;Flexible Time Off&lt;/li&gt;\n&lt;li&gt;Paid Holidays&lt;/li&gt;\n&lt;li&gt;Paid Sick Days&lt;/li&gt;\n&lt;li&gt;Paid Parental Leave&lt;/li&gt;\n&lt;li&gt;Retirement Benefits&lt;/li&gt;\n&lt;li&gt;Mental Wellbeing Benefits&lt;/li&gt;\n&lt;li&gt;And more!&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/div&gt;\n&lt;/div&gt;&lt;div class=&quot;content-pay-transparency&quot;&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;description&quot;&gt;&lt;p&gt;The annual anticipated base salary range for U.S. candidates for this role is listed in USD below. Salary is one component of the Cockroach Labs\u2019 Total Rewards package, which also includes, for each employee: stock options, medical insurance, vision insurance, dental insurance, life and disability insurance, funds towards professional development resources, flexible paid time off, 11 paid holidays a year, 10 paid sick days a year, paid parental leave, a 401(k) plan, and wellbeing benefits.&amp;nbsp;&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;We set standard ranges for all U.S.-based roles based on function, level, and geographic location, benchmarked against similar stage growth companies. Actual salaries may vary and fall outside of this range depending on factors such as a candidate\u2019s qualifications, geographic location, skills, experience, and competencies. In addition, we are often open to a wide variety of profiles, and recognize that the person we hire may be less experienced (or more senior) than this job description as posted.&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;Salaries for candidates outside the U.S. will vary based on local compensation structures.&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;This position will remain posted until filled. Applicants should apply via our Careers Page.&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;title&quot;&gt;Annual Anticipated Base Salary Range (U.S)&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$142,000&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$185,000 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;",
+    "departments": [
+      {
+        "id": 16414,
+        "name": "Sales",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "offices": [
+      {
+        "id": 10692,
+        "name": "New York, NY",
+        "location": "New York, NY, United States",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "ai_disclaimer": null,
+    "include_ai_disclaimer": null,
+    "ai_opt_out_request_url": null
+  }
+}

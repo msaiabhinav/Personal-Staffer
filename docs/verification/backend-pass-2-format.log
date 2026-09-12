@@ -1,0 +1,73 @@
+unformatted: File would be reformatted
+   --> /workspace/scratch/6135d527c987/Personal-Staffer-local/scripts/backup.py:56:12
+    |
+55  |     for key, value in options:
+    -         if (
+    -             key not in TLS_OPTIONS
+    -             or key in seen
+    -             or not value
+    -             or any(c in value for c in "\r\n\x00")
+    -         ):
+56  +         if key not in TLS_OPTIONS or key in seen or not value or any(c in value for c in "\r\n\x00"):
+57  |             raise ValueError("Unsupported or duplicated PostgreSQL connection option")
+--------------------------------------------------------------------------------
+64  |         for k, v in os.environ.items()
+    -         if not k.startswith(
+    -             ("PG", "GOOGLE_", "TOKEN_ENCRYPTION_", "PEOPLE_", "USAJOBS_", "FCM_")
+    -         )
+65  +         if not k.startswith(("PG", "GOOGLE_", "TOKEN_ENCRYPTION_", "PEOPLE_", "USAJOBS_", "FCM_"))
+66  |         and k not in {"DATABASE_URL", "RESTORE_DATABASE_URL"}
+--------------------------------------------------------------------------------
+88  |         ]
+    -         with open(
+    -             path, "x", opener=lambda name, flags: os.open(name, flags, 0o600)
+    -         ) as stream:
+89  +         with open(path, "x", opener=lambda name, flags: os.open(name, flags, 0o600)) as stream:
+90  |             stream.write(":".join(escape(value) for value in fields) + "\n")
+--------------------------------------------------------------------------------
+96  |     # A different database name is mandatory even if the host is another alias.
+    -     if (
+    -         not target["PGDATABASE"].endswith("_restore")
+    -         or target["PGDATABASE"] == source["PGDATABASE"]
+    -     ):
+    -         raise ValueError(
+    -             "Restore requires a separate database whose name ends in _restore"
+    -         )
+97  +     if not target["PGDATABASE"].endswith("_restore") or target["PGDATABASE"] == source["PGDATABASE"]:
+98  +         raise ValueError("Restore requires a separate database whose name ends in _restore")
+99  |
+--------------------------------------------------------------------------------
+106 |     if not os.getenv("RESTIC_REPOSITORY") or not os.getenv("RESTIC_PASSWORD_FILE"):
+    -         raise SystemExit(
+    -             "Configure an off-server RESTIC_REPOSITORY and protected RESTIC_PASSWORD_FILE"
+    -         )
+107 +         raise SystemExit("Configure an off-server RESTIC_REPOSITORY and protected RESTIC_PASSWORD_FILE")
+108 |     if args.operation == "backup":
+--------------------------------------------------------------------------------
+129 |         subprocess.run(["restic", "check"], check=True)
+    -         print(
+    -             "Encrypted backup completed and repository checked. Restore verification is separate."
+    -         )
+130 +         print("Encrypted backup completed and repository checked. Restore verification is separate.")
+131 |     else:
+--------------------------------------------------------------------------------
+136 |         validate_restore_target(source_url, restore_url)
+    -         if args.snapshot != "latest" and not re.fullmatch(
+    -             r"[a-fA-F0-9]{8,64}", args.snapshot
+    -         ):
+137 +         if args.snapshot != "latest" and not re.fullmatch(r"[a-fA-F0-9]{8,64}", args.snapshot):
+138 |             raise SystemExit("Snapshot must be latest or a hexadecimal snapshot ID")
+--------------------------------------------------------------------------------
+168 |             if producer.wait() or consumer.returncode:
+    -                 raise SystemExit(
+    -                     "Restore failed; inspect isolated target before proceeding"
+    -                 )
+    -         print(
+    -             "Restored to isolated target. Keep workers stopped until invariants and outbox history are verified."
+    -         )
+169 +                 raise SystemExit("Restore failed; inspect isolated target before proceeding")
+170 +         print("Restored to isolated target. Keep workers stopped until invariants and outbox history are verified.")
+171 |
+    |
+
+1 file would be reformatted, 110 files already formatted

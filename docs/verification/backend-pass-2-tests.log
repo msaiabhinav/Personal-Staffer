@@ -1,0 +1,73 @@
+...........ssssssss..................................................... [ 15%]
+...........................................sssssssssssssssssssss........ [ 31%]
+........................................................................ [ 47%]
+........................................................................ [ 63%]
+..........ss..............sss........................................... [ 79%]
+....ssssssss.............................................sss............ [ 95%]
+..............ssssss                                                     [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/scratch/6135d527c987/Personal-Staffer-local/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /workspace/scratch/6135d527c987/Personal-Staffer-local/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5
+  /workspace/scratch/6135d527c987/Personal-Staffer-local/backend/.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+    from ._compat import httpx2
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_auth_email_people_postgres.py:129: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:162: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:177: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:236: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:275: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:290: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:301: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_auth_email_people_postgres.py:312: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:103: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:146: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:154: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:176: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:193: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:226: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:248: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_core.py:265: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [2] tests/test_database_corrections.py:67: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_corrections.py:126: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_corrections.py:159: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:35: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:59: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:80: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:104: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:135: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_database_notifications.py:179: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_demo_database.py:48: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_demo_database.py:81: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_demo_database.py:89: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_email_orchestration_database.py:18: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_email_orchestration_database.py:38: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_email_security_database.py:20: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_email_security_database.py:34: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_email_security_database.py:63: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:133: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:162: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:181: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:202: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:214: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:253: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:286: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_reports_database.py:306: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_source_orchestration_database.py:98: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_source_orchestration_database.py:112: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_source_orchestration_database.py:139: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:17: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:38: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:62: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:77: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:92: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+SKIPPED [1] tests/test_workers_database.py:110: TEST_DATABASE_URL is not configured; PostgreSQL behavioral checks were not executed
+401 passed, 51 skipped, 3 warnings in 4.73s

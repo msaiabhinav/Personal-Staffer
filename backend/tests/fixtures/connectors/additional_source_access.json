@@ -1,0 +1,482 @@
+[
+  {
+    "source_type": "lever",
+    "source_url": "https://api.lever.co/v0/postings/spotify?mode=json&limit=2",
+    "checked_at": "2026-09-12T04:46:31.115131+00:00",
+    "synthetic": false,
+    "mechanism": "managed-environment-egress-feasibility-probe",
+    "status": 200,
+    "bytes": 19724,
+    "sha256": "56f4d333cc65efc89bfaa3a233efa8a01c3f076f33f16ce7a269a92ef68db42d",
+    "payload": [
+      {
+        "additionalPlain": "Spotify is an equal opportunity employer. You are welcome at Spotify for who you are, no matter where you come from, what you look like, or what\u2019s playing in your headphones. Our platform is for everyone, and so is our workplace. The more voices we have represented and amplified in our business, the more we will all thrive, contribute, and be forward-thinking! So bring us your personal experience, your perspectives, and your background. It\u2019s in our differences that we will find the power to keep revolutionizing the way the world listens.\n\u00a0\nAt Spotify, we are passionate about inclusivity and making sure our entire recruitment process is accessible to everyone. We have ways to request reasonable accommodations during the interview process and help assist in what you need. If you need accommodations at any stage of the application or interview process, please let us know - we\u2019re here to support you in any way we can.\n\u00a0\n",
+        "additional": "<div><span style=\"font-size: 11pt;\">Spotify is an equal opportunity employer. You are welcome at Spotify for who you are, no matter where you come from, what you look like, or what\u2019s playing in your headphones. Our platform is for everyone, and so is our workplace. The more voices we have represented and amplified in our business, the more we will all thrive, contribute, and be forward-thinking! So bring us your personal experience, your perspectives, and your background. It\u2019s in our differences that we will find the power to keep revolutionizing the way the world listens.</span></div>\n<div>&nbsp;</div>\n<div><span style=\"font-size: 11pt;\">At Spotify, we are passionate about inclusivity and making sure our entire recruitment process is accessible to everyone. We have ways to request reasonable accommodations during the interview process and help assist in what you need. If you need accommodations at any stage of the application or interview process, please let us know - we\u2019re here to support you in any way we can.</span></div>\n<div>&nbsp;</div>",
+        "categories": {
+          "commitment": "Permanent",
+          "department": "Engineering",
+          "location": "London",
+          "team": "Experience",
+          "allLocations": [
+            "London",
+            "Stockholm"
+          ]
+        },
+        "createdAt": 1782214185805,
+        "descriptionPlain": "We design Spotify\u2019s consumer experience\u2014end to end, moment to moment, across every screen, platform, and partner integration. Our mission is to make listening feel effortless, personal, and joyful for billions of users around the world. That means turning complexity into clarity across hundreds of touchpoints\u2014from our mobile and desktop apps to the smart speakers, TVs, cars, and integrations where Spotify shows up every day. If it touches a consumer, we shape it. We bring deep insight into human behavior, design, and technology to craft experiences that feel intuitive, expressive, and unmistakably Spotify.\nThe Stream Reporting team is responsible for capturing and processing the consumption signals that power some of Spotify\u2019s most important experiences and business functions. Our systems help ensure accurate royalty reporting, support experimentation and analytics, and provide trusted data that informs recommendations and personalization across Spotify.\nWe\u2019re looking for an Android Engineer to join a highly collaborative team working at the intersection of mobile development, data, and platform systems. This is an opportunity to build software that operates at Spotify scale and helps power experiences used by millions of listeners every day. You\u2019ll help shape how listening and engagement signals are captured across Spotify\u2019s mobile experiences and transformed into trusted datasets used throughout the company.\n\u00a0\n",
+        "description": "<div>\n<p>We design Spotify\u2019s consumer experience\u2014end to end, moment to moment, across every screen, platform, and partner integration. Our mission is to make listening feel effortless, personal, and joyful for billions of users around the world. That means turning complexity into clarity across hundreds of touchpoints\u2014from our mobile and desktop apps to the smart speakers, TVs, cars, and integrations where Spotify shows up every day. If it touches a consumer, we shape it. We bring deep insight into human behavior, design, and technology to craft experiences that feel intuitive, expressive, and unmistakably Spotify.</p>\n<p>The Stream Reporting team is responsible for capturing and processing the consumption signals that power some of Spotify\u2019s most important experiences and business functions. Our systems help ensure accurate royalty reporting, support experimentation and analytics, and provide trusted data that informs recommendations and personalization across Spotify.</p>\n<p>We\u2019re looking for an Android Engineer to join a highly collaborative team working at the intersection of mobile development, data, and platform systems. This is an opportunity to build software that operates at Spotify scale and helps power experiences used by millions of listeners every day. You\u2019ll help shape how listening and engagement signals are captured across Spotify\u2019s mobile experiences and transformed into trusted datasets used throughout the company.</p>\n<div>&nbsp;</div>\n</div>",
+        "id": "2193db3f-77c5-43b8-b030-8f92c9882bf1",
+        "lists": [
+          {
+            "text": "What You'll Do",
+            "content": "<div>\n\n<li>\n<p>Develop and maintain mobile client components that capture and report listening and user behavior signals across Spotify.</p>\n</li>\n<li>\n<p>Build high-quality, well-tested, and well-documented Kotlin code that contributes to business-critical datasets used for royalty reporting, analytics, experimentation, and personalization.</p>\n</li>\n<li>\n<p>Collaborate with engineers across Android, iOS, backend, and data teams to deliver end-to-end solutions.</p>\n</li>\n<li>\n<p>Help improve the architecture, reliability, and quality of the systems used to collect and process user behavior signals.</p>\n</li>\n<li>\n<p>Contribute to new capabilities that enable Spotify to capture richer listening and engagement signals across evolving product experiences.</p>\n</li>\n<li>\n<p>Drive technical improvements that make it easier for teams across Spotify to add, validate, and maintain event reporting integrations.</p>\n</li>\n<li>\n<p>Use modern AI-assisted engineering tools and workflows to improve productivity and software quality.</p>\n</li>\n<li>\n<p>Contribute to a culture of continuous learning, knowledge sharing, and technical excellence.</p>\n</li>\n\n</div>"
+          },
+          {
+            "text": "Who You Are",
+            "content": "<div>\n\n<li>\n<p>You have experience developing Android and iOS applications using Kotlin using Swift or Objective-C</p>\n</li>\n<li>You have solid experience as a Engingeer I</li>\n<li>\n<p>You know how to build maintainable, scalable, and well-tested software systems.</p>\n</li>\n<li>\n<p>You are comfortable working within large codebases and can quickly learn unfamiliar domains and technologies.</p>\n</li>\n<li>\n<p>You have experience collaborating with engineers and stakeholders across multiple teams.</p>\n</li>\n<li>\n<p>You care about code quality, testing, documentation, and long-term maintainability.</p>\n</li>\n<li>\n<p>You demonstrate curiosity, ownership, and a willingness to step outside your immediate area of expertise when needed.</p>\n</li>\n<li>\n<p>You are comfortable using modern development tooling, including AI-assisted coding solutions.</p>\n</li>\n<li>\n<p>You thrive in environments where learning and long-term growth are valued.</p>\n</li>\n<li>\n<p>You might have experience with C++ and understand how native code integrates with Android and iOS applications.</p>\n</li>\n<li>\n<p>You might have familiarity with SQL, analytics systems, or data engineering concepts.</p>\n</li>\n<li>\n<p>You have experience with instrumentation, telemetry, event collection, or large-scale client-side data systems.</p>\n</li>\n<li>\n<p>You have worked on mobile applications that operate at significant scale and reliability requirements.</p>\n</li>\n\n</div>"
+          },
+          {
+            "text": "Where You'll Be",
+            "content": "<div>\n\n<li>\n<p>This role is based in London or Stockholm.</p>\n</li>\n<li>\n<p>We offer you the flexibility to work where you work best! There will be some in person meetings, but still allows for flexibility to work from home.</p>\n</li>\n\n<br><br></div>"
+          }
+        ],
+        "text": "Android Engineer - Experience",
+        "country": "GB",
+        "workplaceType": "hybrid",
+        "opening": "",
+        "openingPlain": "",
+        "descriptionBody": "<div>\n<p>We design Spotify&rsquo;s consumer experience&mdash;end to end, moment to moment, across every screen, platform, and partner integration. Our mission is to make listening feel effortless, personal, and joyful for billions of users around the world. That means turning complexity into clarity across hundreds of touchpoints&mdash;from our mobile and desktop apps to the smart speakers, TVs, cars, and integrations where Spotify shows up every day. If it touches a consumer, we shape it. We bring deep insight into human behavior, design, and technology to craft experiences that feel intuitive, expressive, and unmistakably Spotify.</p>\n<p>The Stream Reporting team is responsible for capturing and processing the consumption signals that power some of Spotify&rsquo;s most important experiences and business functions. Our systems help ensure accurate royalty reporting, support experimentation and analytics, and provide trusted data that informs recommendations and personalization across Spotify.</p>\n<p>We&rsquo;re looking for an Android Engineer to join a highly collaborative team working at the intersection of mobile development, data, and platform systems. This is an opportunity to build software that operates at Spotify scale and helps power experiences used by millions of listeners every day. You&rsquo;ll help shape how listening and engagement signals are captured across Spotify&rsquo;s mobile experiences and transformed into trusted datasets used throughout the company.</p>\n<div>&nbsp;</div>\n</div>",
+        "descriptionBodyPlain": "We design Spotify\u2019s consumer experience\u2014end to end, moment to moment, across every screen, platform, and partner integration. Our mission is to make listening feel effortless, personal, and joyful for billions of users around the world. That means turning complexity into clarity across hundreds of touchpoints\u2014from our mobile and desktop apps to the smart speakers, TVs, cars, and integrations where Spotify shows up every day. If it touches a consumer, we shape it. We bring deep insight into human behavior, design, and technology to craft experiences that feel intuitive, expressive, and unmistakably Spotify.\nThe Stream Reporting team is responsible for capturing and processing the consumption signals that power some of Spotify\u2019s most important experiences and business functions. Our systems help ensure accurate royalty reporting, support experimentation and analytics, and provide trusted data that informs recommendations and personalization across Spotify.\nWe\u2019re looking for an Android Engineer to join a highly collaborative team working at the intersection of mobile development, data, and platform systems. This is an opportunity to build software that operates at Spotify scale and helps power experiences used by millions of listeners every day. You\u2019ll help shape how listening and engagement signals are captured across Spotify\u2019s mobile experiences and transformed into trusted datasets used throughout the company.\n\u00a0\n",
+        "hostedUrl": "https://jobs.lever.co/spotify/2193db3f-77c5-43b8-b030-8f92c9882bf1",
+        "applyUrl": "https://jobs.lever.co/spotify/2193db3f-77c5-43b8-b030-8f92c9882bf1/apply"
+      },
+      {
+        "additionalPlain": "Spotify is an equal opportunity employer. You are welcome at Spotify for who you are, no matter where you come from, what you look like, or what\u2019s playing in your headphones. Our platform is for everyone, and so is our workplace. The more voices we have represented and amplified in our business, the more we will all thrive, contribute, and be forward-thinking! So bring us your personal experience, your perspectives, and your background. It\u2019s in our differences that we will find the power to keep revolutionizing the way the world listens.\n\u00a0\nAt Spotify, we are passionate about inclusivity and making sure our entire recruitment process is accessible to everyone. We have ways to request reasonable accommodations during the interview process and help assist in what you need. If you need accommodations at any stage of the application or interview process, please let us know - we\u2019re here to support you in any way we can.\n\u00a0\nSpotify transformed music listening forever when we launched in 2008. Our mission is to unlock the potential of human creativity by giving a million creative artists the opportunity to live off their art and billions of fans the chance to enjoy and be passionate about these creators. Everything we do is driven by our love for music and podcasting. Today, we are the world\u2019s most popular audio streaming subscription service.\n",
+        "additional": "<div>Spotify is an equal opportunity employer. You are welcome at Spotify for who you are, no matter where you come from, what you look like, or what\u2019s playing in your headphones. Our platform is for everyone, and so is our workplace. The more voices we have represented and amplified in our business, the more we will all thrive, contribute, and be forward-thinking! So bring us your personal experience, your perspectives, and your background. It\u2019s in our differences that we will find the power to keep revolutionizing the way the world listens.</div>\n<div>&nbsp;</div>\n<div>At Spotify, we are passionate about inclusivity and making sure our entire recruitment process is accessible to everyone. We have ways to request reasonable accommodations during the interview process and help assist in what you need. If you need accommodations at any stage of the application or interview process, please let us know - we\u2019re here to support you in any way we can.</div>\n<div>&nbsp;</div>\n<div>Spotify transformed music listening forever when we launched in 2008. Our mission is to unlock the potential of human creativity by giving a million creative artists the opportunity to live off their art and billions of fans the chance to enjoy and be passionate about these creators. Everything we do is driven by our love for music and podcasting. Today, we are the world\u2019s most popular audio streaming subscription service.</div>",
+        "categories": {
+          "commitment": "Short Term",
+          "department": "Content",
+          "location": "Ho Chi Minh",
+          "team": "Music Business",
+          "allLocations": [
+            "Ho Chi Minh"
+          ]
+        },
+        "createdAt": 1787802187805,
+        "descriptionPlain": "Spotify is looking for a short-term contractor for the Artist & Label Partnerships team in Vietnam.\u00a0\nThe Artist & Label Partnerships team are the face of Spotify to artists, managers, labels & distributors. Focusing on the Vietnamese music landscape, this role will serve as the point of contact for record labels, distributors and artists, ensuring that artists & their teams are familiar with Spotify standard methodologies, resources and tools. The role will closely support the cross-functional teams with on-platform promotion and off-platform artist marketing. \n\nPlease note this is a fixed-term, 6 months, contractor role hired through a third party.\n",
+        "description": "<div>\n<p>Spotify is looking for a short-term contractor for the Artist &amp; Label Partnerships team in Vietnam.&nbsp;</p>\n<p>The Artist &amp; Label Partnerships team are the face of Spotify to artists, managers, labels &amp; distributors. Focusing on the Vietnamese music landscape, this role will serve as the point of contact for record labels, distributors and artists, ensuring that artists &amp; their teams are familiar with Spotify standard methodologies, resources and tools. The role will closely support the cross-functional teams with on-platform promotion and off-platform artist marketing. <br><br></p>\n<p>Please note this is a fixed-term, 6 months, contractor role hired through a third party.</p>\n</div>",
+        "id": "d87833d0-fb78-4794-b45d-3fe5c8274bc8",
+        "lists": [
+          {
+            "text": "What You'll Do",
+            "content": "\n<li>Maintain positive partnerships across artist and label communities within Vietnam.</li>\n<li>Support our key partners in Vietnam on Spotify tools, resources and insights.</li>\n<li>Work closely with our cross functional teams to support artists and labels on priority releases in Vietnam</li>\n<li>Collaborate with the regional Music team to ensure content strategies are localized and successfully executed.</li>\n<li>Ensure Spotify has the best possible content offering in Vietnam and use this to further Spotify\u2019s appeal to existing and new users.</li>\n"
+          },
+          {
+            "text": "Who You Are",
+            "content": "\n<li>You have at least 3+ years of working experience in the music/entertainment industry. Regional and global experience would be an added advantage.&nbsp;</li>\n<li>Extremely well organized, dedicated with the ability to plan, deliver on tight deadlines and pay outstanding attention to detail.</li>\n<li>You have a deep understanding and established network within the local music industry in Vietnam and have built relevant contacts with labels and artists to effectively collaborate with the community.</li>\n<li>You have a strong background in music and technology and a consistent record with operations.</li>\n<li>You have a strong grasp of content knowledge, music and cultural trends, artists, user engagement and behaviors.&nbsp;</li>\n<li>You have excellent stakeholder management skills.&nbsp;</li>\n<li>You have experience working within Vietnam and ideally across multiple markets within regional and global teams.</li>\n<li>You are very fluent in written and spoken English and Vietnamese.&nbsp;</li>\n<li>And finally, a great teammate, adapt well to change, and always have a positive demeanor.</li>\n"
+          },
+          {
+            "text": "Where You'll Be",
+            "content": "\n<li>This contract is based in Ho Chi Minh City, Vietnam.</li>\n"
+          }
+        ],
+        "text": "Artist & Label Partnerships Contractor, Vietnam",
+        "country": "VN",
+        "workplaceType": "hybrid",
+        "opening": "",
+        "openingPlain": "",
+        "descriptionBody": "<div>\n<p>Spotify is looking for a short-term contractor for the Artist &amp; Label Partnerships team in Vietnam.&nbsp;</p>\n<p>The Artist &amp; Label Partnerships team are the face of Spotify to artists, managers, labels &amp; distributors. Focusing on the Vietnamese music landscape, this role will serve as the point of contact for record labels, distributors and artists, ensuring that artists &amp; their teams are familiar with Spotify standard methodologies, resources and tools. The role will closely support the cross-functional teams with on-platform promotion and off-platform artist marketing. <br><br></p>\n<p>Please note this is a fixed-term, 6 months, contractor role hired through a third party.</p>\n</div>",
+        "descriptionBodyPlain": "Spotify is looking for a short-term contractor for the Artist & Label Partnerships team in Vietnam.\u00a0\nThe Artist & Label Partnerships team are the face of Spotify to artists, managers, labels & distributors. Focusing on the Vietnamese music landscape, this role will serve as the point of contact for record labels, distributors and artists, ensuring that artists & their teams are familiar with Spotify standard methodologies, resources and tools. The role will closely support the cross-functional teams with on-platform promotion and off-platform artist marketing. \n\nPlease note this is a fixed-term, 6 months, contractor role hired through a third party.\n",
+        "hostedUrl": "https://jobs.lever.co/spotify/d87833d0-fb78-4794-b45d-3fe5c8274bc8",
+        "applyUrl": "https://jobs.lever.co/spotify/d87833d0-fb78-4794-b45d-3fe5c8274bc8/apply"
+      }
+    ]
+  },
+  {
+    "source_type": "smartrecruiters",
+    "source_url": "https://api.smartrecruiters.com/v1/companies/Visa/postings?limit=2",
+    "checked_at": "2026-09-12T04:46:31.115899+00:00",
+    "synthetic": false,
+    "mechanism": "managed-environment-egress-feasibility-probe",
+    "status": 200,
+    "bytes": 50,
+    "sha256": "7886499ba3c6bd4fca03725a3924048d047b2e22781a37eee3376781f89c2e5e",
+    "payload": {
+      "offset": 0,
+      "limit": 2,
+      "totalFound": 0,
+      "content": []
+    }
+  },
+  {
+    "source_type": "workday",
+    "source_url": "https://analogdevices.wd1.myworkdayjobs.com/wday/cxs/analogdevices/External/jobs",
+    "checked_at": "2026-09-12T04:46:31.116428+00:00",
+    "synthetic": false,
+    "mechanism": "managed-environment-egress-feasibility-probe",
+    "status": 200,
+    "bytes": 6015,
+    "sha256": "1fb47d4d5e2cd9b281f6e1fca045633db1905506580da8986998ea6e6806bf93",
+    "payload": {
+      "total": 259,
+      "jobPostings": [
+        {
+          "title": "Analyst",
+          "externalPath": "/job/India-Gandhinagar/Analyst_R263454-1",
+          "locationsText": "India, Gandhinagar",
+          "postedOn": "Posted 17 Days Ago",
+          "bulletFields": [
+            "R263454"
+          ]
+        },
+        {
+          "title": "Lead Analyst",
+          "externalPath": "/job/Philippines-Cavite-jp/Lead-Analyst_R263154",
+          "locationsText": "Philippines, Cavite (jp)",
+          "postedOn": "Posted 30+ Days Ago",
+          "bulletFields": [
+            "R263154"
+          ]
+        }
+      ],
+      "facets": [
+        {
+          "facetParameter": "jobFamilyGroup",
+          "descriptor": "Job Category",
+          "values": [
+            {
+              "descriptor": "Product Development > Products",
+              "id": "633b03df4f5d1000ec243f6e4cb40001",
+              "count": 37
+            },
+            {
+              "descriptor": "Operations > Manufacturing Engineering",
+              "id": "d7b302590627100dddeb034354610000",
+              "count": 35
+            },
+            {
+              "descriptor": "Product Development > Electronics Design",
+              "id": "633b03df4f5d1000ec24734fbbbb0000",
+              "count": 32
+            },
+            {
+              "descriptor": "Operations > Supply Chain",
+              "id": "633b03df4f5d1000ec243a073d5b0001",
+              "count": 26
+            },
+            {
+              "descriptor": "Product Development > Software & Systems",
+              "id": "633b03df4f5d1000ec247e24e03b0000",
+              "count": 24
+            },
+            {
+              "descriptor": "G&A > Information Technology",
+              "id": "633b03df4f5d1000ec2458c3865d0000",
+              "count": 23
+            },
+            {
+              "descriptor": "G&A > Finance",
+              "id": "d7b302590627100dddeaf3a052960000",
+              "count": 18
+            },
+            {
+              "descriptor": "Operations > Manufacturing Operations",
+              "id": "633b03df4f5d1000ec2437a011000000",
+              "count": 12
+            },
+            {
+              "descriptor": "G&A > G&A Temporary (JFG)",
+              "id": "633b03df4f5d1000ec243c6e056c0000",
+              "count": 10
+            },
+            {
+              "descriptor": "Sales > Sales Support",
+              "id": "d7b302590627100dddeaee36ce050001",
+              "count": 7
+            },
+            {
+              "descriptor": "Operations > Quality",
+              "id": "633b03df4f5d1000ec247955c4c40002",
+              "count": 7
+            },
+            {
+              "descriptor": "Sales > Customer Facing",
+              "id": "d7b302590627100dddeaf1d1fc1a0000",
+              "count": 6
+            },
+            {
+              "descriptor": "Product Development > Data & Analytics",
+              "id": "70d83412bedc1001051ae66d2e950000",
+              "count": 3
+            },
+            {
+              "descriptor": "G&A > Facilities",
+              "id": "633b03df4f5d1000ec2470e51fbf0000",
+              "count": 3
+            },
+            {
+              "descriptor": "Marketing > Marketing (JFG)",
+              "id": "633b03df4f5d1000ec246b72ce7d0000",
+              "count": 3
+            },
+            {
+              "descriptor": "G&A > Administration",
+              "id": "633b03df4f5d1000ec24639d17d60000",
+              "count": 3
+            },
+            {
+              "descriptor": "Product Development > Research & Fellows",
+              "id": "633b03df4f5d1000ec24319c03160000",
+              "count": 2
+            },
+            {
+              "descriptor": "G&A > Human Resources",
+              "id": "d7b302590627100dddeb00dba55d0000",
+              "count": 2
+            },
+            {
+              "descriptor": "Marketing > Marketing and Brand/Content",
+              "id": "633b03df4f5d1000ec247bbd01330001",
+              "count": 2
+            },
+            {
+              "descriptor": "Temporary > Temporary (JFG)",
+              "id": "633b03df4f5d1000ec245bc589df0000",
+              "count": 2
+            },
+            {
+              "descriptor": "G&A > Legal",
+              "id": "633b03df4f5d1000ec244adb90d70000",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "facetParameter": "workerSubType",
+          "descriptor": "Job Type",
+          "values": [
+            {
+              "descriptor": "Regular",
+              "id": "633b03df4f5d1000ec10abdfb8db0000",
+              "count": 248
+            },
+            {
+              "descriptor": "Co-op/Intern (Fixed Term) (Trainee)",
+              "id": "633b03df4f5d1000ec10ab4627a80000",
+              "count": 8
+            },
+            {
+              "descriptor": "Temporary (Fixed Term)",
+              "id": "633b03df4f5d1000ec10abdfb8db0001",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "facetParameter": "timeType",
+          "descriptor": "Time Type",
+          "values": [
+            {
+              "descriptor": "Full time",
+              "id": "1a15e0fbb61110090028388769cb0000",
+              "count": 218
+            }
+          ]
+        },
+        {
+          "facetParameter": "locationMainGroup",
+          "values": [
+            {
+              "facetParameter": "locationCountry",
+              "descriptor": "Location Country",
+              "values": [
+                {
+                  "descriptor": "India",
+                  "id": "c4f78be1a8f14da0ab49ce1162348a5e",
+                  "count": 9
+                },
+                {
+                  "descriptor": "Ireland",
+                  "id": "04a05835925f45b3a59406a2a6b72c8a",
+                  "count": 4
+                },
+                {
+                  "descriptor": "Japan",
+                  "id": "8b705da2becf43cfaccc091da0988ab2",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Malaysia",
+                  "id": "972dc4ba8d454bc0b893ff84b1529077",
+                  "count": 2
+                },
+                {
+                  "descriptor": "Philippines",
+                  "id": "e56f1daf83e04bacae794ba5c5593560",
+                  "count": 16
+                },
+                {
+                  "descriptor": "Spain",
+                  "id": "bd34c524a6a04ae6915f5d96fa086199",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Thailand",
+                  "id": "873d0f604e3b458c990cb4d83a5c0f14",
+                  "count": 2
+                },
+                {
+                  "descriptor": "United States of America",
+                  "id": "bc33aa3152ec42d4995f4791a106ed09",
+                  "count": 27
+                }
+              ]
+            },
+            {
+              "facetParameter": "locations",
+              "descriptor": "Locations",
+              "values": [
+                {
+                  "descriptor": "India, Bangalore, RMZ",
+                  "id": "5e94abe422231001ab4b6b1763420000",
+                  "count": 3
+                },
+                {
+                  "descriptor": "India, Gandhinagar",
+                  "id": "633b03df4f5d1000e7e6048af48e0000",
+                  "count": 6
+                },
+                {
+                  "descriptor": "Ireland, Dublin",
+                  "id": "633b03df4f5d1000e7e6078cd90a0000",
+                  "count": 3
+                },
+                {
+                  "descriptor": "Ireland, Dublin, Glasnevin",
+                  "id": "5d4da70b113c1001ec3559d374e90000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Ireland, Limerick",
+                  "id": "633b03df4f5d1000e7e5f9abe4ab0000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Japan, Tokyo, Minato-ku, Higashi Shinbashi",
+                  "id": "4e8fb875ad861001fed48215c1ff0000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Malaysia, Penang",
+                  "id": "633b03df4f5d1000e7e6403c56550000",
+                  "count": 2
+                },
+                {
+                  "descriptor": "Philippines, Bonifacio Global City",
+                  "id": "633b03df4f5d1000e7e65128f6c30000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Philippines, Cavite, GTC",
+                  "id": "633b03df4f5d1000e7e64f588d030000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Philippines, Cavite, Oper",
+                  "id": "633b03df4f5d1000e7e6542fb4bd0000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Philippines, Cavite (jp)",
+                  "id": "633b03df4f5d1000e7e5718795390000",
+                  "count": 14
+                },
+                {
+                  "descriptor": "Spain, Valencia, Cortes Valencianas",
+                  "id": "73106a5969b810010eaaed5271e40000",
+                  "count": 1
+                },
+                {
+                  "descriptor": "Thailand, Chon Buri",
+                  "id": "633b03df4f5d1000e7e680eade710000",
+                  "count": 2
+                },
+                {
+                  "descriptor": "US, CA, San Jose, Rio Robles",
+                  "id": "633b03df4f5d1000e7e6ce198f8e0000",
+                  "count": 6
+                },
+                {
+                  "descriptor": "US, MA, Chelmsford, Alpha",
+                  "id": "633b03df4f5d1000e7e631234ba80000",
+                  "count": 5
+                },
+                {
+                  "descriptor": "US, MA, Chelmsford, Elizabeth",
+                  "id": "633b03df4f5d1000e7e62f5436500000",
+                  "count": 4
+                },
+                {
+                  "descriptor": "US, MA, Wilmington",
+                  "id": "633b03df4f5d1000e7e62c4da7dc0000",
+                  "count": 16
+                },
+                {
+                  "descriptor": "US, OR, Beaverton",
+                  "id": "633b03df4f5d1000e7e6d8f452240000",
+                  "count": 3
+                },
+                {
+                  "descriptor": "US, WA, Camas",
+                  "id": "633b03df4f5d1000e7e6b905b2c60000",
+                  "count": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "facetParameter": "distance",
+          "descriptor": "Distance",
+          "values": [
+            {
+              "descriptor": "10 miles",
+              "id": "a538cdb60a631000078a2c60ed1700f3",
+              "count": 1
+            },
+            {
+              "descriptor": "25 miles",
+              "id": "a538cdb60a631000078a2c6a410300f4",
+              "count": 1
+            },
+            {
+              "descriptor": "50 miles",
+              "id": "a538cdb60a631000078a2c6eadd300f5",
+              "count": 1
+            },
+            {
+              "descriptor": "100 miles",
+              "id": "a538cdb60a631000078a2c71efcc00f6",
+              "count": 1
+            },
+            {
+              "descriptor": "Any Distance",
+              "id": "a538cdb60a631000078a2c74f73b00f7",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "userAuthenticated": false
+    }
+  },
+  {
+    "source_type": "everify_current",
+    "source_url": "https://www.e-verify.gov/e-verify-employer-search",
+    "checked_at": "2026-09-12T04:46:31.116967+00:00",
+    "synthetic": false,
+    "mechanism": "managed-environment-egress-feasibility-probe",
+    "status": 403,
+    "redirect": null
+  }
+]

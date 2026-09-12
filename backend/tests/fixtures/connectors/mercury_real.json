@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "employer_name": "Mercury",
+    "pool_candidate": "BAY_AREA_CANDIDATE",
+    "source_type": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/mercury/jobs?content=true",
+    "observed_at": "2026-09-12T04:31:45.540219+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 565535,
+    "final_url": "https://boards-api.greenhouse.io/v1/boards/mercury/jobs?content=true",
+    "content_type": "application/json",
+    "raw_sha256": "ad3b515204d7e5c999d5f6925518d7420939b2e8a74bb2289237de4885c2f54e",
+    "outcome": "FETCHED",
+    "job_count": 61,
+    "with_description": 61,
+    "with_published": 61
+  },
+  "job": {
+    "absolute_url": "https://job-boards.greenhouse.io/mercury/jobs/6186428004",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "internal_job_id": 5212461004,
+    "location": {
+      "name": "San Francisco, CA, New York, NY, Portland, OR, or Remote within Canada or United States"
+    },
+    "metadata": [
+      {
+        "id": 12493794004,
+        "name": "Hide on Mercury jobs page?",
+        "value": null,
+        "value_type": "single_select"
+      }
+    ],
+    "id": 6186428004,
+    "updated_at": "2026-09-09T11:10:28-04:00",
+    "requisition_id": "JR00749",
+    "title": "Senior Financial Data Reconciliation Analyst",
+    "company_name": "Mercury",
+    "first_published": "2026-09-09T11:10:28-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;p&gt;Mercury is building a complete finance stack for startups. We work hard to create the easiest and safest banking* experience possible to simplify entrepreneurs&#39; and business owners&#39; financial lives.&lt;/p&gt;\n&lt;p&gt;Underneath Mercury\u2019s products is a network of banking partners, internal systems, payment rails, and funds flows that enable a powerful, streamlined customer experience. The Financial Data Reconciliation team enables the Mercury system by ensuring end-to-end tracking of transactions across partner banks and internal systems, protecting customer funds through timely, rigorous, and efficient reconciliation. The team owns the full reconciliation lifecycle \u2014 from building the data pipelines that transform and enrich transaction data, to matching and investigating exceptions, to reporting on reconciliation health across the business.&lt;/p&gt;\n&lt;p&gt;&lt;em&gt;*Mercury is a fintech company, not an FDIC-insured bank. Banking services provided through Choice Financial Group and Column N.A., Members FDIC.&lt;/em&gt;&lt;/p&gt;\n&lt;p&gt;We\u2019re looking for a Senior Financial Data Reconciliation Analyst who will help operationalize, standardize, and scale reconciliation across Mercury\u2019s banking partners and internal systems. As a senior member of the team, you\u2019ll lead cross-functional initiatives from design through delivery and help other analysts grow. You\u2019ll collaborate with internal and external partners to account for, reconcile, and investigate edge cases in the underlying money movements that power Mercury\u2019s financial products.&lt;/p&gt;\n&lt;h3&gt;&lt;strong&gt;You will:&lt;/strong&gt;&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li&gt;Own the design and implementation of end-to-end reconciliations for new and existing products and funds flows, setting standards that other analysts can build against&lt;/li&gt;\n&lt;li&gt;Develop and maintain data transformations, enrichment logic, and matching rules that support accurate and scalable reconciliation across internal and external systems&lt;/li&gt;\n&lt;li&gt;Monitor and investigate reconciliation exceptions, leading root-cause analysis and coordinating with Product, Engineering, Finance, and banking partners to resolve complex breaks and implement durable fixes&lt;/li&gt;\n&lt;li&gt;Build monitoring, alerting, and reporting that surface reconciliation risks, trends, and improvement opportunities across the team\u2019s portfolio&lt;/li&gt;\n&lt;li&gt;Define reconciliation requirements and technical specifications for new products and funds flows, partnering with Product, Engineering, Data, and Finance early in the design process&lt;/li&gt;\n&lt;li&gt;Partner with Accounting to support month-end close and audit readiness by preparing timely reconciliation analyses, summaries, and supporting documentation&lt;/li&gt;\n&lt;li&gt;Shape and execute the reconciliation control roadmap, leading cross-functional initiatives and representing the Reconciliation team\u2019s perspective as product coverage and operational complexity grow&lt;/li&gt;\n&lt;li&gt;Mentor other analysts through hands-on coaching, helping them strengthen their technical and investigative skills&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h3&gt;&lt;strong&gt;You have:&lt;/strong&gt;&lt;/h3&gt;\n&lt;ul&gt;\n&lt;li&gt;6+ years of experience working with complex transactional and financial data in fintech or financial services, including areas such as reconciliation, settlement, payment operations, and accounting&lt;/li&gt;\n&lt;li&gt;Working knowledge of banking payment rails and card networks, such as ACH, wire transfers, RTP, FedNow, Visa, and Mastercard, with an understanding of transaction flows, clearing, settlement, returns, and exception handling&lt;/li&gt;\n&lt;li&gt;Advanced SQL skills and hands-on experience developing and maintaining data transformation pipelines (e.g., dbt or similar)&lt;/li&gt;\n&lt;li&gt;Strong analytical skills, with a background investigating and resolving complex financial data discrepancies&lt;/li&gt;\n&lt;li&gt;Familiarity with enterprise reconciliation or matching tools (e.g., Blackline) or similar platforms&lt;/li&gt;\n&lt;li&gt;Experience building monitoring or BI dashboards to communicate operational and financial metrics using tools such as Omni, Looker, or Tableau&lt;/li&gt;\n&lt;li&gt;A track record of leading cross-functional initiatives and driving alignment across technical and non-technical partners&lt;/li&gt;\n&lt;li&gt;Experience mentoring or developing other analysts, and a genuine interest in helping others grow&lt;/li&gt;\n&lt;li&gt;Experience supporting audits, regulatory reporting, or financial-control testing&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;Mercury values diversity &amp;amp; belonging and is proud to be an Equal Employment Opportunity employer. All individuals seeking employment at Mercury are considered without regard to race, color, religion, national origin, age, sex, marital status, ancestry, physical or mental disability, veteran status, gender identity, sexual orientation, or any other legally protected characteristic. We are committed to providing reasonable accommodations throughout the recruitment process for applicants with disabilities or special needs. If you need assistance, or an accommodation, please let your recruiter know once you are contacted about a role.&lt;/p&gt;\n&lt;p&gt;#LI-RQ1&lt;/p&gt;&lt;div class=&quot;content-pay-transparency&quot;&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;description&quot;&gt;&lt;p&gt;&lt;strong&gt;Total Rewards&lt;/strong&gt;&lt;br&gt;The total rewards package at Mercury includes base salary, equity (stock options/RSUs), and benefits.&lt;/p&gt;\n&lt;p&gt;Our salary and equity ranges are highly competitive within the SaaS and fintech industry and are updated regularly using the most reliable compensation survey data for our industry. New hire offers are made based on a candidate\u2019s experience, expertise, geographic location, and internal pay equity relative to peers.&lt;/p&gt;\n&lt;p&gt;Our target new hire base salary ranges for this role are the following&lt;strong&gt;:&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;title&quot;&gt;US employees in New York City, Los Angeles, Seattle, or the San Francisco Bay Area:&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$171,000&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$213,700 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;title&quot;&gt;US employees outside of New York City, Los Angeles, Seattle, or the San Francisco Bay Area: &lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$153,900&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$192,300 USD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;pay-input&quot;&gt;&lt;div class=&quot;title&quot;&gt;Canadian employees (any location):&lt;/div&gt;&lt;div class=&quot;pay-range&quot;&gt;&lt;span&gt;$161,600&lt;/span&gt;&lt;span class=&quot;divider&quot;&gt;&amp;mdash;&lt;/span&gt;&lt;span&gt;$209,900 CAD&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;",
+    "departments": [
+      {
+        "id": 4061260004,
+        "name": "Finance",
+        "child_ids": [],
+        "parent_id": 4034565004
+      }
+    ],
+    "offices": [
+      {
+        "id": 4021462004,
+        "name": "Any Office or Remote",
+        "location": null,
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "ai_disclaimer": null,
+    "include_ai_disclaimer": null,
+    "ai_opt_out_request_url": null
+  }
+}

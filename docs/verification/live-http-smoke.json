@@ -1,0 +1,40 @@
+[
+  {
+    "path": "/api/v1/health/live",
+    "status": 200,
+    "body": {
+      "status": "alive"
+    }
+  },
+  {
+    "path": "/api/v1/health/ready",
+    "status": 503,
+    "body": {
+      "status": "not_ready"
+    }
+  },
+  {
+    "path": "/api/v1/version",
+    "status": 200,
+    "body": {
+      "backend_version": "0.1.0",
+      "api_version": "v1",
+      "minimum_client_version": "0.1.0",
+      "latest_client_version": "0.1.0",
+      "release_artifacts": [],
+      "update_mode": "MANUAL_VERIFIED_INSTALL",
+      "demo_mode": false
+    }
+  },
+  {
+    "path": "/api/v1/jobs",
+    "status": 401,
+    "body": {
+      "code": "SESSION_REQUIRED",
+      "user_message": "Sign in to continue.",
+      "retryable": false,
+      "request_id": "59aeaf05-a079-448a-9b57-36a3dc891225",
+      "details": {}
+    }
+  }
+]

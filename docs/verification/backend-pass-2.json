@@ -1,0 +1,1042 @@
+{
+  "at_utc": "2026-09-12T05:20:55.091627+00:00",
+  "passed": false,
+  "results": [
+    {
+      "name": "lock",
+      "command": [
+        "uv",
+        "lock",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "backend-pass-2-lock.log"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "../scripts"
+      ],
+      "exit_code": 1,
+      "seconds": 0.07,
+      "log": "backend-pass-2-lint.log"
+    },
+    {
+      "name": "format",
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "../scripts"
+      ],
+      "exit_code": 1,
+      "seconds": 0.06,
+      "log": "backend-pass-2-format.log"
+    },
+    {
+      "name": "compile",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "compileall",
+        "-q",
+        "app",
+        "tests",
+        "../scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07,
+      "log": "backend-pass-2-compile.log"
+    },
+    {
+      "name": "tests",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "-q",
+        "--junitxml=/workspace/scratch/6135d527c987/Personal-Staffer-local/docs/verification/backend-pass-2.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 5.63,
+      "log": "backend-pass-2-tests.log"
+    },
+    {
+      "name": "policy-replay",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "app.cli",
+        "replay-fixtures"
+      ],
+      "exit_code": 0,
+      "seconds": 0.21,
+      "log": "backend-pass-2-policy-replay.log"
+    },
+    {
+      "name": "migration-render",
+      "command": [
+        "uv",
+        "run",
+        "alembic",
+        "upgrade",
+        "head",
+        "--sql"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "backend-pass-2-migration-render.log"
+    },
+    {
+      "name": "import-app.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.__init__.log"
+    },
+    {
+      "name": "import-app.api.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.api.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "backend-pass-2-import-app.api.__init__.log"
+    },
+    {
+      "name": "import-app.api.admin",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.api.admin"
+      ],
+      "exit_code": 0,
+      "seconds": 0.77,
+      "log": "backend-pass-2-import-app.api.admin.log"
+    },
+    {
+      "name": "import-app.api.errors",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.api.errors"
+      ],
+      "exit_code": 0,
+      "seconds": 0.32,
+      "log": "backend-pass-2-import-app.api.errors.log"
+    },
+    {
+      "name": "import-app.api.router",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.api.router"
+      ],
+      "exit_code": 0,
+      "seconds": 0.87,
+      "log": "backend-pass-2-import-app.api.router.log"
+    },
+    {
+      "name": "import-app.api.schemas",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.api.schemas"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.api.schemas.log"
+    },
+    {
+      "name": "import-app.applications.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.applications.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.applications.__init__.log"
+    },
+    {
+      "name": "import-app.applications.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.applications.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "backend-pass-2-import-app.applications.service.log"
+    },
+    {
+      "name": "import-app.auth.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.auth.__init__.log"
+    },
+    {
+      "name": "import-app.auth.crypto",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.crypto"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "backend-pass-2-import-app.auth.crypto.log"
+    },
+    {
+      "name": "import-app.auth.dependencies",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.dependencies"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.auth.dependencies.log"
+    },
+    {
+      "name": "import-app.auth.provider",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.provider"
+      ],
+      "exit_code": 0,
+      "seconds": 0.21,
+      "log": "backend-pass-2-import-app.auth.provider.log"
+    },
+    {
+      "name": "import-app.auth.router",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.router"
+      ],
+      "exit_code": 0,
+      "seconds": 0.72,
+      "log": "backend-pass-2-import-app.auth.router.log"
+    },
+    {
+      "name": "import-app.auth.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.auth.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.auth.service.log"
+    },
+    {
+      "name": "import-app.cli",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.cli"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07,
+      "log": "backend-pass-2-import-app.cli.log"
+    },
+    {
+      "name": "import-app.config.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.config.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22,
+      "log": "backend-pass-2-import-app.config.__init__.log"
+    },
+    {
+      "name": "import-app.config.settings",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.config.settings"
+      ],
+      "exit_code": 0,
+      "seconds": 0.17,
+      "log": "backend-pass-2-import-app.config.settings.log"
+    },
+    {
+      "name": "import-app.connectors.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22,
+      "log": "backend-pass-2-import-app.connectors.__init__.log"
+    },
+    {
+      "name": "import-app.connectors.ats",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.ats"
+      ],
+      "exit_code": 0,
+      "seconds": 0.18,
+      "log": "backend-pass-2-import-app.connectors.ats.log"
+    },
+    {
+      "name": "import-app.connectors.base",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.base"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22,
+      "log": "backend-pass-2-import-app.connectors.base.log"
+    },
+    {
+      "name": "import-app.connectors.catalog",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.catalog"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22,
+      "log": "backend-pass-2-import-app.connectors.catalog.log"
+    },
+    {
+      "name": "import-app.connectors.contracts",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.contracts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.26,
+      "log": "backend-pass-2-import-app.connectors.contracts.log"
+    },
+    {
+      "name": "import-app.connectors.direct",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.direct"
+      ],
+      "exit_code": 0,
+      "seconds": 0.21,
+      "log": "backend-pass-2-import-app.connectors.direct.log"
+    },
+    {
+      "name": "import-app.connectors.jobspy_adapter",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.jobspy_adapter"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.connectors.jobspy_adapter.log"
+    },
+    {
+      "name": "import-app.connectors.jobspy_runner",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.jobspy_runner"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.connectors.jobspy_runner.log"
+    },
+    {
+      "name": "import-app.connectors.parsing",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.parsing"
+      ],
+      "exit_code": 0,
+      "seconds": 0.17,
+      "log": "backend-pass-2-import-app.connectors.parsing.log"
+    },
+    {
+      "name": "import-app.connectors.safe_http",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.safe_http"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.connectors.safe_http.log"
+    },
+    {
+      "name": "import-app.connectors.usajobs",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.usajobs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.connectors.usajobs.log"
+    },
+    {
+      "name": "import-app.connectors.workday",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.connectors.workday"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.connectors.workday.log"
+    },
+    {
+      "name": "import-app.db.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.db.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "backend-pass-2-import-app.db.__init__.log"
+    },
+    {
+      "name": "import-app.db.base",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.db.base"
+      ],
+      "exit_code": 0,
+      "seconds": 0.37,
+      "log": "backend-pass-2-import-app.db.base.log"
+    },
+    {
+      "name": "import-app.db.models",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.db.models"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "backend-pass-2-import-app.db.models.log"
+    },
+    {
+      "name": "import-app.db.readiness",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.db.readiness"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "backend-pass-2-import-app.db.readiness.log"
+    },
+    {
+      "name": "import-app.db.session",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.db.session"
+      ],
+      "exit_code": 0,
+      "seconds": 0.37,
+      "log": "backend-pass-2-import-app.db.session.log"
+    },
+    {
+      "name": "import-app.demo",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.demo"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.demo.log"
+    },
+    {
+      "name": "import-app.eligibility.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.__init__.log"
+    },
+    {
+      "name": "import-app.eligibility.dedupe",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.dedupe"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.dedupe.log"
+    },
+    {
+      "name": "import-app.eligibility.engine",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.engine"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.engine.log"
+    },
+    {
+      "name": "import-app.eligibility.models",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.models"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.models.log"
+    },
+    {
+      "name": "import-app.eligibility.replay",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.replay"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.replay.log"
+    },
+    {
+      "name": "import-app.eligibility.text_rules",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.eligibility.text_rules"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.eligibility.text_rules.log"
+    },
+    {
+      "name": "import-app.email.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.email.__init__.log"
+    },
+    {
+      "name": "import-app.email.gmail",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.gmail"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.email.gmail.log"
+    },
+    {
+      "name": "import-app.email.orchestration",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.orchestration"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.email.orchestration.log"
+    },
+    {
+      "name": "import-app.email.parser",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.parser"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "backend-pass-2-import-app.email.parser.log"
+    },
+    {
+      "name": "import-app.email.router",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.router"
+      ],
+      "exit_code": 0,
+      "seconds": 0.72,
+      "log": "backend-pass-2-import-app.email.router.log"
+    },
+    {
+      "name": "import-app.email.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.email.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.email.service.log"
+    },
+    {
+      "name": "import-app.jobs.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.jobs.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.jobs.__init__.log"
+    },
+    {
+      "name": "import-app.jobs.orchestration",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.jobs.orchestration"
+      ],
+      "exit_code": 0,
+      "seconds": 0.47,
+      "log": "backend-pass-2-import-app.jobs.orchestration.log"
+    },
+    {
+      "name": "import-app.jobs.pipeline",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.jobs.pipeline"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "backend-pass-2-import-app.jobs.pipeline.log"
+    },
+    {
+      "name": "import-app.main",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.main"
+      ],
+      "exit_code": 0,
+      "seconds": 0.87,
+      "log": "backend-pass-2-import-app.main.log"
+    },
+    {
+      "name": "import-app.notifications.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.notifications.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.notifications.__init__.log"
+    },
+    {
+      "name": "import-app.notifications.contracts",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.notifications.contracts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.notifications.contracts.log"
+    },
+    {
+      "name": "import-app.notifications.delivery",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.notifications.delivery"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.notifications.delivery.log"
+    },
+    {
+      "name": "import-app.notifications.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.notifications.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36,
+      "log": "backend-pass-2-import-app.notifications.service.log"
+    },
+    {
+      "name": "import-app.people.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.people.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.people.__init__.log"
+    },
+    {
+      "name": "import-app.people.discovery",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.people.discovery"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.people.discovery.log"
+    },
+    {
+      "name": "import-app.people.router",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.people.router"
+      ],
+      "exit_code": 0,
+      "seconds": 0.72,
+      "log": "backend-pass-2-import-app.people.router.log"
+    },
+    {
+      "name": "import-app.people.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.people.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "log": "backend-pass-2-import-app.people.service.log"
+    },
+    {
+      "name": "import-app.relevance.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.relevance.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.relevance.__init__.log"
+    },
+    {
+      "name": "import-app.relevance.engine",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.relevance.engine"
+      ],
+      "exit_code": 0,
+      "seconds": 0.16,
+      "log": "backend-pass-2-import-app.relevance.engine.log"
+    },
+    {
+      "name": "import-app.reports.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.reports.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.reports.__init__.log"
+    },
+    {
+      "name": "import-app.reports.selection",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.reports.selection"
+      ],
+      "exit_code": 0,
+      "seconds": 0.06,
+      "log": "backend-pass-2-import-app.reports.selection.log"
+    },
+    {
+      "name": "import-app.reports.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.reports.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42,
+      "log": "backend-pass-2-import-app.reports.service.log"
+    },
+    {
+      "name": "import-app.sync.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.sync.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.sync.__init__.log"
+    },
+    {
+      "name": "import-app.sync.contracts",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.sync.contracts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.sync.contracts.log"
+    },
+    {
+      "name": "import-app.sync.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.sync.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36,
+      "log": "backend-pass-2-import-app.sync.service.log"
+    },
+    {
+      "name": "import-app.sync.snapshot",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.sync.snapshot"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36,
+      "log": "backend-pass-2-import-app.sync.snapshot.log"
+    },
+    {
+      "name": "import-app.workers.__init__",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.workers.__init__"
+      ],
+      "exit_code": 0,
+      "seconds": 0.03,
+      "log": "backend-pass-2-import-app.workers.__init__.log"
+    },
+    {
+      "name": "import-app.workers.celery_app",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.workers.celery_app"
+      ],
+      "exit_code": 0,
+      "seconds": 0.52,
+      "log": "backend-pass-2-import-app.workers.celery_app.log"
+    },
+    {
+      "name": "import-app.workers.schedule",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.workers.schedule"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36,
+      "log": "backend-pass-2-import-app.workers.schedule.log"
+    },
+    {
+      "name": "import-app.workers.service",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-c",
+        "import app.workers.service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36,
+      "log": "backend-pass-2-import-app.workers.service.log"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "employer_name": "Flatiron Health",
+    "pool_candidate": "NYC_CANDIDATE",
+    "source_type": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/flatironhealth/jobs?content=true",
+    "observed_at": "2026-09-12T04:31:51.624817+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 249697,
+    "final_url": "https://boards-api.greenhouse.io/v1/boards/flatironhealth/jobs?content=true",
+    "content_type": "application/json",
+    "raw_sha256": "1a677272c58191d6531211f1ab0d64bf08913c6cca2c905b0d168990cbb694d1",
+    "outcome": "FETCHED",
+    "job_count": 28,
+    "with_description": 28,
+    "with_published": 28
+  },
+  "job": {
+    "absolute_url": "https://flatiron.com/careers/open-positions/job?gh_jid=7611841",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "internal_job_id": 3361346,
+    "location": {
+      "name": "NY office"
+    },
+    "metadata": [
+      {
+        "id": 6571036,
+        "name": "Job Compensation Range",
+        "value": {
+          "unit": "USD",
+          "max_value": "148500.0",
+          "min_value": "108000.0"
+        },
+        "value_type": "currency_range"
+      },
+      {
+        "id": 12077150,
+        "name": "Preferred Primary Location",
+        "value": "NY office",
+        "value_type": "single_select"
+      },
+      {
+        "id": 14772347,
+        "name": "Experience Level",
+        "value": "Entry-level",
+        "value_type": "single_select"
+      },
+      {
+        "id": 8906496,
+        "name": "Worker Type",
+        "value": "Employee",
+        "value_type": "single_select"
+      }
+    ],
+    "id": 7611841,
+    "updated_at": "2026-09-04T12:17:21-04:00",
+    "requisition_id": "JR101883",
+    "title": "Associate, Life Science Partnerships",
+    "company_name": "Flatiron Health",
+    "first_published": "2026-07-13T11:10:01-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;p&gt;Reimagine the infrastructure of cancer care within a community that values integrity, inspires growth, and is uniquely positioned to create a more modern, connected oncology ecosystem. We\u2019re looking for an Associate to help us accomplish our mission to improve and extend lives by learning from the experience of every person with cancer. Are you ready to be the next changemaker in cancer care?&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;What You&#39;ll Do&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;In this role, you&#39;ll work cross-functionally on the Life Sciences Partnerships team to generate and close business opportunities with our biopharma partners and support them in advancing their research priorities using Flatiron solutions. You&#39;ll bring to the team a deep understanding of the healthcare industry, an analytical approach to problem solving, strong client management and organizational skills, and an eagerness to drive growth within your biopharma accounts. As part of this role, you will:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Grow revenue at our existing biopharma partners by building upon new and existing relationships, proactively pitching solutions, and negotiating commercial terms&amp;nbsp;&lt;/li&gt;\n&lt;li&gt;Support development of new business proposals -- directly contributing to Flatiron revenues across the evidence business&lt;/li&gt;\n&lt;li&gt;Become a subject matter expert on our biopharma partners portfolio and research priorities to help inform and identify growth opportunities&lt;/li&gt;\n&lt;li&gt;Support Flatiron\u2019s strategic approach to long term partnerships with biopharma users of our research offerings&lt;/li&gt;\n&lt;li&gt;Become a subject matter expert on Flatiron\u2019s offerings and reliably represent our capabilities to advance the research priorities of our biopharma partners&lt;/li&gt;\n&lt;li&gt;Support our partners in their use of Flatiron\u2019s research offerings by facilitating data and analytical onboarding sessions, identifying value-added opportunities for RWE and supporting onsite client meetings to collect feedback and support use cases (anticipated travel: &amp;lt;20%)&lt;/li&gt;\n&lt;li&gt;Support advancement of internal Flatiron initiatives and priorities (e.g., identifying future growth opportunities, optimizing internal ways of working, etc.)&lt;/li&gt;\n&lt;li&gt;Act as the voice of the customer across internal functional groups (product, research clinicians, quantitative science, engineering, business development, legal and finance team members) as a key influencer of go-to-market strategy&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;Who You Are&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;You&#39;re a kind, passionate and collaborative problem-solver who values the opportunity to think beyond the way things are. In addition, you\u2019re a collaborator with 2+ years of experience in client facing roles.&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;You have a B.A. or B.S. (preferred discipline in biological sciences, economics, engineering, biostatistics or similar)&lt;/li&gt;\n&lt;li&gt;You have 2+ years of client-facing experience delivering products, services or analyses to biopharma companies&lt;/li&gt;\n&lt;li&gt;OR; Advanced degree in a biological science (e.g., PhD), applied health (e.g., MPH), or business (e.g., MBA) with 1+ years of strategic client engagement/business development&lt;/li&gt;\n&lt;li&gt;You are involved in managing project timelines, data analyses, and supporting communication with biopharma clients&lt;/li&gt;\n&lt;li&gt;You have the ability to juggle multiple client interactions and deadlines simultaneously&lt;/li&gt;\n&lt;li&gt;At least 1+ years of experience leading/supporting sales of product/services to biopharma (lead generation, pitching, contract negotiation)&lt;/li&gt;\n&lt;li&gt;Experience leading end-to-end sales of products/services (lead generation, pitching, contract negotiation)&amp;nbsp;&lt;/li&gt;\n&lt;li&gt;Exposure to project work in oncology&lt;/li&gt;\n&lt;li&gt;Understands biopharma industry dynamics across stages of drug development cycle / value chain and familiar with biopharma org structure&lt;/li&gt;\n&lt;li&gt;Experience working in team or cross-functional settings and has a strong willingness to collaborate&lt;/li&gt;\n&lt;li&gt;Detail oriented with a strong desire to develop content expertise (e.g., RWE, clinical oncology, HEOR)&lt;/li&gt;\n&lt;li&gt;Able to navigate ambiguity&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;Extra credit (Optional to add extra credit)&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Exposure to project work using real-world data or evidence&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;Where you\u2019ll work&amp;nbsp;&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;In this hybrid role, you\u2019ll have a defined work location that includes work from home and 3 office days set by you and your team. For more information on our approach to hybrid work, please visit the &lt;a href=&quot;https://flatiron.com/careers/how-we-work?hs_preview=SnRudnya-115772611226&quot;&gt;how we work&lt;/a&gt; website.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Life at Flatiron&amp;nbsp;&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;At Flatiron Health, we offer a full range of benefits to support you and your loved ones so you can focus your working hours on improving cancer care and accelerating cancer research, and your non-working hours on everything else life has to offer:&amp;nbsp;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Work/life autonomy via flexible work hours and flexible paid time off&lt;/li&gt;\n&lt;li&gt;Comprehensive compensation package&lt;/li&gt;\n&lt;li&gt;401(k) contribution to help you reach your retirement planning goals&lt;/li&gt;\n&lt;li&gt;Financial health resources including 1:1 financial advice&lt;/li&gt;\n&lt;li&gt;Mental well-being tools and services&amp;nbsp;&lt;/li&gt;\n&lt;li&gt;Parental benefits and policies including family-building care and generous leave&lt;/li&gt;\n&lt;li&gt;Path to parenthood programs supporting fertility, adoption and surrogacy&lt;/li&gt;\n&lt;li&gt;Travel support for safe healthcare services&lt;/li&gt;\n&lt;li&gt;Lifestyle spending account for perks that make sense for you and your family&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;In addition to our robust benefit offerings, visit our &lt;a href=&quot;https://flatiron.com/careers/life-at-flatiron/&quot;&gt;Life at Flatiron&lt;/a&gt; page to learn how we support continuous learning through professional development programs and celebrate Diversity in the workplace.&lt;/p&gt;",
+    "departments": [
+      {
+        "id": 15480,
+        "name": "Business Development and Sales",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "offices": [
+      {
+        "id": 992,
+        "name": "NY office",
+        "location": "New York, NY, United States",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "ai_disclaimer": null,
+    "include_ai_disclaimer": null,
+    "ai_opt_out_request_url": null
+  }
+}

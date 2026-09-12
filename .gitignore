@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.env.*
+!.env.example
+*.pyc
+.dart_tool/
+build/
+*.db
+*.key
+*.pem
+*.jks
+*.keystore
+key.properties
+google-services.json
+GoogleService-Info.plist
+.secrets/
+.cache/
+.coverage
+*.log
+artifacts/
+
+# Retained verification evidence (reviewed; never raw provider secrets).
+!docs/verification/*.log
+.ruff_cache/

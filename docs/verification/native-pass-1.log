@@ -1,0 +1,36 @@
+Native debug pass 1
+Started 2026-09-12T05:25:47.238590+00:00
+Host: Linux; Flutter 3.47.4; Dart 3.13.3
+After startup error redaction and duplicate-Apply Undo guard fixes.
+Windows and Samsung runtime checks are not represented by these tests.
+
+COMMAND: CI=true flutter --suppress-analytics analyze
+Analyzing client...                                             
+No issues found! (ran in 1.6s)
+EXIT: 0
+
+COMMAND: CI=true flutter --suppress-analytics test
+00:00 +0: loading /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/snapshot_projection_test.dart
+00:00 +0: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/snapshot_projection_test.dart: uses the latest evaluation of the pinned saved snapshot only
+00:00 +1: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +2: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +3: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +4: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +5: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +6: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +7: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: expired access rotates refresh and replays the same idempotency key once
+00:00 +8: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: sign-out cannot cache a delayed response under another account
+00:00 +9: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/sync_auth_test.dart: a refresh completed after sign-out cannot restore old credentials
+00:00 +10: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +11: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-44 destination allowlist retains exact record and rejects unsafe routes
+00:00 +12: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: API origin accepts loopback development and requires HTTPS remotely
+00:00 +13: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-49 offline operation is persisted with original account and revision
+00:00 +14: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-49 conflict never overwrites newer server activity
+00:00 +15: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: First viewed job saves against the acknowledged view revision
+00:01 +16: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: Malformed stored session never exposes its contents at startup
+00:01 +17: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-60 exact native navigation and Homepage tabs
+00:02 +18: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-58 narrow large-font layout remains usable
+00:02 +19: /workspace/scratch/6135d527c987/Personal-Staffer-local/client/test/widget_test.dart: AT-44 signed-out notification keeps destination through sign-in
+00:02 +20: All tests passed!
+EXIT: 0
+Finished 2026-09-12T05:25:55.003409+00:00

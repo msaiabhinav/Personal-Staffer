@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "employer_name": "Oscar Health",
+    "pool_candidate": "NYC_CANDIDATE",
+    "source_type": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/oscar/jobs?content=true",
+    "observed_at": "2026-09-12T04:31:51.403517+00:00",
+    "mechanism": "managed-environment-egress-probe-not-runtime-ssrf-client",
+    "synthetic": false,
+    "http_status": 200,
+    "bytes": 3034298,
+    "final_url": "https://boards-api.greenhouse.io/v1/boards/oscar/jobs?content=true",
+    "content_type": "application/json",
+    "raw_sha256": "a30926619fb5e3a57a2c8af3a30a471a5c3d75379240259d2e9661dd17e2dfb0",
+    "outcome": "FETCHED",
+    "job_count": 289,
+    "with_description": 289,
+    "with_published": 289
+  },
+  "job": {
+    "absolute_url": "http://www.hioscar.com/careers/7914958?gh_jid=7914958",
+    "data_compliance": [
+      {
+        "type": "gdpr",
+        "requires_consent": false,
+        "requires_processing_consent": false,
+        "requires_retention_consent": false,
+        "retention_period": null,
+        "demographic_data_consent_applies": false
+      }
+    ],
+    "internal_job_id": 3440646,
+    "location": {
+      "name": "New York, New York, United States"
+    },
+    "metadata": [
+      {
+        "id": 157143,
+        "name": "Job Description",
+        "value": null,
+        "value_type": "long_text"
+      },
+      {
+        "id": 4676693,
+        "name": "Work Style",
+        "value": "In Office",
+        "value_type": "single_select"
+      }
+    ],
+    "id": 7914958,
+    "updated_at": "2026-07-28T12:06:51-04:00",
+    "requisition_id": "R0008700",
+    "title": "Analytics Engineer I",
+    "company_name": "Oscar Health",
+    "first_published": "2026-07-23T13:05:07-04:00",
+    "language": "en",
+    "application_deadline": null,
+    "content": "&lt;p&gt;Hi, we&#39;re Oscar. We&#39;re hiring an Analytics Engineer I to join our Data Team.&lt;/p&gt;\n&lt;p&gt;Oscar is the first health insurance company built around a full stack technology platform and a relentless focus on serving our members. We started Oscar in 2012 to create the kind of health insurance company we would want for ourselves\u2014one that behaves like a doctor in the family.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;About the role:&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;The Analytics Engineer I designs, builds, and maintains dimensional models and data transformations that convert raw operational data into reliable, well-structured analytical assets. You\u2019ll work within Oscar\u2019s unified data foundation in dbt, partnering with domain experts and stakeholders to capture business logic and translate it into dimensional models that serve analytics use cases across the organization. Under the guidance of more senior Analytics Engineers, you\u2019ll build and maintain models, implement automated tests to ensure long-term data product health, and contribute to the semantic layer that powers enterprise business intelligence. This is a hands-on role focused on growing your craft in dimensional modeling, SQL, and analytics engineering within a healthcare environment.&lt;/p&gt;\n&lt;p&gt;You will report into the Associate Director, Data Science.&amp;nbsp;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Work Location: &lt;/strong&gt;This position is based in our New York City office, requiring a hybrid work schedule with 3 days of in-office work per week. Thursdays are a required in-office day for team meetings and events, while your other two office days are flexible to suit your schedule.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Pay Transparency: &lt;/strong&gt;The base pay for this role is: $106,812 - $140,190.75 per year. You are also eligible for employee benefits, participation in Oscar&#39;s unlimited vacation program, company equity grants, and annual performance bonuses.&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Responsibilities:&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Demonstrates a strong working knowledge of Oscar&#39;s analytics technologies and tools as well as the breadth of content contained within.&lt;/li&gt;\n&lt;li&gt;Contribute to the development and documentation of best practices for engineering and analytics development, consistent with industry standards and internal guidelines.&lt;/li&gt;\n&lt;li&gt;Under the guidance of more senior Analytics Engineers, partner with Subject Matter Experts and Business stakeholders to explore data, define business requirements, design and implement solutions for one or more data transformation and/or downstream semantic layer systems.&lt;/li&gt;\n&lt;li&gt;Advance the Analytics Engineering roadmap by executing on small-to-medium projects with minimal oversight&lt;/li&gt;\n&lt;li&gt;Contribute to the administration of the analytics platform, including but not limited to active participation in support channels and actioning&amp;nbsp; access requests.&lt;/li&gt;\n&lt;li&gt;Leverage a working knowledge of existing data quality checks as well as monitoring and alerting pipelines to perform Root Cause Analyses of data defects as needed and escalate to the appropriate team when warranted.&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;Requirements:&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;1+ years of experience in Analytics Engineering, Data Science, or a related field.&lt;/li&gt;\n&lt;li&gt;1+ years of experience working with SQL.&lt;/li&gt;\n&lt;li&gt;1+ years of experience developing in a semantic modeling language (e.g. LookML).&lt;/li&gt;\n&lt;li&gt;1+ years of experience developing within a modern data transformation tool like DBT.&lt;/li&gt;\n&lt;li&gt;1+ years of experience with cloud database tools (GCP, AWS, Azure).&lt;/li&gt;\n&lt;/ul&gt;\n&lt;p&gt;&lt;strong&gt;Bonus points:&lt;/strong&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Experience working with healthcare or insurance industry data, analytics, and reporting.&lt;/li&gt;\n&lt;li&gt;Experience with Google Cloud Platform and dbt.&lt;/li&gt;\n&lt;li&gt;Experience building dimensional models (star schemas, slowly changing dimensions).&lt;/li&gt;\n&lt;li&gt;Strong communication skills, as demonstrated by experience partnering with non-technical stakeholders.&lt;/li&gt;\n&lt;/ul&gt;&lt;div class=&quot;content-conclusion&quot;&gt;&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;This is an authentic Oscar Health job opportunity. Learn more about how you can safeguard yourself from recruitment fraud&lt;/span&gt;&lt;a href=&quot;http://hioscar.com/careers/recruitment-fraud-alert&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt; &lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;At Oscar, being an Equal Opportunity Employer means more than upholding discrimination-free hiring practices. It means that we cultivate an environment where people can be their most authentic selves and find both belonging and support. We&#39;re on a mission to change health care -- an experience made whole by our unique backgrounds and perspectives.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Pay Transparency:&amp;nbsp; &lt;/strong&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Final offer amounts, within the base pay set forth above, are determined by factors including your relevant skills, education, and experience. &lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Full-time employees are eligible for benefits including: medical, dental, and vision benefits, 11 paid holidays, paid sick time, paid parental leave, 401(k) plan participation, life and disability insurance, and paid wellness time and reimbursements.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;strong&gt;Artificial Intelligence (AI): &lt;/strong&gt;Our &lt;a href=&quot;http://hioscar.com/careers/ai-guidelines&quot; target=&quot;_blank&quot;&gt;AI Guidelines&lt;/a&gt; outline the acceptable use of artificial intelligence for candidates and detail how we use AI to support our recruiting efforts.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;Reasonable Accommodation: &lt;/strong&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Oscar applicants are considered solely based on their qualifications, without regard to applicant\u2019s disability or need for accommodation. Any Oscar applicant who requires reasonable accommodations during the application process should contact the Oscar Benefits Team (accommodations@hioscar.com) to make the need for an accommodation known.&lt;/span&gt;&lt;/p&gt;\n&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;strong&gt;California Residents:&lt;/strong&gt; For information about our collection, use, and disclosure of applicants\u2019 personal information as well as applicants\u2019 rights over their personal information, please see our &lt;a href=&quot;https://www.hioscar.com/legal/privacy/&quot;&gt;Privacy Policy&lt;/a&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;",
+    "departments": [
+      {
+        "id": 2109,
+        "name": "Data",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "offices": [
+      {
+        "id": 1117,
+        "name": "New York, NY",
+        "location": "New York, New York, United States",
+        "child_ids": [],
+        "parent_id": null
+      }
+    ],
+    "ai_disclaimer": "<p><strong>Artificial Intelligence (AI): </strong>Our <a href=\"http://hioscar.com/careers/ai-guidelines\" target=\"_blank\">AI Guidelines</a> outline the acceptable use of artificial intelligence for candidates and detail how we use AI to support our recruiting efforts.</p>",
+    "include_ai_disclaimer": false,
+    "ai_opt_out_request_url": null
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "at_utc": "2026-09-12T05:23:59.880882+00:00",
+  "pass": 2,
+  "initial_findings": [
+    "Executable smoke_demo.py needed its Python shebang.",
+    "Root and backend formatting differed for operations scripts."
+  ],
+  "changes": [
+    "Added shebang and executable modes for documented scripts.",
+    "Added root Ruff config extending backend config and explicit app import classification.",
+    "Applied consistent formatter."
+  ],
+  "checks": [
+    {
+      "command": "uv run ruff check app tests ../scripts",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run ruff format --check app tests ../scripts",
+      "exit_code": 0,
+      "files": 111
+    },
+    {
+      "command": "uv run python -m compileall -q app tests ../scripts",
+      "exit_code": 0
+    }
+  ],
+  "result": "PASS_AFTER_CORRECTION",
+  "behavioral_tests": "401 passed and 51 skipped in pass 2; correction affects formatting/import classification/script entry point only."
+}
