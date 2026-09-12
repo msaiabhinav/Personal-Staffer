@@ -99,10 +99,11 @@ class StafferColors extends ThemeExtension<StafferColors> {
     green: Color(0xff5ddc8f),
     amber: Color(0xfff5b14a),
     coral: Color(0xffff8a80),
-    sidebar: Color(0xff070d16),
-    sidebarLow: Color(0xff0f1a2b),
-    onSidebar: Color(0xffe9eff6),
-    onSidebarMuted: Color(0xff8a9bb0),
+    // Deep slate-indigo, clearly lifted from the near-black canvas.
+    sidebar: Color(0xff162238),
+    sidebarLow: Color(0xff0f1a2c),
+    onSidebar: Color(0xffeef3f9),
+    onSidebarMuted: Color(0xff9fb0c6),
     shadow: Color(0x00000000),
   );
 
