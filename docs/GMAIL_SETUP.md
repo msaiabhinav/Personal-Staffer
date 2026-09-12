@@ -7,6 +7,10 @@ background grant renewal and Windows/Android browser callbacks remain unverified
 Credentials must be configured securely on the backend; do not paste them into
 chat or place them in Flutter defines.
 
+## Local testing on the Windows laptop (live-local mode)
+
+`scripts\start_desktop_demo.ps1 -Mode live` creates an ignored `.env.local` (APP_ENV=local, DEMO_MODE=false, redirect URIs on `http://127.0.0.1:5555`), refuses to start until you have filled `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` and `OWNER_ALLOWED_EMAIL` yourself, generates `TOKEN_ENCRYPTION_KEY` locally on first start, and runs a separate Compose project (`personal-staffer-local`, its own database volume) so real owner data never shares a database with the synthetic demo. Google accepts `http://127.0.0.1:<port>` redirect URIs for Web application clients, so no HTTPS is needed for laptop testing; production still requires HTTPS. Stop with `scripts\stop_desktop_demo.ps1 -Mode live`.
+
 ## Google project and server client
 
 1. Create or choose an authorized Google Cloud project and enable the Gmail API.

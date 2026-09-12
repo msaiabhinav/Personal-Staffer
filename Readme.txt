@@ -33,6 +33,7 @@ On the Windows laptop, PowerShell scripts wrap the same steps in an isolated Com
 scripts\check_desktop_prerequisites.ps1        # read-only report; installs nothing
 scripts\start_desktop_demo.ps1 -BackendOnly    # build, migrate once, seed, verify readiness
 scripts\start_desktop_demo.ps1                 # ...then flutter run -d windows in DEMO_MODE
+scripts\start_desktop_demo.ps1 -Mode live      # real Google sign-in via an ignored .env.local you fill in (see docs/GMAIL_SETUP.md)
 scripts\stop_desktop_demo.ps1                  # stops containers; demo volumes are kept (-DeleteData removes them)
 scripts\verify_desktop_loop.ps1 -PassNumber N   # one complete verification loop; evidence in docs/verification
 ```

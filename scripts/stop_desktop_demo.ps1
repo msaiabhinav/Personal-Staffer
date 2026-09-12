@@ -10,6 +10,7 @@
 #>
 [CmdletBinding()]
 param(
+    [ValidateSet('demo', 'live')][string]$Mode = 'demo',
     [switch]$DeleteData,
     [switch]$Force
 )
@@ -17,8 +18,8 @@ param(
 $ErrorActionPreference = 'Stop'
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ComposeFile = Join-Path $RepoRoot 'deployment\compose.local.yml'
-$EnvDemo = Join-Path $RepoRoot '.env.demo'
-$ProjectName = 'personal-staffer-demo'
+$EnvDemo = Join-Path $RepoRoot $(if ($Mode -eq 'live') { '.env.local' } else { '.env.demo' })
+$ProjectName = $(if ($Mode -eq 'live') { 'personal-staffer-local' } else { 'personal-staffer-demo' })
 
 & docker version --format '{{.Server.Version}}' *> $null
 if ($LASTEXITCODE -ne 0) { throw 'Docker engine is not reachable; nothing to stop.' }
