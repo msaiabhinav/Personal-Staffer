@@ -123,3 +123,9 @@ Phase C nodes still requiring the owner's physical action: tray enable/disable a
 | Large text 150 % | Not yet reported. | |
 | Toasts | Not testable yet: the owner's Windows session has **Do Not Disturb on**. | Turn DND off before the toast check. |
 | Blank window surface | Twice the Flutter view rendered blank (white, then black after a resize) when the window was brought forward from another process after sitting hidden for a long time (once after a forwarded protocol link, once after `ShowWindow` from a script). Not reproduced by minimize/restore under `flutter run`; no engine error logged. Impeller OpenGL backend is in use on this hybrid Intel/NVIDIA laptop. | Open defect; keep an instance running under `flutter run` to capture the engine log when it recurs, then evaluate forcing a redraw on `WM_ACTIVATE`/`WM_SHOWWINDOW` or the Skia backend. |
+
+### First real Google sign-in (live-local mode) — 12 September 2026
+
+The owner created a free Google Cloud project, enabled the Gmail API, configured an External/Testing consent screen with the owner as test user, and created a **Web application** OAuth client with redirect URIs `http://127.0.0.1:5555/api/v1/auth/google/callback` and `/api/v1/gmail/callback`; the values were entered only into the ignored `.env.local`. `scripts\start_desktop_demo.ps1 -Mode live -BackendOnly` generated `TOKEN_ENCRYPTION_KEY` locally, started the separate `personal-staffer-local` stack (fresh database, `demo_mode=false`), and `POST /auth/login/start` returned a Google authorization URL. The Windows app was built without `DEMO_MODE`; the owner completed consent in the browser and the app signed in by redeeming the flow.
+
+Server-side check (no secrets): `users=1` (`msaiabhinav2000@gmail.com`, 21-character Google subject stored), `devices=1`, active `app_sessions=1`, no API errors. Gmail read-only connection (separate consent from Settings) not yet exercised.

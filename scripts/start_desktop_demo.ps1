@@ -168,8 +168,12 @@ if ($Live) {
         # Generate the Fernet key locally inside the backend image; it never leaves this machine.
         Write-Step 'Generating TOKEN_ENCRYPTION_KEY (kept only in .env.local)'
         $env:STAFFER_ENV_FILE = $EnvExample
-        $key = (& docker compose -p $ProjectName -f $ComposeFile run --rm --no-deps -T api python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())' 2>$null | Select-Object -Last 1).Trim()
-        if ($key -notmatch '^[A-Za-z0-9_-]{43}=$') { throw 'Could not generate a Fernet key; is the backend image built?' }
+        $previousPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'  # Compose progress goes to stderr; PS 5.1 would treat it as terminating.
+        $keyOutput = & docker compose -p $ProjectName -f $ComposeFile run --rm --no-deps -T api python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())' 2>&1 | ForEach-Object { "$_".Trim() }
+        $ErrorActionPreference = $previousPreference
+        $key = $keyOutput | Where-Object { $_ -match '^[A-Za-z0-9_-]{43}=$' } | Select-Object -Last 1
+        if (-not $key) { throw 'Could not generate a Fernet key; is the backend image built?' }
         $updated = $demoLines | ForEach-Object { if ($_ -match '^\s*TOKEN_ENCRYPTION_KEY\s*=') { "TOKEN_ENCRYPTION_KEY=$key" } else { $_ } }
         [System.IO.File]::WriteAllLines($EnvDemo, [string[]]$updated, (New-Object System.Text.UTF8Encoding($false)))
         $demoLines = Get-Content $EnvDemo

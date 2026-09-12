@@ -11,7 +11,7 @@ Branch `debug/windows-desktop` (from published `35338e6`), **pushed to origin on
 | Live-source verified | Unchanged. |
 | Device verified | On the target laptop: Windows debug and release builds; the app launched and used in DEMO_MODE (all six destinations, job detail, save/unsave, watchlist, appearance, Back/Forward); AT-55 encrypted-storage integration test passed on the device; protocol-link forwarding to the running instance; release HTTPS guard; unsigned Inno Setup installer built, installed, upgraded over itself, uninstalled cleanly (`verification/windows-installer.json`). **Not yet physically accepted:** tray/close-to-tray/startup, toast click activation, keyboard/screen-reader review, offline-reconnect. |
 | Not configured | Unchanged (Google owner/OAuth, FCM, People, USAJOBS, deployment endpoint, backups, signing). Inno Setup 6 not installed. |
-| Blocked | Nothing blocks local desktop work now (Developer Mode, VS Build Tools + ATL and Inno Setup are installed). A working *installed* app needs an HTTPS backend origin because release builds refuse plain HTTP by design. Google sign-in/Gmail remain unconfigured. |
+| Blocked | Nothing blocks local desktop work now (Developer Mode, VS Build Tools + ATL and Inno Setup are installed). A working *installed* app needs an HTTPS backend origin because release builds refuse plain HTTP by design. Google sign-in is configured and verified on the laptop in live-local mode (12 September 2026); Gmail consent not yet exercised. |
 
 Defects corrected here (regression tests added): dotenv `Literal` policy constants broke the documented startup; in-container pytest could not collect root-script tests; version-endpoint test assumed non-demo environment. See TEST_RESULTS.md.
 
