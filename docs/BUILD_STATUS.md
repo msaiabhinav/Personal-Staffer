@@ -2,7 +2,7 @@
 
 ## Windows desktop-debug checkpoint — 12 September 2026
 
-Branch `debug/windows-desktop` (from published `35338e6`). Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress**: the Windows workflow runs on the device against real PostgreSQL/Redis with synthetic data and the installer round-trips; physical acceptance of tray/startup/toast/accessibility and the second verification loop remain before M3 is declared accepted. Owner product decisions (Watchlist as a sixth destination, light/dark appearance, browser-style history, local API port 5555) are recorded in ADR 0002.
+Branch `debug/windows-desktop` (from published `35338e6`), **pushed to origin on 12 September 2026**; GitHub Actions run [34713669791](https://github.com/msaiabhinav/Personal-Staffer/actions/runs/34713669791): backend, Flutter Ubuntu and Flutter Windows succeeded; the Android debug-APK compile step failed as before (deferred; its log needs repository admin rights to download anonymously). Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress**: the Windows workflow runs on the device against real PostgreSQL/Redis with synthetic data and the installer round-trips; physical acceptance of tray/startup/toast/accessibility and the second verification loop remain before M3 is declared accepted. Owner product decisions (Watchlist as a sixth destination, light/dark appearance, browser-style history, local API port 5555) are recorded in ADR 0002.
 
 | State | Change at this checkpoint |
 |---|---|
