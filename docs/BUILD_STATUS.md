@@ -1,13 +1,13 @@
 # Personal Staffer build checkpoint
 
-## Windows desktop-debug checkpoint — 12 September 2026
+## Windows desktop-debug checkpoint â€” 12 September 2026
 
-Branch `debug/windows-desktop` (from published `35338e6`), first checkpoint commit `509b39e`. Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress, not accepted**.
+Branch `debug/windows-desktop` (from published `35338e6`), checkpoint commits `509b39e`, `75a5370`, `5ab474f`. Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress, not accepted**.
 
 | State | Change at this checkpoint |
 |---|---|
 | Implemented | Isolated demo tooling: `scripts/check_desktop_prerequisites.ps1`, `scripts/start_desktop_demo.ps1`, `scripts/stop_desktop_demo.ps1`; `deployment/compose.local.yml` selects an ignored `.env.demo` through `STAFFER_ENV_FILE` and mounts `scripts/`/.env.example read-only into the local `api` service. Settings policy constants accept dotenv strings while still refusing any value other than 32/72. |
-| Automated-test verified | On real PostgreSQL 17.11 and Redis 7.4.6 in Docker Desktop: **458 passed, 0 skipped**. Every formerly skipped PostgreSQL test executed. CI-equivalent Ruff lint/format clean. Policy replay 60/60. Demo HTTP smoke on PostgreSQL passed. Flutter 3.47.4 analyzer clean and 20 tests passed on Windows. |
+| Automated-test verified | On real PostgreSQL 17.11 and Redis 7.4.6 in Docker Desktop: **459 passed, 0 skipped** (3 upstream deprecation warnings). Every formerly skipped PostgreSQL test executed. CI-equivalent Ruff lint/format clean. Policy replay 60/60. Demo HTTP smoke on PostgreSQL passed. Flutter 3.47.4 analyzer clean and 20 tests passed on Windows. |
 | Live-source verified | Unchanged. |
 | Device verified | Backend containers and HTTP checks executed on the Windows laptop. **The Windows application has not been built or launched here yet**; no UI, tray, startup, toast, protocol, encrypted-storage or installer acceptance. |
 | Not configured | Unchanged (Google owner/OAuth, FCM, People, USAJOBS, deployment endpoint, backups, signing). Inno Setup 6 not installed. |
