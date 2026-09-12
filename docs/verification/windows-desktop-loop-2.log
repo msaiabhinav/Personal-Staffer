@@ -1,0 +1,432 @@
+﻿Windows desktop verification loop 2 at 20260912T182051Z
+==> [prerequisites] scripts\check_desktop_prerequisites.ps1
+
+Item              State Required Detail                                                                                                                                                      
+----              ----- -------- ------                                                                                                                                                      
+Windows           PASS      True Microsoft Windows 11 Home build 26200 (64-bit)                                                                                                              
+PowerShell        PASS      True 5.1.26100.9444 (Desktop)                                                                                                                                    
+Disk space        PASS      True 70.6 GB free on C:                                                                                                                                          
+Git               PASS      True git version 2.53.0.windows.1                                                                                                                                
+Docker CLI        PASS      True Docker version 29.6.2, build dfc4efb                                                                                                                        
+Docker engine     PASS      True Running: 29.6.2 (linux/amd64)                                                                                                                               
+Docker Compose    PASS      True v5.3.1 (Compose v2+ required for env_file interpolation)                                                                                                    
+WSL 2             PASS      True Default WSL version 2                                                                                                                                       
+Flutter           PASS      True Flutter 3.47.4 at C:\Users\crick\dev\flutter\bin\flutter.bat                                                                                                
+Dart              PASS      True Dart 3.13.3                                                                                                                                                 
+Visual Studio C++ PASS      True Visual Studio Build Tools 2022 17.14.37628.2 at C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools                                              
+C++ ATL           PASS      True C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\atlmfc\include\atlbase.h                                           
+Windows SDK       PASS      True Installed: 10.0.26100.0                                                                                                                                     
+CMake             PASS      True cmake version 3.31.6-msvc6 (C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe)
+Ninja             PASS      True ninja 1.12.1 (C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe)                  
+Inno Setup 6      PASS     False C:\Users\crick\AppData\Local\Programs\Inno Setup 6\ISCC.exe                                                                                                 
+
+
+
+All required desktop prerequisites are present.
+    PASS (exit 0, 3.6s)
+==> [git-status] git status --short --branch; git rev-parse HEAD
+## debug/windows-desktop
+ M client/windows/flutter/generated_plugin_registrant.cc
+ M client/windows/flutter/generated_plugin_registrant.h
+ M client/windows/flutter/generated_plugins.cmake
+?? docs/verification/windows-desktop-loop-1-20260912T181816Z.json
+?? docs/verification/windows-desktop-loop-1-20260912T181816Z.log
+?? docs/verification/windows-desktop-loop-2.log
+4f53a669055890be80d35c87409e6e96c68d784e
+    PASS (exit 0, 0.1s)
+==> [flutter-lock] flutter pub get --enforce-lockfile
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+    PASS (exit 0, 2.2s)
+==> [ruff-check] ruff check app tests ../scripts
+All checks passed!
+    PASS (exit 0, 0.1s)
+==> [ruff-format] ruff format --check app tests ../scripts
+111 files already formatted
+    PASS (exit 0, 0.1s)
+==> [backend-image] docker compose build api
+ Image personal-staffer-backend:0.1.0 Building 
+ Image personal-staffer-backend:0.1.0 Built 
+    PASS (exit 0, 1.6s)
+==> [clean-database] psql: DROP DATABASE IF EXISTS staffer_loop; CREATE DATABASE staffer_loop
+DROP DATABASE
+CREATE DATABASE
+    PASS (exit 0, 0.8s)
+==> [alembic-clean] alembic upgrade head (clean staffer_loop)
+ Container personal-staffer-demo-api-run-8120349b89ed Creating 
+ Container personal-staffer-demo-api-run-8120349b89ed Created 
+    PASS (exit 0, 3.2s)
+==> [backend-pytest] pytest -ra (TEST_DATABASE_URL=staffer_loop)
+ Container personal-staffer-demo-api-run-7875b761e6c3 Creating 
+ Container personal-staffer-demo-api-run-7875b761e6c3 Created 
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /app
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, asyncio-1.4.0, respx-0.23.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 459 items
+
+tests/test_api_contracts.py ...........                                  [  2%]
+tests/test_auth_email_people_postgres.py .........                       [  4%]
+tests/test_auth_provider.py .........                                    [  6%]
+tests/test_cli_provenance.py ........                                    [  8%]
+tests/test_config.py .........                                           [ 10%]
+tests/test_connectors.py ............................................... [ 20%]
+....                                                                     [ 21%]
+tests/test_connectors_safe_http.py .......................               [ 26%]
+tests/test_database_core.py ........                                     [ 27%]
+tests/test_database_corrections.py ....                                  [ 28%]
+tests/test_database_notifications.py ......                              [ 30%]
+tests/test_demo_database.py ...                                          [ 30%]
+tests/test_eligibility_corpus.py ....................................... [ 39%]
+........................                                                 [ 44%]
+tests/test_eligibility_imports.py ...                                    [ 45%]
+tests/test_eligibility_rules.py ........................................ [ 53%]
+......................                                                   [ 58%]
+tests/test_email_gmail_api.py ...                                        [ 59%]
+tests/test_email_hostile_content.py .............................        [ 65%]
+tests/test_email_orchestration.py ..                                     [ 66%]
+tests/test_email_orchestration_database.py ..                            [ 66%]
+tests/test_email_parser.py ..............                                [ 69%]
+tests/test_email_security_database.py ...                                [ 70%]
+tests/test_fcm_contracts.py ......                                       [ 71%]
+tests/test_http_contract.py .....                                        [ 72%]
+tests/test_notification_destinations.py ...........                      [ 74%]
+tests/test_oauth_proxy_callback.py ..                                    [ 75%]
+tests/test_people_discovery.py ...........                               [ 77%]
+tests/test_pipeline_mapping.py .........                                 [ 79%]
+tests/test_readiness.py .....                                            [ 80%]
+tests/test_reports_database.py ........                                  [ 82%]
+tests/test_reports_selection.py ...........                              [ 84%]
+tests/test_security_review.py .......................                    [ 89%]
+tests/test_source_orchestration.py ...........                           [ 92%]
+tests/test_source_orchestration_database.py ...                          [ 93%]
+tests/test_sync_contracts.py ..........                                  [ 95%]
+tests/test_worker_contracts.py ................                          [ 98%]
+tests/test_workers_database.py ......                                    [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /app/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /app/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5
+  /app/.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+    from ._compat import httpx2
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 459 passed, 3 warnings in 27.38s =======================
+    PASS (exit 0, 31.1s)
+==> [policy-replay] python -m app.cli replay-fixtures
+ Container personal-staffer-demo-api-run-b7e13e5ff03e Creating 
+ Container personal-staffer-demo-api-run-b7e13e5ff03e Created 
+{
+  "corpus_version": "synthetic-1.0",
+  "synthetic_only": true,
+  "frozen_evaluation_time": "2026-09-12T15:00:00Z",
+  "metrics": {
+    "regression": {
+      "cases": 48,
+      "correct": 48,
+      "outcomes": {
+        "ELIGIBLE": 18,
+        "NEEDS_REVIEW": 13,
+        "INELIGIBLE": 17
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.2708333333333333
+    },
+    "heldout": {
+      "cases": 12,
+      "correct": 12,
+      "outcomes": {
+        "INELIGIBLE": 5,
+        "NEEDS_REVIEW": 5,
+        "ELIGIBLE": 2
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.4166666666666667
+    },
+    "all": {
+      "cases": 60,
+      "correct": 60,
+      "outcomes": {
+        "ELIGIBLE": 20,
+        "NEEDS_REVIEW": 18,
+        "INELIGIBLE": 22
+      },
+      "hard_rule_false_accepts": 0,
+      "eligible_recall": 1.0,
+      "eligible_precision": 1.0,
+      "review_rate": 0.3
+    }
+  },
+  "per_rule_labeled_metrics": {
+    "experience": {
+      "annotated_cases": 9,
+      "correct": 9,
+      "expected_fails": 6,
+      "detected_fails": 6,
+      "actual_fails": 6,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "sponsorship": {
+      "annotated_cases": 8,
+      "correct": 8,
+      "expected_fails": 4,
+      "detected_fails": 4,
+      "actual_fails": 4,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "clearance": {
+      "annotated_cases": 7,
+      "correct": 7,
+      "expected_fails": 4,
+      "detected_fails": 4,
+      "actual_fails": 4,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "employment": {
+      "annotated_cases": 3,
+      "correct": 3,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "country": {
+      "annotated_cases": 2,
+      "correct": 2,
+      "expected_fails": 1,
+      "detected_fails": 1,
+      "actual_fails": 1,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "everify": {
+      "annotated_cases": 5,
+      "correct": 5,
+      "expected_fails": 0,
+      "detected_fails": 0,
+      "actual_fails": 0,
+      "fail_precision": null,
+      "fail_recall": null
+    },
+    "freshness": {
+      "annotated_cases": 5,
+      "correct": 5,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "active_opening": {
+      "annotated_cases": 3,
+      "correct": 3,
+      "expected_fails": 1,
+      "detected_fails": 1,
+      "actual_fails": 1,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    },
+    "role_relevance": {
+      "annotated_cases": 2,
+      "correct": 2,
+      "expected_fails": 2,
+      "detected_fails": 2,
+      "actual_fails": 2,
+      "fail_precision": 1.0,
+      "fail_recall": 1.0
+    }
+  },
+  "failures": [],
+  "live_source_coverage": "NOT_VERIFIED_BY_SYNTHETIC_REPLAY",
+  "limitations": "Finite synthetic tests do not establish production accuracy; real evidence bundles and multi-day audit remain required."
+}
+    PASS (exit 0, 1.4s)
+==> [demo-smoke] python /scripts/smoke_demo.py (staffer_loop)
+ Container personal-staffer-demo-api-run-fe95a061ddf1 Creating 
+ Container personal-staffer-demo-api-run-fe95a061ddf1 Created 
+/app/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+/app/.venv/lib/python3.12/site-packages/authlib/integrations/httpx_client/assertion_client.py:5: AuthlibDeprecationWarning: The httpx module is deprecated; please use httpx2 instead.
+  from ._compat import httpx2
+Synthetic API workflow: login, retained feed, save, apply, snapshot, inbox navigation passed on PostgreSQL.
+    PASS (exit 0, 4.4s)
+==> [http-checks] GET live/ready/version/jobs/openapi on http://127.0.0.1:5555
+/api/v1/health/live -> 200 (expected 200)
+/api/v1/health/ready -> 200 (expected 200)
+/api/v1/version -> 200 (expected 200)
+/api/v1/jobs -> 401 (expected 401)
+/openapi.json -> 404 (expected 404)
+    PASS (exit 0, 0.1s)
+==> [flutter-analyze] flutter analyze
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing client...                                             
+No issues found! (ran in 11.5s)
+    PASS (exit 0, 14.5s)
+==> [flutter-test] flutter test
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart
+00:00 +0: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +1: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +2: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +3: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +4: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +5: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +6: C:/Users/crick/Personal-Staffer/client/test/encryption_test.dart: AT-55 linked encrypted SQLite stores unreadable bytes and reopens with key
+00:00 +7: C:/Users/crick/Personal-Staffer/client/test/sync_auth_test.dart: AT-50 expired cursor consumes complete snapshot, drops stale rows, retains unresolved local operations
+00:00 +8: C:/Users/crick/Personal-Staffer/client/test/sync_auth_test.dart: expired access rotates refresh and replays the same idempotency key once
+00:00 +9: C:/Users/crick/Personal-Staffer/client/test/sync_auth_test.dart: sign-out cannot cache a delayed response under another account
+00:00 +10: C:/Users/crick/Personal-Staffer/client/test/sync_auth_test.dart: a refresh completed after sign-out cannot restore old credentials
+00:00 +11: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-44 destination allowlist retains exact record and rejects unsafe routes
+00:00 +12: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: API origin accepts loopback development and requires HTTPS remotely
+00:00 +13: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-49 offline operation is persisted with original account and revision
+00:00 +14: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-49 conflict never overwrites newer server activity
+00:00 +15: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: First viewed job saves against the acknowledged view revision
+00:01 +16: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: Malformed stored session never exposes its contents at startup
+00:01 +17: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-60 exact native navigation and Homepage tabs
+00:02 +18: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: Watchlist destination lists companies with resolution state
+00:02 +19: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: Browser-style Back and Forward traverse visited destinations
+00:03 +20: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: Dark appearance preference applies a dark theme
+00:03 +21: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-58 narrow large-font layout remains usable
+00:04 +22: C:/Users/crick/Personal-Staffer/client/test/widget_test.dart: AT-44 signed-out notification keeps destination through sign-in
+00:04 +23: All tests passed!
+    PASS (exit 0, 10s)
+==> [windows-debug-build] flutter build windows --debug
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Building Windows application...                                    13.4s
+√ Built build\windows\x64\runner\Debug\personal_staffer.exe
+    PASS (exit 0, 15.8s)
+==> [windows-release-build] flutter build windows --release
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Building Windows application...                                    13.9s
+√ Built build\windows\x64\runner\Release\personal_staffer.exe
+    PASS (exit 0, 16.4s)
+==> [device-integration] flutter test integration_test/device_storage_test.dart -d windows
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.0.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.3 (1.19.0 available)
+  native_toolchain_c 0.19.2 (0.19.4 available)
+  objective_c 9.5.0 (9.6.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  test_api 0.7.12 (0.7.14 available)
+  vector_math 2.4.0 (2.4.2 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading C:/Users/crick/Personal-Staffer/client/integration_test/device_storage_test.dart
+Building Windows application...                                    24.6s
+√ Built build\windows\x64\runner\Debug\personal_staffer.exe
+00:00 +0: Device secure key round-trip and encrypted cache reopen
+00:00 +1: (tearDownAll)
+00:00 +1: All tests passed!
+    PASS (exit 0, 29.6s)
+==> [release-artifacts] list + SHA256 of Release\personal_staffer.exe
+app_links_plugin.dll 141312 bytes
+firebase_core_plugin.lib 1236074 bytes
+flutter_local_notifications_windows.dll 91136 bytes
+flutter_secure_storage_windows_plugin.dll 159744 bytes
+flutter_windows.dll 21274112 bytes
+msvcp140.dll 557728 bytes
+native_assets.json 208 bytes
+personal_staffer.exe 871936 bytes
+personal_staffer.exp 1498 bytes
+personal_staffer.lib 3062 bytes
+sqlite3mc.dll 2136576 bytes
+url_launcher_windows_plugin.dll 98304 bytes
+vcruntime140.dll 124544 bytes
+vcruntime140_1.dll 49792 bytes
+8F0912DB763B29ECB313F87AFBB744EF6EA631FF7E83A08C27C3B30496DEC68D
+    PASS (exit 0, 0.1s)
+==> [secret-scan] pattern scan of Release\ for private keys / OAuth secrets
+No recognized secret patterns in the release directory (bounded pattern scan).
+    PASS (exit 0, 1.5s)
+==> [git-diff-check] git diff --check
+warning: in the working copy of 'client/windows/flutter/generated_plugin_registrant.cc', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/windows/flutter/generated_plugin_registrant.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'client/windows/flutter/generated_plugins.cmake', LF will be replaced by CRLF the next time Git touches it
+clean
+    PASS (exit 0, 0.1s)
