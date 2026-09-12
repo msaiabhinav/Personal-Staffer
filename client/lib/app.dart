@@ -1,24 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/api.dart';
 import 'core/providers.dart';
 import 'core/models.dart';
+import 'core/history.dart';
+import 'core/theme.dart';
 import 'features/shared.dart';
 import 'features/jobs.dart';
 import 'features/applications.dart';
 import 'features/inbox_people.dart';
 import 'features/settings.dart';
+import 'features/watchlist.dart';
 
+/// Primary destinations. The first five are the specification's fixed order;
+/// Watchlist was added as a primary destination by product decision (ADR-0001).
 final navLabels = [
   'Notifications',
   'Homepage',
   'People',
   'Saved Jobs',
   'Applied Jobs',
+  'Watchlist',
 ];
 final navPaths = [
   '/notifications',
@@ -26,6 +33,7 @@ final navPaths = [
   '/people',
   '/saved',
   '/applications',
+  '/watchlist',
 ];
 final navIcons = [
   Icons.notifications_none,
@@ -33,38 +41,17 @@ final navIcons = [
   Icons.people_outline,
   Icons.bookmark_outline,
   Icons.work_outline,
+  Icons.star_outline,
 ];
-ThemeData stafferTheme() => ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff087f8c))
-      .copyWith(
-        primary: const Color(0xff087f8c),
-        onPrimary: Colors.white,
-        surface: Colors.white,
-        onSurface: const Color(0xff172b4d),
-        onSurfaceVariant: const Color(0xff526175),
-        outline: const Color(0xffd8e0e8),
-      ),
-  scaffoldBackgroundColor: const Color(0xfff5f7fa),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xfff5f7fa),
-    foregroundColor: Color(0xff172b4d),
-  ),
-  inputDecorationTheme: const InputDecorationTheme(
-    border: OutlineInputBorder(),
-    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-  ),
-  filledButtonTheme: FilledButtonThemeData(
-    style: FilledButton.styleFrom(minimumSize: const Size(48, 48)),
-  ),
-  outlinedButtonTheme: OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
-  ),
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-  ),
-  visualDensity: VisualDensity.standard,
-);
+final navSelectedIcons = [
+  Icons.notifications,
+  Icons.home,
+  Icons.people,
+  Icons.bookmark,
+  Icons.work,
+  Icons.star,
+];
+ThemeData stafferTheme() => stafferThemeFor(Brightness.light);
 
 GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
   initialLocation: initial,
@@ -138,6 +125,10 @@ GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
           ),
         GoRoute(path: '/settings', builder: (_, state) => const SettingsPage()),
         GoRoute(
+          path: '/watchlist',
+          builder: (_, state) => const WatchlistPage(),
+        ),
+        GoRoute(
           path: '/collection',
           builder: (_, state) => CollectionPage(
             route: state.uri.queryParameters['route'] ?? '/reports',
@@ -159,16 +150,35 @@ GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
   ),
 );
 
-class StafferApp extends StatelessWidget {
+class StafferApp extends ConsumerWidget {
   const StafferApp({super.key, required this.router});
   final GoRouter router;
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-    title: 'Personal Staffer',
-    debugShowCheckedModeBanner: false,
-    theme: stafferTheme(),
-    routerConfig: router,
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeControllerProvider).mode;
+    return MaterialApp.router(
+      title: 'Personal Staffer',
+      debugShowCheckedModeBanner: false,
+      theme: stafferThemeFor(Brightness.light),
+      darkTheme: stafferThemeFor(Brightness.dark),
+      themeMode: mode,
+      routerConfig: router,
+    );
+  }
+}
+
+class ThemeToggleButton extends ConsumerWidget {
+  const ThemeToggleButton({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(themeControllerProvider);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return IconButton(
+      tooltip: dark ? 'Switch to light mode' : 'Switch to dark mode',
+      onPressed: () => controller.set(dark ? ThemeMode.light : ThemeMode.dark),
+      icon: Icon(dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+    );
+  }
 }
 
 class AppShell extends ConsumerWidget {
@@ -188,19 +198,48 @@ class AppShell extends ConsumerWidget {
             .asData
             ?.value['unread_count'] ??
         0;
-    Widget icon(int i) => i == 0
-        ? Badge(
-            isLabelVisible: unread is int && unread > 0,
-            label: Text(unread.toString()),
-            child: Icon(navIcons[i]),
-          )
-        : Icon(navIcons[i]);
+    final scheme = Theme.of(context).colorScheme;
+    final history = ref.watch(navigationHistoryProvider);
+    Widget icon(int i, {bool selected = false}) {
+      final glyph = Icon(selected ? navSelectedIcons[i] : navIcons[i]);
+      return i == 0
+          ? Badge(
+              isLabelVisible: unread is int && unread > 0,
+              label: Text(unread.toString()),
+              child: glyph,
+            )
+          : glyph;
+    }
+
     return LayoutBuilder(
       builder: (context, size) {
         final wide = size.maxWidth >= 1000;
-        return Scaffold(
+        final shell = Scaffold(
           appBar: AppBar(
-            title: const Text('Personal Staffer'),
+            leadingWidth: 104,
+            leading: HistoryButtons(history: history),
+            titleSpacing: wide ? 8 : null,
+            title: wide
+                ? Row(
+                    children: [
+                      Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: scheme.primary,
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                        child: Icon(
+                          Icons.auto_awesome,
+                          size: 20,
+                          color: scheme.onPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text('Personal Staffer'),
+                    ],
+                  )
+                : const Text('Personal Staffer'),
             actions: [
               if (repo.syncing)
                 const Padding(
@@ -211,6 +250,7 @@ class AppShell extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
+              const ThemeToggleButton(),
               IconButton(
                 tooltip: 'Settings',
                 onPressed: () => context.push('/settings'),
@@ -226,38 +266,69 @@ class AppShell extends ConsumerWidget {
                   NavigationRail(
                     extended: true,
                     selectedIndex: selected,
+                    groupAlignment: -1,
+                    trailing: Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Divider(),
+                              const SizedBox(height: 8),
+                              TextButton.icon(
+                                onPressed: () => context.push('/settings'),
+                                icon: const Icon(Icons.settings_outlined),
+                                label: const Text('Settings'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: scheme.onSurfaceVariant,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     onDestinationSelected: (i) => context.go(navPaths[i]),
                     destinations: List.generate(
-                      5,
+                      navLabels.length,
                       (i) => NavigationRailDestination(
                         icon: icon(i),
+                        selectedIcon: icon(i, selected: true),
                         label: Text(navLabels[i]),
+                        padding: const EdgeInsets.symmetric(vertical: 2),
                       ),
                     ),
                   ),
                   const VerticalDivider(width: 1),
                 ],
                 Expanded(
-                  child: Column(
-                    children: [
-                      if (const bool.fromEnvironment('DEMO_MODE'))
-                        const StatusStrip(
-                          'DEMO · Synthetic local records',
-                          icon: Icons.science_outlined,
-                        ),
-                      if (repo.offline || repo.operations.isNotEmpty)
-                        StatusStrip(
-                          '${repo.offline ? 'Offline · ' : ''}${repo.operations.length} pending change${repo.operations.length == 1 ? '' : 's'}',
-                          icon: repo.offline
-                              ? Icons.cloud_off_outlined
-                              : Icons.sync,
-                          action: TextButton(
-                            onPressed: () => context.push('/settings'),
-                            child: const Text('Review'),
+                  child: Material(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Column(
+                      children: [
+                        if (const bool.fromEnvironment('DEMO_MODE'))
+                          const StatusStrip(
+                            'DEMO · Synthetic local records',
+                            icon: Icons.science_outlined,
                           ),
-                        ),
-                      Expanded(child: child),
-                    ],
+                        if (repo.offline || repo.operations.isNotEmpty)
+                          StatusStrip(
+                            '${repo.offline ? 'Offline · ' : ''}${repo.operations.length} pending change${repo.operations.length == 1 ? '' : 's'}',
+                            icon: repo.offline
+                                ? Icons.cloud_off_outlined
+                                : Icons.sync,
+                            action: TextButton(
+                              onPressed: () => context.push('/settings'),
+                              child: const Text('Review'),
+                            ),
+                          ),
+                        Expanded(child: child),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -270,15 +341,54 @@ class AppShell extends ConsumerWidget {
                   onDestinationSelected: (i) => context.go(navPaths[i]),
                   labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
                   destinations: List.generate(
-                    5,
+                    navLabels.length,
                     (i) => NavigationDestination(
                       icon: icon(i),
+                      selectedIcon: icon(i, selected: true),
                       label: navLabels[i],
                     ),
                   ),
                 ),
         );
+        if (history == null) return shell;
+        return CallbackShortcuts(
+          bindings: {
+            const SingleActivator(LogicalKeyboardKey.arrowLeft, alt: true):
+                history.back,
+            const SingleActivator(LogicalKeyboardKey.arrowRight, alt: true):
+                history.forward,
+          },
+          child: Focus(autofocus: true, child: shell),
+        );
       },
+    );
+  }
+}
+
+/// Browser-style Back / Forward controls, always visible in the shell.
+class HistoryButtons extends StatelessWidget {
+  const HistoryButtons({super.key, required this.history});
+  final NavigationHistory? history;
+  @override
+  Widget build(BuildContext context) {
+    final h = history;
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: 'Back (Alt+Left)',
+            icon: const Icon(Icons.arrow_back),
+            onPressed: h != null && h.canGoBack ? h.back : null,
+          ),
+          IconButton(
+            tooltip: 'Forward (Alt+Right)',
+            icon: const Icon(Icons.arrow_forward),
+            onPressed: h != null && h.canGoForward ? h.forward : null,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -347,46 +457,152 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: EmptyMessage(
-        title: 'Personal Staffer',
-        message:
-            'Your opportunities and application history, together on Windows and Android. Sign in with the Google account configured for your private server.\n\nNo resume is required.${error == null ? '' : '\n\n$error'}',
-        action: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FilledButton.icon(
-              onPressed: busy ? null : login,
-              icon: const Icon(Icons.login),
-              label: Text(
-                busy
-                    ? 'Finish sign-in in your browser…'
-                    : 'Continue with Google',
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              scheme.primary.withValues(alpha: 0.10),
+              theme.scaffoldBackgroundColor,
+              scheme.primary.withValues(alpha: 0.05),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              const Positioned(top: 8, right: 8, child: ThemeToggleButton()),
+              Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 520),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      child: Padding(
+                        padding: const EdgeInsets.all(36),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: scheme.primary,
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Icon(
+                                    Icons.auto_awesome,
+                                    color: scheme.onPrimary,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  'Personal Staffer',
+                                  style: theme.textTheme.headlineSmall,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Your opportunities and application history, together on Windows and Android.',
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Sign in with the Google account configured for your private server. No resume is required.',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                            if (error != null) ...[
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: scheme.tertiary.withValues(
+                                    alpha: 0.12,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline,
+                                      size: 18,
+                                      color: scheme.tertiary,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(child: Text(error!)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 28),
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton.icon(
+                                onPressed: busy ? null : login,
+                                icon: const Icon(Icons.login),
+                                label: Text(
+                                  busy
+                                      ? 'Finish sign-in in your browser…'
+                                      : 'Continue with Google',
+                                ),
+                              ),
+                            ),
+                            if (const bool.fromEnvironment('DEMO_MODE')) ...[
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: double.infinity,
+                                child: OutlinedButton.icon(
+                                  onPressed: busy
+                                      ? null
+                                      : () async {
+                                          final repository = ref.read(
+                                            repositoryProvider,
+                                          );
+                                          try {
+                                            await repository.session
+                                                .startDemo();
+                                            await repository.start();
+                                          } on ApiError catch (e) {
+                                            if (mounted) {
+                                              setState(() => error = e.message);
+                                            }
+                                          }
+                                        },
+                                  icon: const Icon(Icons.science_outlined),
+                                  label: const Text('Open local demo'),
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 20),
+                            SelectableText(
+                              'Server: ${ref.read(repositoryProvider).session.origin}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            if (const bool.fromEnvironment('DEMO_MODE'))
-              TextButton(
-                onPressed: busy
-                    ? null
-                    : () async {
-                        final repository = ref.read(repositoryProvider);
-                        try {
-                          await repository.session.startDemo();
-                          await repository.start();
-                        } on ApiError catch (e) {
-                          if (mounted) setState(() => error = e.message);
-                        }
-                      },
-                child: const Text('Open local demo'),
-              ),
-            const SizedBox(height: 16),
-            SelectableText(
-              'Server: ${ref.read(repositoryProvider).session.origin}',
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

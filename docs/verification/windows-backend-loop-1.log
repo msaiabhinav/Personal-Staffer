@@ -60,4 +60,4 @@ tests/test_workers_database.py ......                                    [100%]
     from ._compat import httpx2
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 459 passed, 3 warnings in 26.98s =======================
+======================= 459 passed, 3 warnings in 28.23s =======================

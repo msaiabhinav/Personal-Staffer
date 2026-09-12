@@ -82,28 +82,47 @@ class ApplicationList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) {
       return const EmptyMessage(
+        icon: Icons.work_outline,
         title: 'Your applications, kept together',
         message: 'Mark Applied on a job after you submit it, or add an application you made elsewhere. Your dates, links and history stay here.',
       );
     }
-    return ListView.separated(
+    return ListView.builder(
       itemCount: items.length,
-      padding: const EdgeInsets.all(16),
-      separatorBuilder: (_, index) => const Divider(height: 1),
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
       itemBuilder: (context, index) {
         final row = items[index];
-        return ListTile(
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: 8,
+        final status = friendly(row['display_status'] ?? row['current_status']);
+        return Card(
+          clipBehavior: Clip.antiAlias,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 18,
+            ),
+            title: Text(
+              label(row['title']),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(label(row['company'])),
+                  StatusPill(status, tone: PillTone.positive),
+                  Text(
+                    'Applied ${dateLabel(row['applied_at'])}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/applications/${row['id']}'),
           ),
-          title: Text(label(row['title'])),
-          subtitle: Text(
-            '${label(row['company'])}\nApplied ${dateLabel(row['applied_at'])} · ${friendly(row['display_status'] ?? row['current_status'])}',
-          ),
-          isThreeLine: true,
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.push('/applications/${row['id']}'),
         );
       },
     );

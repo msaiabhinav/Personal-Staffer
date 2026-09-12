@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
+import '../core/theme.dart';
 import 'shared.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -20,6 +21,10 @@ class SettingsPage extends ConsumerWidget {
       children: [
         Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
+        Text('Appearance', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        const AppearanceSelector(),
+        const Divider(height: 32),
         Text('Server: ${repo.session.origin}'),
         const SizedBox(height: 12),
         Text('Device notifications: ${friendly(repo.notificationState)}'),
@@ -97,9 +102,18 @@ class SettingsPage extends ConsumerWidget {
           ),
         ),
         const Divider(height: 32),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.star_outline),
+          title: const Text('Watchlist'),
+          subtitle: const Text(
+            'Priority employers, now in the main navigation',
+          ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.go('/watchlist'),
+        ),
         ...[
           ('Search profile', '/profile'),
-          ('Watchlist', '/watchlist'),
           ('Daily Search Reports', '/reports'),
           ('Previously Shown Companies', '/reports/companies'),
           ('Source health', '/connectors/health'),
@@ -398,6 +412,38 @@ class _ProfileEditorState extends ConsumerState<ProfileEditor> {
       const SizedBox(height: 24),
     ],
   );
+}
+
+class AppearanceSelector extends ConsumerWidget {
+  const AppearanceSelector({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(themeControllerProvider);
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SegmentedButton<ThemeMode>(
+        segments: const [
+          ButtonSegment(
+            value: ThemeMode.system,
+            label: Text('System'),
+            icon: Icon(Icons.brightness_auto_outlined),
+          ),
+          ButtonSegment(
+            value: ThemeMode.light,
+            label: Text('Light'),
+            icon: Icon(Icons.light_mode_outlined),
+          ),
+          ButtonSegment(
+            value: ThemeMode.dark,
+            label: Text('Dark'),
+            icon: Icon(Icons.dark_mode_outlined),
+          ),
+        ],
+        selected: {controller.mode},
+        onSelectionChanged: (selection) => controller.set(selection.first),
+      ),
+    );
+  }
 }
 
 class DesktopPreferences extends StatefulWidget {

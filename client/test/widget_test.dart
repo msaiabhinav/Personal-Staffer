@@ -15,6 +15,8 @@ import 'package:personal_staffer/core/cache.dart';
 import 'package:personal_staffer/core/models.dart';
 import 'package:personal_staffer/core/providers.dart';
 import 'package:personal_staffer/core/repository.dart';
+import 'package:personal_staffer/core/history.dart';
+import 'package:personal_staffer/core/theme.dart';
 
 Future<StafferRepository> repository(
   Json Function(http.Request) response,
@@ -191,8 +193,9 @@ void main() {
   testWidgets(
     'Malformed stored session never exposes its contents at startup',
     (tester) async {
+      // Must match main.dart's API_BASE_URL default so the namespace lines up.
       final session = Session(
-        Uri.parse('http://127.0.0.1:8000'),
+        Uri.parse('http://127.0.0.1:5555'),
         const FlutterSecureStorage(),
       );
       FlutterSecureStorage.setMockInitialValues({
@@ -227,6 +230,16 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    // ADR-0001: the five specification destinations keep their order; Watchlist
+    // is the sixth primary destination.
+    expect(navLabels, [
+      'Notifications',
+      'Homepage',
+      'People',
+      'Saved Jobs',
+      'Applied Jobs',
+      'Watchlist',
+    ]);
     for (final name in navLabels) {
       expect(find.text(name), findsWidgets);
     }
@@ -236,6 +249,117 @@ void main() {
     await tester.tap(find.text('Saved Jobs').first);
     await tester.pumpAndSettle();
     expect(find.text('Keep an opportunity for later'), findsOneWidget);
+    router.dispose();
+  });
+  testWidgets('Watchlist destination lists companies with resolution state', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 950);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final repo = await repository(
+      (r) => r.url.path.endsWith('unread-count')
+          ? {'unread_count': 0}
+          : r.url.path.endsWith('/watchlist')
+          ? {
+              'items': [
+                {
+                  'id': 'w1',
+                  'company': 'Thermo Fisher Scientific',
+                  'resolution_state': 'REGISTERED',
+                },
+                {
+                  'id': 'w2',
+                  'company': 'Henry Ford Health',
+                  'resolution_state': 'PENDING',
+                },
+              ],
+              'has_more': false,
+            }
+          : {'items': [], 'has_more': false},
+    );
+    final router = createRouter(repo.session, initial: '/watchlist');
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [repositoryProvider.overrideWith((_) => repo)],
+        child: StafferApp(router: router),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Thermo Fisher Scientific'), findsOneWidget);
+    expect(find.text('Henry Ford Health'), findsOneWidget);
+    expect(find.text('Registered'), findsOneWidget);
+    expect(find.text('Pending'), findsOneWidget);
+    expect(find.text('Add a company'), findsOneWidget);
+    router.dispose();
+  });
+  testWidgets('Browser-style Back and Forward traverse visited destinations', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1400, 950);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final repo = await repository(
+      (r) => r.url.path.endsWith('unread-count')
+          ? {'unread_count': 0}
+          : {'items': [], 'has_more': false},
+    );
+    final router = createRouter(repo.session);
+    final history = NavigationHistory(router);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          repositoryProvider.overrideWith((_) => repo),
+          navigationHistoryProvider.overrideWith((_) => history),
+        ],
+        child: StafferApp(router: router),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(history.canGoBack, isFalse);
+    await tester.tap(find.text('Saved Jobs').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Watchlist').first);
+    await tester.pumpAndSettle();
+    expect(history.entries, ['/home', '/saved', '/watchlist']);
+    await tester.tap(find.byTooltip('Back (Alt+Left)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Keep an opportunity for later'), findsOneWidget);
+    expect(history.canGoForward, isTrue);
+    await tester.tap(find.byTooltip('Forward (Alt+Right)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add a company'), findsOneWidget);
+    expect(history.canGoForward, isFalse);
+    // The provider container disposes the history notifier itself.
+    router.dispose();
+  });
+  testWidgets('Dark appearance preference applies a dark theme', (
+    tester,
+  ) async {
+    final repo = await repository(
+      (r) => r.url.path.endsWith('unread-count')
+          ? {'unread_count': 0}
+          : {'items': [], 'has_more': false},
+    );
+    final controller = ThemeController(const FlutterSecureStorage());
+    final router = createRouter(repo.session);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          repositoryProvider.overrideWith((_) => repo),
+          themeControllerProvider.overrideWith((_) => controller),
+        ],
+        child: StafferApp(router: router),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final home = find.text('Job Feed');
+    expect(Theme.of(tester.element(home)).brightness, Brightness.light);
+    await controller.set(ThemeMode.dark);
+    await tester.pumpAndSettle();
+    expect(Theme.of(tester.element(home)).brightness, Brightness.dark);
     router.dispose();
   });
   testWidgets('AT-58 narrow large-font layout remains usable', (tester) async {

@@ -63,7 +63,21 @@ def test_demo_http_workflow_and_repeated_smoke_are_durable(demo_client, pg_engin
         ).json()
         items.extend(page["items"])
     groups = [item["data"] for item in items if item["entity_type"] == "employer_group"]
-    assert groups and groups[0]["canonical_name"].startswith("DEMO")
+    assert any(group["canonical_name"].startswith("DEMO") for group in groups)
+    # The Windows client's default feed query must be accepted over real HTTP (query strings are text).
+    for hours in ("24", "48", "72"):
+        feed = demo_client.get(f"/api/v1/jobs?scope=today&posted_within_hours={hours}", headers=headers)
+        assert feed.status_code == 200, feed.text
+    priority = demo_client.get("/api/v1/jobs?scope=priority&posted_within_hours=72", headers=headers)
+    assert priority.status_code == 200 and len(priority.json()["items"]) == 2
+    rejected = demo_client.get("/api/v1/jobs?scope=today&posted_within_hours=36", headers=headers)
+    assert rejected.status_code == 422
+    # The specification's priority employers are watched from the first demo sign-in.
+    watchlist = demo_client.get("/api/v1/watchlist?limit=100", headers=headers).json()["items"]
+    watched = {entry["company"] for entry in watchlist}
+    assert {"Thermo Fisher Scientific", "Henry Ford Health", "Tata Consultancy Services"} <= watched
+    assert all(entry["resolution_state"] == "REGISTERED" for entry in watchlist)
+    assert len(watchlist) == 12
     evaluations = [item["data"] for item in items if item["entity_type"] == "job_evaluation"]
     assert evaluations and evaluations[0]["evidence"]["rules"]
     snapshots = [item["data"] for item in items if item["entity_type"] == "job_snapshot"]

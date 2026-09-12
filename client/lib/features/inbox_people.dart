@@ -18,22 +18,14 @@ class _NotificationsState extends ConsumerState<NotificationsPage> {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Notifications',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ),
-            FilterChip(
-              label: const Text('Unread only'),
-              selected: unread,
-              onSelected: (v) => setState(() => unread = v),
-            ),
-          ],
+      PageHeader(
+        title: 'Notifications',
+        subtitle:
+            'Every alert opens its exact job, application, report or review.',
+        trailing: FilterChip(
+          label: const Text('Unread only'),
+          selected: unread,
+          onSelected: (v) => setState(() => unread = v),
         ),
       ),
       Expanded(
@@ -43,55 +35,77 @@ class _NotificationsState extends ConsumerState<NotificationsPage> {
             final items = objects(data['items']);
             if (items.isEmpty) {
               return const EmptyMessage(
+                icon: Icons.notifications_none,
                 title: 'You’re caught up',
                 message: 'Job alerts, application updates and reports will appear here. Every alert opens its specific record.',
               );
             }
-            return ListView.separated(
+            return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 24),
               itemCount: items.length,
-              separatorBuilder: (_, index) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final n = items[index];
-                return ListTile(
-                  minVerticalPadding: 14,
-                  leading: Icon(
-                    n['read_at'] == null
-                        ? Icons.mark_email_unread_outlined
-                        : Icons.drafts_outlined,
-                  ),
-                  title: Text(
-                    label(n['title']),
-                    style: TextStyle(
-                      fontWeight: n['read_at'] == null
-                          ? FontWeight.w600
-                          : FontWeight.normal,
+                final isUnread = n['read_at'] == null;
+                final scheme = Theme.of(context).colorScheme;
+                return Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 8,
                     ),
-                  ),
-                  subtitle: Text(
-                    '${label(n['body'], '')}\n${dateLabel(n['created_at'])}',
-                  ),
-                  isThreeLine: true,
-                  onTap: () => context.push('/notifications/${n['id']}'),
-                  trailing: IconButton(
-                    tooltip: n['read_at'] == null ? 'Mark read' : 'Mark unread',
-                    icon: Icon(
-                      n['read_at'] == null
-                          ? Icons.done
-                          : Icons.mark_email_unread_outlined,
+                    leading: CircleAvatar(
+                      backgroundColor: isUnread
+                          ? scheme.primaryContainer
+                          : scheme.surfaceContainerHigh,
+                      foregroundColor: isUnread
+                          ? scheme.onPrimaryContainer
+                          : scheme.onSurfaceVariant,
+                      child: Icon(
+                        isUnread
+                            ? Icons.mark_email_unread_outlined
+                            : Icons.drafts_outlined,
+                      ),
                     ),
-                    onPressed: () async {
-                      try {
-                        final repo = ref.read(repositoryProvider);
-                        await repo.session.request(
-                          'PUT',
-                          '/notifications/${n['id']}/read',
-                          body: {'read': n['read_at'] == null},
-                        );
-                        repo.changed();
-                      } on ApiError catch (e) {
-                        if (context.mounted) showMessage(context, e.message);
-                      }
-                    },
+                    title: Text(
+                      label(n['title']),
+                      style: TextStyle(
+                        fontWeight: isUnread
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        '${label(n['body'], '')}\n${dateLabel(n['created_at'])}',
+                      ),
+                    ),
+                    isThreeLine: true,
+                    onTap: () => context.push('/notifications/${n['id']}'),
+                    trailing: IconButton(
+                      tooltip: n['read_at'] == null
+                          ? 'Mark read'
+                          : 'Mark unread',
+                      icon: Icon(
+                        n['read_at'] == null
+                            ? Icons.done
+                            : Icons.mark_email_unread_outlined,
+                      ),
+                      onPressed: () async {
+                        try {
+                          final repo = ref.read(repositoryProvider);
+                          await repo.session.request(
+                            'PUT',
+                            '/notifications/${n['id']}/read',
+                            body: {'read': n['read_at'] == null},
+                          );
+                          repo.changed();
+                        } on ApiError catch (e) {
+                          if (context.mounted) showMessage(context, e.message);
+                        }
+                      },
+                    ),
                   ),
                 );
               },

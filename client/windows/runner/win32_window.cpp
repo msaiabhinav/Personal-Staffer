@@ -134,10 +134,29 @@ bool Win32Window::Create(const std::wstring& title,
   UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
   double scale_factor = dpi / 96.0;
 
+  // Fit the requested logical size inside the monitor's work area so a laptop
+  // with display scaling (e.g. 125% on 1536x864) never opens a clipped window.
+  int x = Scale(origin.x, scale_factor);
+  int y = Scale(origin.y, scale_factor);
+  int width = Scale(size.width, scale_factor);
+  int height = Scale(size.height, scale_factor);
+  MONITORINFO info = {};
+  info.cbSize = sizeof(info);
+  if (GetMonitorInfo(monitor, &info)) {
+    const RECT& work = info.rcWork;
+    const int work_width = work.right - work.left;
+    const int work_height = work.bottom - work.top;
+    if (width > work_width) width = work_width;
+    if (height > work_height) height = work_height;
+    if (x + width > work.right) x = work.right - width;
+    if (y + height > work.bottom) y = work.bottom - height;
+    if (x < work.left) x = work.left;
+    if (y < work.top) y = work.top;
+  }
+
   HWND window = CreateWindow(
       window_class, title.c_str(), WS_OVERLAPPEDWINDOW,
-      Scale(origin.x, scale_factor), Scale(origin.y, scale_factor),
-      Scale(size.width, scale_factor), Scale(size.height, scale_factor),
+      x, y, width, height,
       nullptr, nullptr, GetModuleHandle(nullptr), this);
 
   if (!window) {

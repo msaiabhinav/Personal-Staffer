@@ -15,11 +15,17 @@ class HomePage extends StatelessWidget {
     length: 2,
     child: Column(
       children: [
-        const TabBar(
-          tabs: [
-            Tab(text: 'Job Feed'),
-            Tab(text: 'Application Dashboard'),
-          ],
+        Material(
+          color: Theme.of(context).colorScheme.surface,
+          child: const TabBar(
+            tabAlignment: TabAlignment.start,
+            isScrollable: true,
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            tabs: [
+              Tab(text: 'Job Feed'),
+              Tab(text: 'Application Dashboard'),
+            ],
+          ),
         ),
         const Expanded(
           child: TabBarView(children: [JobsPage(), DashboardPage()]),
@@ -52,75 +58,80 @@ class _JobsPageState extends ConsumerState<JobsPage> {
     final route = widget.saved ? '/saved-jobs' : '/jobs?$query';
     final list = Column(
       children: [
+        if (widget.saved)
+          const PageHeader(
+            title: 'Saved Jobs',
+            subtitle: 'Kept until you unsave them or record your application; expired postings stay visible.',
+          ),
         if (!widget.saved)
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
             child: Wrap(
               spacing: 12,
-              runSpacing: 8,
+              runSpacing: 10,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                SizedBox(
-                  width: 280,
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: scope,
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'today',
-                        child: Text('Today’s report'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'priority',
-                        child: Text('Additional priority jobs'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'history',
-                        child: Text('Previously delivered'),
-                      ),
-                    ],
-                    onChanged: (v) => setState(() => scope = v!),
-                  ),
+                DropdownMenu<String>(
+                  width: 260,
+                  initialSelection: scope,
+                  leadingIcon: const Icon(Icons.view_agenda_outlined),
+                  label: const Text('Scope'),
+                  dropdownMenuEntries: const [
+                    DropdownMenuEntry(
+                      value: 'today',
+                      label: 'Today\u2019s report',
+                    ),
+                    DropdownMenuEntry(
+                      value: 'priority',
+                      label: 'Additional priority jobs',
+                    ),
+                    DropdownMenuEntry(
+                      value: 'history',
+                      label: 'Previously delivered',
+                    ),
+                  ],
+                  onSelected: (v) => setState(() => scope = v ?? scope),
                 ),
-                SizedBox(
+                DropdownMenu<String>(
+                  width: 190,
+                  initialSelection: hours,
+                  leadingIcon: const Icon(Icons.schedule_outlined),
+                  label: const Text('Freshness'),
+                  dropdownMenuEntries: ['24', '48', '72']
+                      .map(
+                        (h) => DropdownMenuEntry(
+                          value: h,
+                          label: 'Within $h hours',
+                        ),
+                      )
+                      .toList(),
+                  onSelected: (v) => setState(() => hours = v ?? hours),
+                ),
+                DropdownMenu<String>(
                   width: 200,
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: hours,
-                    items: ['24', '48', '72']
-                        .map(
-                          (h) => DropdownMenuItem(
-                            value: h,
-                            child: Text('Within $h hours'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) => setState(() => hours = v!),
-                  ),
+                  initialSelection: arrangement,
+                  leadingIcon: const Icon(Icons.laptop_outlined),
+                  label: const Text('Arrangement'),
+                  dropdownMenuEntries: const [
+                    DropdownMenuEntry(value: '', label: 'All arrangements'),
+                    DropdownMenuEntry(value: 'REMOTE', label: 'Remote'),
+                    DropdownMenuEntry(value: 'HYBRID', label: 'Hybrid'),
+                    DropdownMenuEntry(value: 'ONSITE', label: 'Onsite'),
+                  ],
+                  onSelected: (v) =>
+                      setState(() => arrangement = v ?? arrangement),
                 ),
                 SizedBox(
-                  width: 220,
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: arrangement,
-                    items: const [
-                      DropdownMenuItem(
-                        value: '',
-                        child: Text('All arrangements'),
-                      ),
-                      DropdownMenuItem(value: 'REMOTE', child: Text('Remote')),
-                      DropdownMenuItem(value: 'HYBRID', child: Text('Hybrid')),
-                      DropdownMenuItem(value: 'ONSITE', child: Text('Onsite')),
-                    ],
-                    onChanged: (v) => setState(() => arrangement = v!),
-                  ),
-                ),
-                SizedBox(
-                  width: 240,
+                  width: 260,
                   child: TextField(
                     decoration: const InputDecoration(
+                      isDense: true,
                       labelText: 'Search title or company',
                       prefixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
                     onSubmitted: (v) => setState(() => keyword = v),
                   ),
@@ -136,6 +147,9 @@ class _JobsPageState extends ConsumerState<JobsPage> {
               final rows = objects(data['items']);
               if (rows.isEmpty) {
                 return EmptyMessage(
+                  icon: widget.saved
+                      ? Icons.bookmark_outline
+                      : Icons.work_outline,
                   title: widget.saved
                       ? 'Keep an opportunity for later'
                       : scope == 'priority'
@@ -154,7 +168,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
               }
               return ListView.builder(
                 key: PageStorageKey(route),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
                 itemCount: rows.length,
                 itemBuilder: (context, index) {
                   return JobRow(
@@ -228,68 +242,110 @@ class JobRow extends ConsumerWidget {
     final fields = object(object(job['snapshot'])['structured_fields']);
     final state = object(job['state']);
     final pending = ref.watch(repositoryProvider).pendingFor(job['id']);
-    return Column(
-      children: [
-        InkWell(
-          onTap: onOpen,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        label(job['title']),
-                        style: Theme.of(context).textTheme.titleMedium,
+    final theme = Theme.of(context);
+    final locations = job['locations'] is List
+        ? (job['locations'] as List).join(' · ')
+        : label(job['locations']);
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onOpen,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          label(job['title']),
+                          style: theme.textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          label(job['company']),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  if (pending)
+                    const StatusPill(
+                      'Pending',
+                      icon: Icons.sync,
+                      tone: PillTone.warning,
+                    ),
+                  if (state['is_saved'] == true) ...[
+                    const SizedBox(width: 8),
+                    Tooltip(
+                      message: 'Saved',
+                      child: Icon(
+                        Icons.bookmark,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
-                    if (pending) const Chip(label: Text('Pending')),
-                    if (state['is_saved'] == true)
-                      const Tooltip(
-                        message: 'Saved',
-                        child: Icon(Icons.bookmark),
-                      ),
                   ],
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  label(job['company']),
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${job['locations'] is List ? (job['locations'] as List).join(' · ') : label(job['locations'])} · ${friendly(job['work_arrangement'])}',
-                ),
-                const SizedBox(height: 6),
-                Text('Published ${publicationLabel(job)}'),
-                if (fields['salary'] != null)
-                  Text('Salary: ${salaryLabel(fields['salary'])}'),
-                if (fields['experience'] != null)
-                  Text('Experience: ${fields['experience']}'),
-                if (state['saved_at'] != null)
-                  Text('Saved ${dateLabel(state['saved_at'])}'),
-                if (job['availability'] != 'ACTIVE')
-                  Text(
-                    'Posting ${friendly(job['availability'])} · retained record',
+                ],
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  StatusPill(locations, icon: Icons.place_outlined),
+                  StatusPill(
+                    friendly(job['work_arrangement']),
+                    icon: Icons.laptop_outlined,
                   ),
-                if (fields['summary'] != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      label(fields['summary']),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                  if (fields['salary'] != null)
+                    StatusPill(
+                      salaryLabel(fields['salary']),
+                      icon: Icons.payments_outlined,
+                      tone: PillTone.positive,
                     ),
+                  if (fields['experience'] != null)
+                    StatusPill(
+                      '${fields['experience']}',
+                      icon: Icons.timeline_outlined,
+                    ),
+                  if (job['availability'] != 'ACTIVE')
+                    StatusPill(
+                      'Posting ${friendly(job['availability'])} · retained record',
+                      icon: Icons.history,
+                      tone: PillTone.warning,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Published ${publicationLabel(job)}'
+                '${state['saved_at'] != null ? ' · Saved ${dateLabel(state['saved_at'])}' : ''}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              if (fields['summary'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    label(fields['summary']),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
-        const Divider(height: 1),
-      ],
+      ),
     );
   }
 }

@@ -7,7 +7,9 @@ import 'core/api.dart';
 import 'core/cache.dart';
 import 'core/providers.dart';
 import 'core/repository.dart';
+import 'core/history.dart';
 import 'core/notifications.dart';
+import 'core/theme.dart';
 import 'features/shared.dart';
 
 Future<void> main() async {
@@ -18,6 +20,8 @@ Future<void> main() async {
       defaultValue: 'http://127.0.0.1:5555',
     );
     const secrets = FlutterSecureStorage();
+    final theme = ThemeController(secrets);
+    await theme.restore();
     final session = Session(validateApiOrigin(origin), secrets);
     await session.restore();
     final cache = await EncryptedCache.open(secrets, session.namespace);
@@ -25,11 +29,16 @@ Future<void> main() async {
     await cache.read(session.account ?? '', '__sync');
     final repository = StafferRepository(session, cache);
     final router = createRouter(session);
+    final history = NavigationHistory(router);
     final notifications = NativeNotifications(repository, router);
     await notifications.initialize();
     runApp(
       ProviderScope(
-        overrides: [repositoryProvider.overrideWith((ref) => repository)],
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+          themeControllerProvider.overrideWith((ref) => theme),
+          navigationHistoryProvider.overrideWith((ref) => history),
+        ],
         child: StafferApp(router: router),
       ),
     );

@@ -158,28 +158,147 @@ class EmptyMessage extends StatelessWidget {
     required this.title,
     required this.message,
     this.action,
+    this.icon,
   });
   final String title, message;
   final Widget? action;
+  final IconData? icon;
   @override
-  Widget build(BuildContext context) => Center(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 480),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 12),
-            Text(message),
-            if (action != null) ...[const SizedBox(height: 24), action!],
-          ],
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (icon != null) ...[
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: scheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(icon, color: scheme.onPrimaryContainer, size: 28),
+                ),
+                const SizedBox(height: 20),
+              ],
+              Text(title, style: Theme.of(context).textTheme.headlineSmall),
+              const SizedBox(height: 12),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.bodyLarge
+                    ?.copyWith(color: scheme.onSurfaceVariant),
+              ),
+              if (action != null) ...[const SizedBox(height: 24), action!],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+/// Consistent page title block used by primary destinations.
+class PageHeader extends StatelessWidget {
+  const PageHeader({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.trailing,
+  });
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: theme.textTheme.headlineSmall),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    subtitle!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (trailing != null) ...[const SizedBox(width: 16), trailing!],
+        ],
+      ),
+    );
+  }
+}
+
+enum PillTone { neutral, positive, warning, accent }
+
+/// Small rounded status label; never relies on color alone because it carries text.
+class StatusPill extends StatelessWidget {
+  const StatusPill(
+    this.text, {
+    super.key,
+    this.tone = PillTone.neutral,
+    this.icon,
+  });
+  final String text;
+  final PillTone tone;
+  final IconData? icon;
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final (Color background, Color foreground) = switch (tone) {
+      PillTone.positive => (
+        scheme.primary.withValues(alpha: 0.16),
+        scheme.onPrimaryContainer,
+      ),
+      PillTone.warning => (
+        scheme.tertiary.withValues(alpha: 0.18),
+        scheme.tertiary,
+      ),
+      PillTone.accent => (scheme.primary, scheme.onPrimary),
+      PillTone.neutral => (
+        scheme.surfaceContainerHigh,
+        scheme.onSurfaceVariant,
+      ),
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 14, color: foreground),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            text,
+            style: Theme.of(context).textTheme.labelMedium
+                ?.copyWith(color: foreground, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class StatusStrip extends StatelessWidget {
@@ -193,20 +312,26 @@ class StatusStrip extends StatelessWidget {
   final IconData icon;
   final Widget? action;
   @override
-  Widget build(BuildContext context) => Material(
-    color: Theme.of(context).colorScheme.surfaceContainerLow,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
-        children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 12),
-          Expanded(child: Text(text)),
-          ?action,
-        ],
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.surfaceContainerLow,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: scheme.primary),
+            const SizedBox(width: 12),
+            Expanded(child: Text(text)),
+            ?action,
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class DetailPage extends StatelessWidget {

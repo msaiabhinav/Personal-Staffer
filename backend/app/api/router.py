@@ -403,7 +403,7 @@ def employer_groups(
 @router.get("/jobs")
 def jobs(
     scope: Literal["today", "history", "priority"] = "today",
-    posted_within_hours: Literal[24, 48, 72] | None = None,
+    posted_within_hours: int | None = Query(None, description="Freshness window: 24, 48 or 72 hours"),
     work_arrangement: str | None = None,
     family: str | None = None,
     company: str | None = None,
@@ -414,6 +414,9 @@ def jobs(
     user: User = USER_DEPENDENCY,
     session: Session = SESSION_DEPENDENCY,
 ):
+    # Query strings arrive as text; an int Literal would reject the client's own "72" with 422.
+    if posted_within_hours is not None and posted_within_hours not in (24, 48, 72):
+        raise DomainError("VALIDATION_ERROR", "posted_within_hours must be 24, 48 or 72.", 422)
     stmt = select(Job).join(InitialDelivery, InitialDelivery.job_id == Job.id).where(InitialDelivery.user_id == user.id)
     if scope == "today":
         today = datetime.now(ZoneInfo("America/New_York")).date()

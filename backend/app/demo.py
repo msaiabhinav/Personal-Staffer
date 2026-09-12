@@ -131,6 +131,11 @@ def seed_demo(session):
         )
     )
     record_change(session, user.id, "profile", profile.id, profile.revision)
+    # The specification's priority employer seeds appear on the demo Watchlist as
+    # rotation groups only; no jobs, entities or E-Verify evidence are invented for them.
+    from app.cli import seed_registry
+
+    seed_registry(session)
     from app.eligibility.models import JobEvidence
     from app.jobs.pipeline import reevaluate_job
 
