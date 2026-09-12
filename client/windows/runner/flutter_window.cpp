@@ -147,6 +147,12 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
     case WM_FONTCHANGE:
       flutter_controller_->engine()->ReloadSystemFonts();
       break;
+    case WM_SHOWWINDOW:
+    case WM_ACTIVATE:
+      // The view has been observed blank after the window was activated from another
+      // process following a long hidden period; schedule a frame so a stale surface repaints.
+      if (flutter_controller_ && wparam != 0) flutter_controller_->ForceRedraw();
+      break;
   }
 
   return Win32Window::MessageHandler(hwnd, message, wparam, lparam);
