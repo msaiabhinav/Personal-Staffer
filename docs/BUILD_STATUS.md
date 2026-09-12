@@ -2,16 +2,16 @@
 
 ## Windows desktop-debug checkpoint — 12 September 2026
 
-Branch `debug/windows-desktop` (from published `35338e6`), checkpoint commits `509b39e`, `75a5370`, `5ab474f`. Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress, not accepted**.
+Branch `debug/windows-desktop` (from published `35338e6`). Executed on the target Asus Vivobook Pro 15 (Windows 11 Home 26200). Milestone M3 is **in progress**: the Windows workflow runs on the device against real PostgreSQL/Redis with synthetic data and the installer round-trips; physical acceptance of tray/startup/toast/accessibility and the second verification loop remain before M3 is declared accepted. Owner product decisions (Watchlist as a sixth destination, light/dark appearance, browser-style history, local API port 5555) are recorded in ADR 0002.
 
 | State | Change at this checkpoint |
 |---|---|
 | Implemented | Isolated demo tooling: `scripts/check_desktop_prerequisites.ps1`, `scripts/start_desktop_demo.ps1`, `scripts/stop_desktop_demo.ps1`; `deployment/compose.local.yml` selects an ignored `.env.demo` through `STAFFER_ENV_FILE` and mounts `scripts/`/.env.example read-only into the local `api` service. Settings policy constants accept dotenv strings while still refusing any value other than 32/72. |
 | Automated-test verified | On real PostgreSQL 17.11 and Redis 7.4.6 in Docker Desktop: **459 passed, 0 skipped** (3 upstream deprecation warnings). Every formerly skipped PostgreSQL test executed. CI-equivalent Ruff lint/format clean. Policy replay 60/60. Demo HTTP smoke on PostgreSQL passed. Flutter 3.47.4 analyzer clean and 20 tests passed on Windows. |
 | Live-source verified | Unchanged. |
-| Device verified | Backend containers and HTTP checks executed on the Windows laptop. **The Windows application has not been built or launched here yet**; no UI, tray, startup, toast, protocol, encrypted-storage or installer acceptance. |
+| Device verified | On the target laptop: Windows debug and release builds; the app launched and used in DEMO_MODE (all six destinations, job detail, save/unsave, watchlist, appearance, Back/Forward); AT-55 encrypted-storage integration test passed on the device; protocol-link forwarding to the running instance; release HTTPS guard; unsigned Inno Setup installer built, installed, upgraded over itself, uninstalled cleanly (`verification/windows-installer.json`). **Not yet physically accepted:** tray/close-to-tray/startup, toast click activation, keyboard/screen-reader review, offline-reconnect. |
 | Not configured | Unchanged (Google owner/OAuth, FCM, People, USAJOBS, deployment endpoint, backups, signing). Inno Setup 6 not installed. |
-| Blocked | Visual Studio C++ desktop toolchain and Windows Developer Mode require administrator action by the user before `flutter build windows` can run. |
+| Blocked | Nothing blocks local desktop work now (Developer Mode, VS Build Tools + ATL and Inno Setup are installed). A working *installed* app needs an HTTPS backend origin because release builds refuse plain HTTP by design. Google sign-in/Gmail remain unconfigured. |
 
 Defects corrected here (regression tests added): dotenv `Literal` policy constants broke the documented startup; in-container pytest could not collect root-script tests; version-endpoint test assumed non-demo environment. See TEST_RESULTS.md.
 

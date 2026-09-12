@@ -4,7 +4,7 @@ Personal Staffer is a Flutter native application, not a browser product. The tar
 
 ## Toolchain
 
-Install Flutter **3.47.4** stable (Dart **3.13.3**) and Visual Studio with the Desktop development with C++ workload, Windows SDK and CMake tooling. Visual Studio Code alone does not supply the native compiler. Install Git and, for the local backend, Docker Desktop/WSL2. Follow the current [Flutter Windows setup](https://docs.flutter.dev/platform-integration/windows/setup).
+Install Flutter **3.47.4** stable (Dart **3.13.3**) and Visual Studio 2022 (or Build Tools) with the Desktop development with C++ workload, Windows SDK, CMake tooling **and the C++ ATL component** (`Microsoft.VisualStudio.Component.VC.ATL`; the secure-storage and notification plugins include `atlbase.h`/`atlstr.h`). One elevated command installs the toolchain: `winget install --id Microsoft.VisualStudio.2022.BuildTools --override "--quiet --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --add Microsoft.VisualStudio.Component.VC.ATL"`. Enable Windows Developer Mode (Settings > System > For developers) so Flutter can create plugin symlinks. Visual Studio Code alone does not supply the native compiler. Install Git and, for the local backend, Docker Desktop/WSL2. Follow the current [Flutter Windows setup](https://docs.flutter.dev/platform-integration/windows/setup).
 
 In PowerShell from `client/`:
 
@@ -27,7 +27,7 @@ A credentialless demonstration is optional and visibly synthetic. `scripts\start
 
 ## Installer and update
 
-Install Inno Setup 6, then from `client/`:
+Install Inno Setup 6 (`winget install --id JRSoftware.InnoSetup`; a per-user install lands in `%LOCALAPPDATA%\Programs\Inno Setup 6`, pass its `ISCC.exe` with `-Iscc`), then from `client/`:
 
 ```powershell
 .\tool\build_windows.ps1 -ApiBaseUrl 'https://YOUR-AUTHORIZED-SERVER'
@@ -49,3 +49,15 @@ Start-Process 'personalstaffer://jobs/REPLACE-WITH-AN-AUTHORIZED-JOB-UUID'
 Run foreground, minimized, closed, signed-out, reboot and reconnect checks. Check toast click to exact application/review/report; Google browser return; secure cache reopening after process restart; keyboard traversal; screen-reader names; small windows and enlarged fonts; and install/update/uninstall.
 
 The present Windows delivery polls the authoritative inbox while the app is running. It suppresses the initial backlog and summarizes later batches. The Windows runner includes an opt-in tray mode with Open/Exit menu and a separate Windows-sign-in startup switch. Both default off; enabling tray mode keeps the process alive when the window closes. Exiting it stops local polling and the app catches up on reopening. The native runner and installer still need a real Windows build and lifecycle tests, so full M3/M8 native acceptance is not complete. Linux encryption and widget tests are not Windows device verification.
+
+## Owner checklist for physical Phase C acceptance
+
+Run the debug demo (`scripts\start_desktop_demo.ps1`) and tick each item, noting anything unexpected:
+
+1. Settings > Desktop: enable "Keep notifications running when window closes"; close the window; a tray icon remains; right-click shows Open / Exit; Open restores the window; Exit stops the app.
+2. Settings > Desktop: enable "Open Personal Staffer when I sign in to Windows"; confirm `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\PersonalStaffer` exists; sign out/in and confirm the app starts in the tray; disable and confirm the value is removed.
+3. Leave the app running for a minute; a Windows toast appears for a new inbox item when one is produced; clicking it opens the exact record.
+4. Tab/Shift+Tab traverse every control with a visible focus ring; Alt+Left/Alt+Right move through history; Narrator reads destination names.
+5. Windows Settings > Accessibility > Text size 150%: all screens remain usable; shrink the window below 1000 px wide: the bottom navigation bar appears.
+6. Disable Wi-Fi: the sidebar footer turns amber "Offline"; saved records still open; Save shows Pending; re-enable Wi-Fi and the change synchronizes.
+7. Sign out: the cache is cleared and the sign-in screen appears; sign back in with "Open local demo".

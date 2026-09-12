@@ -34,6 +34,7 @@ scripts\check_desktop_prerequisites.ps1        # read-only report; installs noth
 scripts\start_desktop_demo.ps1 -BackendOnly    # build, migrate once, seed, verify readiness
 scripts\start_desktop_demo.ps1                 # ...then flutter run -d windows in DEMO_MODE
 scripts\stop_desktop_demo.ps1                  # stops containers; demo volumes are kept (-DeleteData removes them)
+scripts\verify_desktop_loop.ps1 -PassNumber N   # one complete verification loop; evidence in docs/verification
 ```
 
 The full backend suite runs against the demo PostgreSQL/Redis from the same project; `scripts/` and `.env.example` are mounted read-only into the local `api` service so root-script tests collect:

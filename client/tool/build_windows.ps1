@@ -16,7 +16,13 @@ try {
   $vsRoot = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
   if (-not $vsRoot) { throw 'Visual C++ installation not found for runtime packaging' }
   $redistRoot = Join-Path $vsRoot 'VC/Redist/MSVC'
-  $runtime = Get-ChildItem $redistRoot -Directory | Sort-Object Name -Descending | ForEach-Object { Get-ChildItem (Join-Path $_.FullName 'x64') -Directory -Filter 'Microsoft.VC*.CRT' } | Select-Object -First 1
+  # Redist contains versioned folders plus a 'v143' alias without an x64 subtree; only consider
+  # folders that actually carry the x64 CRT so a missing path cannot abort packaging.
+  $runtime = Get-ChildItem $redistRoot -Directory |
+    Where-Object { Test-Path (Join-Path $_.FullName 'x64') } |
+    Sort-Object Name -Descending |
+    ForEach-Object { Get-ChildItem (Join-Path $_.FullName 'x64') -Directory -Filter 'Microsoft.VC*.CRT' -ErrorAction SilentlyContinue } |
+    Select-Object -First 1
   if (-not $runtime) { throw 'Microsoft x64 app-local VC runtime not found' }
   foreach ($dll in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
     $source = Join-Path $runtime.FullName $dll

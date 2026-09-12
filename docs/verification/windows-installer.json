@@ -1,0 +1,43 @@
+{
+  "recorded_utc": "2026-09-12T18:11:08+00:00",
+  "host": "Asus Vivobook Pro 15, Windows 11 Home 26200",
+  "toolchain": {
+    "flutter": "3.47.4",
+    "dart": "3.13.3",
+    "visual_studio_build_tools": "2022 17.14.40 + VC.ATL",
+    "inno_setup": "6 (per-user install)"
+  },
+  "api_base_url_compiled": "http://127.0.0.1:5555",
+  "signed": false,
+  "release_executable": {
+    "path": "client/build/windows/x64/runner/Release/personal_staffer.exe",
+    "bytes": 871936,
+    "sha256": "39a4144554104670351f10ffbd6b5104cc240fe21bab9813598a56ddbdeb53b7"
+  },
+  "installer": {
+    "path": "client/build/installer/PersonalStaffer-0.1.0-unsigned-setup.exe",
+    "bytes": 12486610,
+    "sha256": "5936cf5bb3af9ca46eb835e9d1111e54cd5393eb93b0a575c292e80322da5fe7"
+  },
+  "acceptance": {
+    "silent_install_exit": 0,
+    "protocol_registered": true,
+    "start_menu_shortcut": true,
+    "uninstall_entry": true,
+    "os_protocol_activation_launched_installed_exe": true,
+    "upgrade_over_existing_exit": 0,
+    "uninstall_exit": 0,
+    "removed_on_uninstall": [
+      "install directory",
+      "HKCU\\Software\\Classes\\personalstaffer",
+      "HKCU\\Software\\PersonalStaffer",
+      "Run entry",
+      "Start menu group",
+      "Uninstall entry"
+    ],
+    "retained_on_uninstall": [
+      "%APPDATA%\\com.personalstaffer (encrypted local cache and secure-storage files)"
+    ],
+    "note": "Release builds refuse a plain-HTTP API origin by design, so this installed demo shows the safe startup message; a working installed app needs an HTTPS backend origin."
+  }
+}

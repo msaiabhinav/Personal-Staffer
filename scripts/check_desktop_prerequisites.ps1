@@ -158,6 +158,20 @@ if (Test-Path $vswhere) {
     Add-Result 'Visual Studio C++' 'FAIL' 'Visual Studio / Build Tools not installed (vswhere.exe absent). Install "Desktop development with C++" including Windows 10/11 SDK and C++ CMake tools.'
 }
 
+# ATL headers are required by the flutter_secure_storage and flutter_local_notifications
+# Windows plugins (atlbase.h / atlstr.h). The C++ workload does not include them by default.
+if ($vsRoot) {
+    $atl = Get-ChildItem (Join-Path $vsRoot 'VC\Tools\MSVC') -Directory -ErrorAction SilentlyContinue |
+        ForEach-Object { Join-Path $_.FullName 'atlmfc\include\atlbase.h' } | Where-Object { Test-Path $_ } | Select-Object -First 1
+    if ($atl) {
+        Add-Result 'C++ ATL' 'PASS' $atl
+    } else {
+        Add-Result 'C++ ATL' 'FAIL' 'Component Microsoft.VisualStudio.Component.VC.ATL missing; Windows plugin builds fail with "Cannot open include file atlbase.h".'
+    }
+} else {
+    Add-Result 'C++ ATL' 'FAIL' 'Requires the Visual Studio C++ toolchain first.'
+}
+
 $sdkRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\Include'
 if (Test-Path $sdkRoot) {
     $sdks = Get-ChildItem $sdkRoot -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^10\.' } | Sort-Object Name -Descending
