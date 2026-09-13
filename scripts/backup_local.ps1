@@ -23,7 +23,7 @@ param([int]$Keep = 14, [string]$Mode = 'local')
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 $env:STAFFER_ENV_FILE = Join-Path $repo ".env.$Mode"
-$project = "personal-staffer-$Mode"
+$project = "personal-staffer-$Mode"  # backup Mode is the compose project suffix: local (owner data) or demo
 $compose = Join-Path $repo 'deployment\compose.local.yml'
 $dir = Join-Path $env:USERPROFILE 'PersonalStafferBackups'
 New-Item -ItemType Directory -Force $dir | Out-Null

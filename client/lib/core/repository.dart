@@ -13,6 +13,34 @@ class StafferRepository extends ChangeNotifier {
   final Session session;
   final LocalCache cache;
   bool offline = false, syncing = false;
+
+  /// When the local API itself stopped answering (Docker/backend down), as opposed to a
+  /// transient request failure. Null while the backend is reachable.
+  DateTime? backendDownSince;
+  bool restartingBackend = false;
+  void setRestarting(bool value) {
+    restartingBackend = value;
+    notifyListeners();
+  }
+
+  /// Unauthenticated liveness probe of the local API. Runs alongside sync so the sidebar
+  /// can say "backend offline since 12:45" instead of a generic offline label.
+  Future<void> heartbeat() async {
+    try {
+      await session.request('GET', '/health/live', authenticated: false);
+      if (backendDownSince != null) {
+        backendDownSince = null;
+        notifyListeners();
+      }
+    } on ApiError catch (e) {
+      if (e.retryable && backendDownSince == null) {
+        backendDownSince = DateTime.now();
+        offline = true;
+        notifyListeners();
+      }
+    }
+  }
+
   String? syncMessage;
   String notificationState = 'NOT_CONFIGURED';
   void updateNotificationState(String value) {
@@ -27,7 +55,11 @@ class StafferRepository extends ChangeNotifier {
   String get account => session.account ?? '';
   Future<void> start() async {
     operations = await cache.pending(account);
-    _timer ??= Timer.periodic(const Duration(seconds: 30), (_) => sync());
+    _timer ??= Timer.periodic(const Duration(seconds: 30), (_) {
+      heartbeat();
+      sync();
+    });
+    await heartbeat();
     await sync();
   }
 

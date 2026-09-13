@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import 'core/api.dart';
 import 'core/providers.dart';
+import 'core/repository.dart';
 import 'core/models.dart';
 import 'core/history.dart';
 import 'core/theme.dart';
@@ -53,6 +55,72 @@ final navSelectedIcons = [
   Icons.star,
 ];
 ThemeData stafferTheme() => stafferThemeFor(Brightness.light);
+
+String _clock(DateTime at) {
+  final local = at.toLocal();
+  return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+}
+
+/// Repository checkout that holds scripts/start_backend.ps1: an explicit build-time
+/// define first, otherwise walk up from the executable (client/build/windows/...).
+String? backendScript() {
+  const configured = String.fromEnvironment('REPO_ROOT');
+  final roots = <String>[if (configured.isNotEmpty) configured];
+  var dir = File(Platform.resolvedExecutable).parent;
+  for (var i = 0; i < 8; i++) {
+    roots.add(dir.path);
+    dir = dir.parent;
+  }
+  for (final root in roots) {
+    final script = File(
+      '$root${Platform.pathSeparator}scripts${Platform.pathSeparator}start_backend.ps1',
+    );
+    if (script.existsSync()) return script.path;
+  }
+  return null;
+}
+
+/// Runs scripts/start_backend.ps1 (repairs/starts Docker Desktop, `compose up -d`,
+/// waits for the API). Never resets Docker or touches data.
+Future<void> restartBackend(
+  BuildContext context,
+  StafferRepository repo,
+) async {
+  final script = backendScript();
+  if (!Platform.isWindows || script == null) {
+    showMessage(
+      context,
+      'Run scripts\\start_backend.ps1 from the Personal Staffer folder to restart the backend.',
+    );
+    return;
+  }
+  repo.setRestarting(true);
+  try {
+    final result = await Process.run('powershell.exe', [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-File',
+      script,
+      '-Mode',
+      'live',
+    ]).timeout(const Duration(minutes: 9));
+    await repo.heartbeat();
+    if (context.mounted) {
+      showMessage(
+        context,
+        result.exitCode == 0
+            ? 'Backend is running again.'
+            : 'Backend did not come back (exit ${result.exitCode}). See %LOCALAPPDATA%\\PersonalStaffer\\start_backend.log.',
+      );
+    }
+  } on Object catch (e) {
+    if (context.mounted) showMessage(context, 'Restart failed: $e');
+  } finally {
+    repo.setRestarting(false);
+    if (repo.backendDownSince == null) repo.sync();
+  }
+}
 
 /// The owner's logo badge (assets/brand), the same artwork as the window icon.
 class BrandMark extends StatelessWidget {
@@ -720,7 +788,9 @@ class Sidebar extends ConsumerWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: repo.offline
+                      color: repo.backendDownSince != null
+                          ? colors.coral
+                          : repo.offline
                           ? colors.amber
                           : repo.syncing
                           ? colors.blue
@@ -729,16 +799,48 @@ class Sidebar extends ConsumerWidget {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      repo.offline
-                          ? 'Offline \u00b7 cached records'
-                          : repo.syncing
-                          ? 'Synchronizing\u2026'
-                          : 'Connected',
-                      style: Theme.of(context).textTheme.bodySmall
-                          ?.copyWith(color: colors.onSidebar),
+                    child: Tooltip(
+                      message: repo.backendDownSince != null
+                          ? 'The local Personal Staffer service (Docker) is not answering. '
+                                'Your internet is not the problem. Restart it with the button.'
+                          : '',
+                      child: Text(
+                        repo.backendDownSince != null
+                            ? 'Backend offline since ${_clock(repo.backendDownSince!)}'
+                            : repo.offline
+                            ? 'Offline \u00b7 cached records'
+                            : repo.syncing
+                            ? 'Synchronizing\u2026'
+                            : 'Connected',
+                        style: Theme.of(context).textTheme.bodySmall
+                            ?.copyWith(color: colors.onSidebar),
+                      ),
                     ),
                   ),
+                  if (repo.backendDownSince != null)
+                    IconButton(
+                      tooltip: repo.restartingBackend
+                          ? 'Restarting the backend\u2026'
+                          : 'Restart backend',
+                      visualDensity: VisualDensity.compact,
+                      onPressed: repo.restartingBackend
+                          ? null
+                          : () => restartBackend(context, repo),
+                      icon: repo.restartingBackend
+                          ? SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colors.onSidebar,
+                              ),
+                            )
+                          : Icon(
+                              Icons.restart_alt,
+                              size: 20,
+                              color: colors.coral,
+                            ),
+                    ),
                   IconButton(
                     tooltip: 'Settings',
                     visualDensity: VisualDensity.compact,
