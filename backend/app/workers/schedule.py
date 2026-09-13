@@ -9,6 +9,10 @@ from app.workers.service import enqueue
 
 def source_interval(source):
     tags = {str(tag).upper() for tag in source.pool_tags or []}
+    if source_queries(source) != [""]:
+        # Search-style sources run once per reviewed query; hourly keeps the worker free for
+        # mail sync and the board sources while still catching same-day postings.
+        return 3600
     if "WATCHLIST" in tags:
         return 900
     if "CONNECTICUT" in tags:
@@ -20,7 +24,7 @@ def source_interval(source):
 
 def source_queries(source) -> list[str]:
     """Reviewed search terms for a source, or a single empty query (the whole board)."""
-    queries = (source.capabilities or {}).get("queries")
+    queries = (getattr(source, "capabilities", None) or {}).get("queries")
     if not isinstance(queries, list):
         return [""]
     cleaned = []

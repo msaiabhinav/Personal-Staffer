@@ -150,3 +150,35 @@ def test_fcm_failure_retries_preserves_inbox_and_caps_attempts(pg_engine, monkey
     with factory() as session:
         assert session.get(Notification, identifier)
         assert session.scalar(select(NotificationDelivery)).attempts == 3
+
+
+def test_dispatch_publishes_mail_sync_and_inbox_ahead_of_source_scans(pg_engine):
+    from app.workers.service import event_priority
+
+    factory = sessionmaker(pg_engine, expire_on_commit=False)
+    with factory() as session, session.begin():
+        scan = enqueue(session, "SEARCH_SOURCE", {"source_id": "s", "user_id": "u"}, "prio-scan")
+        prep = enqueue(
+            session,
+            "SEARCH_SOURCE",
+            {"source_id": "s", "user_id": "u", "report_preparation": "2026-09-13"},
+            "prio-prep",
+        )
+        mail = enqueue(session, "GMAIL_SYNC", {"user_id": "u"}, "prio-mail")
+        for name, work in [("scan", scan), ("prep", prep), ("mail", mail)]:
+            session.add(OutboxEvent(event_key=f"prio:{name}", event_type="WORK", payload={"work_id": str(work.id)}))
+        session.add(
+            OutboxEvent(event_key="prio:inbox", event_type="notification.created", payload={"notification_id": "n"})
+        )
+        session.flush()
+        rows = {e.event_key: event_priority(session, e) for e in session.scalars(select(OutboxEvent))}
+    assert rows["prio:inbox"] == 0 and rows["prio:mail"] == 1 and rows["prio:prep"] == 3 and rows["prio:scan"] == 6
+    published = []
+    later = datetime.now(UTC) + timedelta(seconds=1)
+    assert dispatch_once(factory, lambda event_id, priority: published.append(priority), now=later) >= 4
+    assert {0, 1, 3, 6} <= set(published)
+    # A single-argument publisher (older callers/tests) still works.
+    with factory() as session, session.begin():
+        session.add(OutboxEvent(event_key="prio:plain", event_type="notification.created", payload={}))
+    plain = []
+    assert dispatch_once(factory, plain.append, now=datetime.now(UTC) + timedelta(seconds=1)) == 1

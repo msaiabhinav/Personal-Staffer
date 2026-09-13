@@ -81,6 +81,37 @@ def reconcile(session: Session, *, now=None) -> int:
     return len(rows)
 
 
+# Broker priority (0 = first). Inbox and mail sync must never wait behind long source scans:
+# a few search-style sources with several queries each can keep both worker slots busy for
+# most of an hour, and the owner's Gmail sync would otherwise starve.
+WORK_PRIORITY = {
+    "NOTIFICATION_DELIVERY": 0,
+    "GMAIL_SYNC": 1,
+    "BUILD_REPORT": 2,
+    "SEARCH_SOURCE": 6,
+    "PEOPLE_ENRICH": 7,
+}
+
+
+def event_priority(session, event) -> int:
+    if event.event_type in {"WORK", "work.ready"}:
+        work_id = (event.payload or {}).get("work_id")
+        row = session.get(WorkItem, UUID(work_id)) if work_id else None
+        if row is None:
+            return 5
+        if row.task_type == "SEARCH_SOURCE" and (row.payload or {}).get("report_preparation"):
+            return 3  # The 10:30 preparation pass feeds today's report.
+        return WORK_PRIORITY.get(row.task_type, 5)
+    return 0  # notification.created / application.changed are tiny and user-facing.
+
+
+def _publish(publish, event_id, priority):
+    try:
+        return publish(event_id, priority)
+    except TypeError:
+        return publish(event_id)  # Single-argument publishers (tests, older callers).
+
+
 def dispatch_once(session_factory, publish, *, now=None) -> int:
     now = now or datetime.now(UTC)
     with session_factory() as session, session.begin():
@@ -100,11 +131,11 @@ def dispatch_once(session_factory, publish, *, now=None) -> int:
             event.state, event.lease_owner = "DISPATCHING", str(uuid4())
             event.lease_expires_at = now + timedelta(minutes=2)
             event.attempts += 1
-            ids.append((event.id, event.lease_owner, event.attempts))
+            ids.append((event.id, event.lease_owner, event.attempts, event_priority(session, event)))
     count = 0
-    for event_id, claim_owner, attempts in ids:
+    for event_id, claim_owner, attempts, priority in ids:
         try:
-            publish(str(event_id))
+            _publish(publish, str(event_id), priority)
             values = {"state": "DISPATCHED", "dispatched_at": datetime.now(UTC), "lease_expires_at": None}
             count += 1
         except Exception as exc:  # noqa: BLE001 - Broker implementations raise distinct transport errors.

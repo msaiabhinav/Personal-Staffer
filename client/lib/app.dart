@@ -16,6 +16,7 @@ import 'features/applications.dart';
 import 'features/inbox_people.dart';
 import 'features/settings.dart';
 import 'features/watchlist.dart';
+import 'features/company.dart';
 
 /// Primary destinations. The first five are the specification's fixed order;
 /// Watchlist was added as a primary destination by product decision (ADR-0001).
@@ -63,6 +64,7 @@ String shellTitle(String location) {
   if (index >= 0) return navLabels[index];
   if (path == '/settings') return 'Settings';
   if (path == '/collection') return uri.queryParameters['title'] ?? 'Records';
+  if (path == '/company') return uri.queryParameters['name'] ?? 'Company';
   if (path.startsWith('/jobs/')) return 'Job';
   if (path.startsWith('/evidence/')) return 'Evidence';
   if (path.startsWith('/reports/')) return 'Daily report';
@@ -124,7 +126,15 @@ GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
         ),
         GoRoute(
           path: '/applications',
-          builder: (_, state) => const ApplicationsPage(),
+          builder: (_, state) => ApplicationsPage(
+            initialStatus: state.uri.queryParameters['status'] ?? '',
+            key: ValueKey(state.uri.queryParameters['status'] ?? ''),
+          ),
+        ),
+        GoRoute(
+          path: '/company',
+          builder: (_, state) =>
+              CompanyPage(name: state.uri.queryParameters['name'] ?? ''),
         ),
         GoRoute(
           path: '/applications/new',

@@ -234,7 +234,10 @@ def main(argv=None):
             with factory() as session, session.begin():
                 schedule_due(session)
                 reconcile(session)
-            count = dispatch_once(factory, lambda event_id: process_event.delay(event_id))
+            count = dispatch_once(
+                factory,
+                lambda event_id, priority=5: process_event.apply_async(args=[event_id], priority=priority),
+            )
             if args.command == "dispatch-once":
                 print(json.dumps({"dispatched": count}))
                 return

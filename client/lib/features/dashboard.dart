@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/models.dart';
 import '../core/theme.dart';
+import 'company.dart';
 import 'shared.dart';
 
 /// Statuses that mean the application is still open, in pipeline order.
@@ -118,6 +119,8 @@ class DashboardPage extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
             children: [
+              const CompanySearch(),
+              const SizedBox(height: 16),
               _Kpis(s),
               const SizedBox(height: 16),
               _Grid(
@@ -240,6 +243,7 @@ class _Kpis extends StatelessWidget {
         detail: '${s.open} in progress · ${s.closed} closed',
         icon: Icons.work_outline,
         hue: colors.blue,
+        onTap: () => context.go('/applications'),
       ),
       _Kpi(
         label: 'No reply yet',
@@ -249,6 +253,7 @@ class _Kpis extends StatelessWidget {
             : 'Employer has not responded',
         icon: Icons.hourglass_bottom,
         hue: colors.amber,
+        onTap: () => context.go('/applications?status=AWAITING_RESPONSE'),
       ),
       _Kpi(
         label: 'Interviews & offers',
@@ -257,6 +262,11 @@ class _Kpis extends StatelessWidget {
             '${s.interviews} interviewing/assessment · ${s.offers} offer${s.offers == 1 ? '' : 's'}',
         icon: Icons.forum_outlined,
         hue: colors.violet,
+        onTap: () => context.go(
+          s.offers > 0 && s.interviews == 0
+              ? '/applications?status=OFFER'
+              : '/applications?status=INTERVIEWING',
+        ),
       ),
       _Kpi(
         label: 'Response rate',
@@ -265,6 +275,7 @@ class _Kpis extends StatelessWidget {
             '${s.replied} of ${s.total} heard back · ${s.closed} rejected/closed',
         icon: Icons.mark_email_read_outlined,
         hue: s.closed > s.interviews + s.offers ? colors.coral : colors.green,
+        onTap: () => context.go('/applications?status=REJECTED'),
       ),
     ];
     return LayoutBuilder(
@@ -294,62 +305,69 @@ class _Kpi extends StatelessWidget {
     required this.detail,
     required this.icon,
     required this.hue,
+    this.onTap,
   });
   final String label, value, detail;
   final IconData icon;
   final Color hue;
+
+  /// Every number opens the list behind it.
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(width: 4, color: hue),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(22, 18, 18, 18),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        value,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        detail,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                HueBadge(icon: icon, hue: hue, size: 40),
-              ],
+      child: InkWell(
+        onTap: onTap,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: Container(width: 4, color: hue),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 18, 18, 18),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          label,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          value,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          detail,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  HueBadge(icon: icon, hue: hue, size: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

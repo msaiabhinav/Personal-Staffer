@@ -23,7 +23,8 @@ celery_app.conf.update(
     task_soft_time_limit=600,
     task_time_limit=660,
     broker_connection_retry_on_startup=True,
-    broker_transport_options={"visibility_timeout": 900},
+    broker_transport_options={"visibility_timeout": 900, "queue_order_strategy": "priority"},
+    task_default_priority=5,
     beat_schedule={"durable-minute": {"task": "staffer.tick", "schedule": 60.0}},
 )
 

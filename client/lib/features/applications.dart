@@ -21,13 +21,17 @@ const applicationStatuses = [
 ];
 
 class ApplicationsPage extends StatefulWidget {
-  const ApplicationsPage({super.key});
+  const ApplicationsPage({super.key, this.initialStatus = ''});
+
+  /// Status filter to open with (dashboard tiles link here with one).
+  final String initialStatus;
   @override
   State<ApplicationsPage> createState() => _ApplicationsPageState();
 }
 
 class _ApplicationsPageState extends State<ApplicationsPage> {
-  String query = '', status = '';
+  String query = '';
+  late String status = widget.initialStatus;
   @override
   Widget build(BuildContext context) => Column(
     children: [
@@ -51,6 +55,10 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
               value: status,
               items: [
                 const DropdownMenuItem(value: '', child: Text('All statuses')),
+                const DropdownMenuItem(
+                  value: 'AWAITING_RESPONSE',
+                  child: Text('No reply yet'),
+                ),
                 ...applicationStatuses.map(
                   (s) => DropdownMenuItem(value: s, child: Text(friendly(s))),
                 ),
