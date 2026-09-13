@@ -160,3 +160,21 @@ def test_repeated_confirmation_for_same_company_and_title_links_instead_of_creat
 
     first, second = import_history.propose(Session(), uuid4())
     assert first.action == "CREATE" and second.action == "LINK" and second.link_to == str(first.review_id)
+
+
+def test_bulk_employer_mail_is_never_proposed_as_application_evidence():
+    from app.email.import_history import _BULK_MAIL
+
+    for subject in [
+        "News from Schneider Electric - Innovation, Partnerships & People",
+        "Registrations Are OPEN: Go Green 2026 Starts Now!",
+        "Digital Talent News - Schneider Electric",
+        "Confirm your identity",
+    ]:
+        assert _BULK_MAIL.search(subject), subject
+    for subject in [
+        "Thank You for Your Interest in The Home Depot",
+        "RE: Healthcare Analyst Role - Resume for Consideration",
+        "Your application status has changed",
+    ]:
+        assert not _BULK_MAIL.search(subject), subject

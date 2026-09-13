@@ -385,6 +385,13 @@ def apply(session, user_id: UUID, proposals: list[Proposal], *, include_low: boo
 # ---------------------------------------------------------------------------------------------
 # One-time re-match of open status emails against the applications created above.
 
+# Employer bulk mail that names the company but says nothing about the owner's application.
+_BULK_MAIL = re.compile(
+    r"newsletter|news from|latest in|registrations? (?:are )?open|starts now|webinar|talent community|"
+    r"talent news|confirm your identity|survey|unsubscribe|digest|events? (?:this|next) (?:week|month)",
+    re.IGNORECASE,
+)
+
 _COMPANY_NOISE = re.compile(
     r"\b(?:inc|llc|ltd|corp|corporation|company|co|group|plc|pty|holdings|system|systems|services)\b\.?",
     re.IGNORECASE,
@@ -432,6 +439,8 @@ def propose_links(session, user_id: UUID) -> list[LinkProposal]:
     ).all()
     proposals: list[LinkProposal] = []
     for review, mail in rows:
+        if _BULK_MAIL.search(mail.subject or ""):
+            continue  # Newsletters and identity prompts are not application evidence.
         text = _norm((mail.subject or "") + " " + (mail.excerpt or "") + " " + (mail.sender or ""))
         text = _COMPANY_NOISE.sub(" ", text)
         text = re.sub(r"\s+", " ", text)
