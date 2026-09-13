@@ -445,6 +445,13 @@ void main() {
       event('e4', 'b', 'EVIDENCE_RECEIVED', null, 0), // no status: not activity
       event('e5', 'b', 'CORRECTION', 'OFFER', 0, corrects: 'e3'),
       event('e6', 'gone', 'APPLIED', 'APPLIED', 3), // voided application
+      event(
+        'e7',
+        'a',
+        'STATUS_CHANGED',
+        'INTERVIEWING',
+        15,
+      ), // older, still first
       _envelope('notifications', 'n1', {
         'type': 'EMAIL_REVIEW',
         'created_at': _now.toIso8601String(),
@@ -480,8 +487,13 @@ void main() {
     expect(dashboard['watchlist_companies'], 1);
     final recent = (dashboard['recent_events'] as List).cast<Json>();
     // e3 is superseded by the correction e5; e4 has no status; e6 belongs to a voided row.
-    expect(recent.map((e) => e['status']), ['APPLIED', 'APPLIED']);
-    expect(recent.first['application_id'], 'a'); // newest effective_at first
+    expect(recent.map((e) => e['status']), [
+      'INTERVIEWING',
+      'APPLIED',
+      'APPLIED',
+    ]);
+    expect(recent.first['event_type'], 'STATUS_CHANGED');
+    expect(recent[1]['application_id'], 'a'); // then newest application first
     expect(recent.first['company'], 'Example employer');
     expect(recent.first['actor'], 'EMAIL');
   });

@@ -760,34 +760,46 @@ def dashboard(user: User = USER_DEPENDENCY, session: Session = SESSION_DEPENDENC
         counts[item["display_status"]] = counts.get(item["display_status"], 0) + 1
     gmail = session.scalar(select(GmailConnection).where(GmailConnection.user_id == user.id))
     by_id = {app.id: app for app in apps}
-    # Latest effective status changes across the owner's applications, newest first.
+    # Recent activity: employer/owner status changes first (newest), then the newest
+    # applications fill the remaining slots, so a fresh import does not bury real replies.
     recent = []
     if by_id:
-        events = session.scalars(
-            select(ApplicationEvent)
-            .where(
-                ApplicationEvent.application_id.in_(list(by_id)),
-                ApplicationEvent.status.is_not(None),
-                ApplicationEvent.event_type.in_(("APPLIED", "STATUS_CHANGED")),
+        superseded = set(
+            session.scalars(
+                select(ApplicationEvent.correction_of_event_id).where(
+                    ApplicationEvent.application_id.in_(list(by_id)),
+                    ApplicationEvent.correction_of_event_id.is_not(None),
+                )
             )
-            .order_by(ApplicationEvent.effective_at.desc(), ApplicationEvent.id.desc())
-            .limit(40)
-        ).all()
-        superseded = {event.correction_of_event_id for event in events if event.correction_of_event_id}
-        for event in events:
-            if event.id in superseded or len(recent) >= 10:
-                continue
-            app = by_id[event.application_id]
-            recent.append(
-                {
-                    "application_id": str(app.id),
-                    "company": app.company,
-                    "title": app.title,
-                    "status": event.status,
-                    "actor": event.actor,
-                    "effective_at": event.effective_at.isoformat(),
-                }
-            )
+        )
+        for event_type in ("STATUS_CHANGED", "APPLIED"):
+            if len(recent) >= 10:
+                break
+            events = session.scalars(
+                select(ApplicationEvent)
+                .where(
+                    ApplicationEvent.application_id.in_(list(by_id)),
+                    ApplicationEvent.status.is_not(None),
+                    ApplicationEvent.event_type == event_type,
+                )
+                .order_by(ApplicationEvent.effective_at.desc(), ApplicationEvent.id.desc())
+                .limit(10 + len(superseded))
+            ).all()
+            for event in events:
+                if event.id in superseded or len(recent) >= 10:
+                    continue
+                app = by_id[event.application_id]
+                recent.append(
+                    {
+                        "application_id": str(app.id),
+                        "company": app.company,
+                        "title": app.title,
+                        "status": event.status,
+                        "event_type": event.event_type,
+                        "actor": event.actor,
+                        "effective_at": event.effective_at.isoformat(),
+                    }
+                )
     open_reviews = (
         session.scalar(
             select(func.count())

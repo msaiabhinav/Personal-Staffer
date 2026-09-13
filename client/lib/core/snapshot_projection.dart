@@ -242,14 +242,22 @@ Map<String, Json> snapshotResponses(List<Json> items, {required DateTime now}) {
       'company': app['company'],
       'title': app['title'],
       'status': event['status'],
+      'event_type': type,
       'actor': event['actor'],
       'effective_at': event['effective_at'],
     });
   }
-  statusEvents.sort(
-    (a, b) =>
-        _compareDates(a['effective_at'], b['effective_at'], descending: true),
-  );
+  // Status changes first (newest), then the newest applications fill the list.
+  statusEvents.sort((a, b) {
+    final changeA = a['event_type'] == 'STATUS_CHANGED' ? 0 : 1;
+    final changeB = b['event_type'] == 'STATUS_CHANGED' ? 0 : 1;
+    if (changeA != changeB) return changeA - changeB;
+    return _compareDates(
+      a['effective_at'],
+      b['effective_at'],
+      descending: true,
+    );
+  });
 
   final notifications = records('notifications').values.toList()
     ..sort(
