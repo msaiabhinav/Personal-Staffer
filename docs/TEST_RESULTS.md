@@ -154,3 +154,10 @@ Defect found and fixed: each rescan of an unchanged posting appended a new snaps
 - Parser gained "you were/have not been selected" and "you are invited to interview"; `classify_text` is the subject-only fallback for re-matching.
 - Notifications (ADR 0004): `POST /notifications/read-all`, `POST /notifications/delete-all` (`read_only`), `APPLICATION_EMAIL` for evidence-only linked mail, "Email from <sender>" titles for review mail; client Mark all read / Delete menu / type filter. `docs/openapi.json` regenerated (64 paths).
 - Suite: **488 passed, 0 skipped** on PostgreSQL/Redis (new: parser phrasings, owner-scoped bulk read/delete with tombstones and delivery rows, HTTP idempotent replay of both actions). Flutter: analyzer clean, 23 tests pass.
+
+### Application dashboard rebuilt (13 September 2026)
+
+- Owner feedback: the dashboard "feels like a list" and its tiles did not add up ("68 active applications? 55 awaiting response?"). Root cause: the old tiles were raw status counts with misleading labels — "Active" included the 11 rejected rows, and "Applied 1" / "Awaiting response 55" were the same bucket split on the 24-hour derivation.
+- New `client/lib/features/dashboard.dart`: four KPIs that reconcile (Tracked = in progress + closed; No reply yet = Applied + Awaiting; Interviews & offers; Response rate = heard back ÷ tracked), a Pipeline card (stacked status bar + stage funnel), Needs-your-attention (unread notifications, open email reviews, watchlist companies, Gmail health — each opens its page), Applications-per-week bars (12 weeks), Recent activity (latest effective status events, corrections respected), and Waiting longest (no-reply applications by age, 30+ days flagged).
+- `/dashboard` now also returns `recent_events`, `open_reviews`, `unread_notifications`, `watchlist_companies`; the offline snapshot projection derives the same fields so the page is identical offline.
+- Suite: backend **489 passed, 0 skipped** (new HTTP dashboard test on the demo workflow); Flutter analyzer clean, **24 tests** (new projection test: superseded corrections, status-less events and voided applications are excluded from activity).

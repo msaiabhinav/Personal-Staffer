@@ -125,3 +125,24 @@ def test_notification_bulk_actions_over_http_are_idempotent(demo_client):
     assert demo_client.get("/api/v1/notifications", headers=headers).json()["items"] == []
     missing = demo_client.post("/api/v1/notifications/delete-all", json={}, headers=headers)
     assert missing.status_code == 422  # Idempotency-Key is mandatory for every mutation.
+
+
+def test_dashboard_reports_activity_and_attention_counts(demo_client):
+    path = Path(__file__).resolve().parents[2] / "scripts" / "smoke_demo.py"
+    spec = importlib.util.spec_from_file_location("staffer_demo_smoke_dashboard", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result = module.run_workflow(demo_client)
+    login = demo_client.post("/api/v1/auth/demo", json={"device_id": str(uuid4()), "platform": "WINDOWS"}).json()
+    headers = {"Authorization": "Bearer " + login["access_token"]}
+    dashboard = demo_client.get("/api/v1/dashboard", headers=headers).json()
+    assert dashboard["total"] == 1
+    assert dashboard["watchlist_companies"] == 12
+    assert dashboard["open_reviews"] >= 0 and dashboard["unread_notifications"] >= 0
+    recent = dashboard["recent_events"]
+    assert recent and recent[0]["application_id"] == result["application_id"]
+    assert recent[0]["status"] == "APPLIED" and recent[0]["actor"] == "USER"
+    assert {"company", "title", "effective_at"} <= set(recent[0])
+    # Reading the dashboard never mutates state: unread count matches the inbox endpoint.
+    unread = demo_client.get("/api/v1/notifications/unread-count", headers=headers).json()["unread_count"]
+    assert dashboard["unread_notifications"] == unread

@@ -220,11 +220,36 @@ Map<String, Json> snapshotResponses(List<Json> items, {required DateTime now}) {
     final status = application['display_status'];
     if (status is String) counts[status] = (counts[status] ?? 0) + 1;
   }
-  output['/dashboard'] = {
-    'total': applicationRows.length,
-    'counts': counts,
-    'items': applicationRows,
-  };
+  final byApplication = {for (final row in applicationRows) row['id']: row};
+  final superseded = <Object?>{};
+  final statusEvents = <Json>[];
+  for (final event in records('application_event').values) {
+    if (event['correction_of_event_id'] != null) {
+      superseded.add(event['correction_of_event_id']);
+    }
+  }
+  for (final event in records('application_event').values) {
+    final app = byApplication[event['application_id']];
+    final type = event['event_type'];
+    if (app == null ||
+        event['status'] == null ||
+        superseded.contains(event['id']) ||
+        (type != 'APPLIED' && type != 'STATUS_CHANGED')) {
+      continue;
+    }
+    statusEvents.add({
+      'application_id': app['id'],
+      'company': app['company'],
+      'title': app['title'],
+      'status': event['status'],
+      'actor': event['actor'],
+      'effective_at': event['effective_at'],
+    });
+  }
+  statusEvents.sort(
+    (a, b) =>
+        _compareDates(a['effective_at'], b['effective_at'], descending: true),
+  );
 
   final notifications = records('notifications').values.toList()
     ..sort(
@@ -241,6 +266,19 @@ Map<String, Json> snapshotResponses(List<Json> items, {required DateTime now}) {
     'unread_count': unread.length,
   };
   output['/notifications/unread-count'] = {'unread_count': unread.length};
+  output['/dashboard'] = {
+    'total': applicationRows.length,
+    'counts': counts,
+    'items': applicationRows,
+    'recent_events': statusEvents.take(10).toList(),
+    'unread_notifications': unread.length,
+    'open_reviews': records('reviews').values
+        .where((row) => row['admin_only'] != true && row['state'] == 'OPEN')
+        .length,
+    'watchlist_companies': records('watchlist').values
+        .where((row) => row['enabled'] == true)
+        .length,
+  };
 
   final profiles = records('profile').values.toList()
     ..sort((a, b) => _revision(b).compareTo(_revision(a)));

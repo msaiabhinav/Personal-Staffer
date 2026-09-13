@@ -759,10 +759,59 @@ def dashboard(user: User = USER_DEPENDENCY, session: Session = SESSION_DEPENDENC
     for item in items:
         counts[item["display_status"]] = counts.get(item["display_status"], 0) + 1
     gmail = session.scalar(select(GmailConnection).where(GmailConnection.user_id == user.id))
+    by_id = {app.id: app for app in apps}
+    # Latest effective status changes across the owner's applications, newest first.
+    recent = []
+    if by_id:
+        events = session.scalars(
+            select(ApplicationEvent)
+            .where(
+                ApplicationEvent.application_id.in_(list(by_id)),
+                ApplicationEvent.status.is_not(None),
+                ApplicationEvent.event_type.in_(("APPLIED", "STATUS_CHANGED")),
+            )
+            .order_by(ApplicationEvent.effective_at.desc(), ApplicationEvent.id.desc())
+            .limit(40)
+        ).all()
+        superseded = {event.correction_of_event_id for event in events if event.correction_of_event_id}
+        for event in events:
+            if event.id in superseded or len(recent) >= 10:
+                continue
+            app = by_id[event.application_id]
+            recent.append(
+                {
+                    "application_id": str(app.id),
+                    "company": app.company,
+                    "title": app.title,
+                    "status": event.status,
+                    "actor": event.actor,
+                    "effective_at": event.effective_at.isoformat(),
+                }
+            )
+    open_reviews = (
+        session.scalar(
+            select(func.count())
+            .select_from(ReviewItem)
+            .where(ReviewItem.user_id == user.id, ReviewItem.state == "OPEN", ReviewItem.admin_only.is_(False))
+        )
+        or 0
+    )
+    watched = (
+        session.scalar(
+            select(func.count())
+            .select_from(WatchlistEntry)
+            .where(WatchlistEntry.user_id == user.id, WatchlistEntry.enabled.is_(True))
+        )
+        or 0
+    )
     return {
         "total": len(items),
         "counts": counts,
         "items": items,
+        "recent_events": recent,
+        "open_reviews": open_reviews,
+        "unread_notifications": notification_service.unread_count(session, user.id),
+        "watchlist_companies": watched,
         "email_sync_health": gmail.sync_health if gmail else "NOT_CONFIGURED",
     }
 

@@ -6,8 +6,8 @@ import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
 import '../core/theme.dart';
+import 'dashboard.dart';
 import 'shared.dart';
-import 'applications.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

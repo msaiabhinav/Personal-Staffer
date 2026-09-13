@@ -57,7 +57,11 @@ List<Json> _completeItems(Map<String, Json> responses, String route) {
 void main() {
   test('uses the latest evaluation of the pinned saved snapshot only', () {
     final oldRules = <Json>[
-      {'rule_id': 'experience', 'decision': 'PASS', 'reason': 'Original evidence'},
+      {
+        'rule_id': 'experience',
+        'decision': 'PASS',
+        'reason': 'Original evidence',
+      },
     ];
     final sourceFields = <String, dynamic>{
       'source_specific': {
@@ -114,7 +118,9 @@ void main() {
             },
             {
               'field': 'education',
-              'evidence': [{'text': 'Not an experience requirement'}],
+              'evidence': [
+                {'text': 'Not an experience requirement'},
+              ],
             },
           ],
           'relevance': {
@@ -131,7 +137,9 @@ void main() {
         'evaluated_at': '2026-09-09T09:00:00Z',
         'decision': 'REVIEW_REQUIRED',
         'evidence': {
-          'rules': [{'reason': 'SUPERSEDED_OLD_EVALUATION'}],
+          'rules': [
+            {'reason': 'SUPERSEDED_OLD_EVALUATION'},
+          ],
           'relevance': {'summary': 'SUPERSEDED_OLD_EVALUATION'},
         },
       }),
@@ -141,11 +149,15 @@ void main() {
         'evaluated_at': '2026-09-12T09:00:00Z',
         'decision': 'INELIGIBLE',
         'evidence': {
-          'rules': [{'reason': 'CURRENT_ONLY'}],
+          'rules': [
+            {'reason': 'CURRENT_ONLY'},
+          ],
           'facts': [
             {
               'field': 'experience',
-              'evidence': [{'text': '10 years in the new description'}],
+              'evidence': [
+                {'text': '10 years in the new description'},
+              ],
             },
           ],
           'relevance': {
@@ -178,8 +190,10 @@ void main() {
     expect(fields['match_reason'], 'The original SQL requirements match');
     expect(fields['matched_skills'], ['SQL']);
     expect(fields['missing_skills'], ['Tableau']);
-    expect(fields['experience'],
-        '2 years using SQL; Experience building dashboards');
+    expect(
+      fields['experience'],
+      '2 years using SQL; Experience building dashboards',
+    );
     expect(fields['employment_type'], 'FULL_TIME');
     expect(fields['salary'], {'minimum': 70000, 'currency': 'USD'});
     expect(responses['/jobs/job-1']!['eligibility'], saved['eligibility']);
@@ -392,6 +406,85 @@ void main() {
       });
     },
   );
+
+  test('dashboard summarises activity, attention counts and watchlist', () {
+    Json event(
+      String id,
+      String app,
+      String type,
+      String? status,
+      int daysAgo, {
+      String? corrects,
+    }) => _envelope('application_event', id, {
+      'application_id': app,
+      'event_type': type,
+      'status': status,
+      'effective_at': _now.subtract(Duration(days: daysAgo)).toIso8601String(),
+      'recorded_at': _now.subtract(Duration(days: daysAgo)).toIso8601String(),
+      'actor': 'EMAIL',
+      'source_reference': null,
+      'evidence': const {},
+      'correction_of_event_id': corrects,
+    });
+    final responses = snapshotResponses([
+      _application('a', appliedAt: _now.subtract(const Duration(days: 9))),
+      _application(
+        'b',
+        status: 'REJECTED',
+        appliedAt: _now.subtract(const Duration(days: 20)),
+      ),
+      _application(
+        'gone',
+        status: 'APPLIED',
+        appliedAt: _now.subtract(const Duration(days: 3)),
+        extra: {'voided_at': _now.toIso8601String()},
+      ),
+      event('e1', 'a', 'APPLIED', 'APPLIED', 9),
+      event('e2', 'b', 'APPLIED', 'APPLIED', 20),
+      event('e3', 'b', 'STATUS_CHANGED', 'REJECTED', 1),
+      event('e4', 'b', 'EVIDENCE_RECEIVED', null, 0), // no status: not activity
+      event('e5', 'b', 'CORRECTION', 'OFFER', 0, corrects: 'e3'),
+      event('e6', 'gone', 'APPLIED', 'APPLIED', 3), // voided application
+      _envelope('notifications', 'n1', {
+        'type': 'EMAIL_REVIEW',
+        'created_at': _now.toIso8601String(),
+        'read_at': null,
+        'revision': 1,
+      }),
+      _envelope('notifications', 'n2', {
+        'type': 'EMAIL_REVIEW',
+        'created_at': _now.toIso8601String(),
+        'read_at': _now.toIso8601String(),
+        'revision': 2,
+      }),
+      _envelope('reviews', 'r1', {
+        'review_type': 'EMAIL_APPLICATION',
+        'state': 'OPEN',
+      }),
+      _envelope('reviews', 'r2', {
+        'review_type': 'EMAIL_APPLICATION',
+        'state': 'RESOLVED',
+      }),
+      _envelope('reviews', 'r3', {
+        'review_type': 'X',
+        'state': 'OPEN',
+        'admin_only': true,
+      }),
+      _envelope('watchlist', 'w1', {'enabled': true, 'requested_name': 'Acme'}),
+      _envelope('watchlist', 'w2', {'enabled': false, 'requested_name': 'Old'}),
+    ], now: _now);
+    final dashboard = responses['/dashboard']!;
+    expect(dashboard['total'], 2);
+    expect(dashboard['unread_notifications'], 1);
+    expect(dashboard['open_reviews'], 1);
+    expect(dashboard['watchlist_companies'], 1);
+    final recent = (dashboard['recent_events'] as List).cast<Json>();
+    // e3 is superseded by the correction e5; e4 has no status; e6 belongs to a voided row.
+    expect(recent.map((e) => e['status']), ['APPLIED', 'APPLIED']);
+    expect(recent.first['application_id'], 'a'); // newest effective_at first
+    expect(recent.first['company'], 'Example employer');
+    expect(recent.first['actor'], 'EMAIL');
+  });
 
   test('reconstructs complete inbox and unread views from read state', () {
     final responses = snapshotResponses([
