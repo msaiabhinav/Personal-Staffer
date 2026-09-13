@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+import time
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -24,6 +26,14 @@ class MessageBatch:
     message_ids: tuple[str, ...]
     next_page_token: str | None
     history_cursor: str | None
+
+
+_RATE_LIMIT = re.compile(
+    r"rateLimitExceeded|userRateLimitExceeded|RATE_LIMIT_EXCEEDED|quotaExceeded|RESOURCE_EXHAUSTED"
+)
+# messages.get(format=full) costs 5 quota units against Gmail's 250 units/second per-user limit;
+# a short pause per fetch keeps a 100-message page well under it.
+MESSAGE_FETCH_PAUSE_SECONDS = 0.15
 
 
 def _error_reason(response, status) -> str:
@@ -56,11 +66,13 @@ class GmailAPI:
                 )
             if response.status_code in {401, 403}:
                 # Google's structured reason (e.g. insufficientPermissions, accessNotConfigured,
-                # dailyLimitExceeded) is operational diagnosis, not mailbox content or a credential.
+                # rateLimitExceeded) is operational diagnosis, not mailbox content or a credential.
+                reason = _error_reason(response, response.status_code)
+                if _RATE_LIMIT.search(reason):
+                    # Gmail reports per-user quota exhaustion as 403; it is transient, not a lost grant.
+                    raise GmailUnavailable("RATE_LIMITED", "Gmail per-user quota reached; synchronization will retry")
                 raise GmailUnavailable(
-                    "RECONNECT_REQUIRED",
-                    "Gmail authorization needs reconnection or permission review: "
-                    + _error_reason(response, response.status_code),
+                    "RECONNECT_REQUIRED", "Gmail authorization needs reconnection or permission review: " + reason
                 )
             if response.status_code == 404 and route == "history":
                 raise HistoryExpired()
@@ -114,4 +126,6 @@ class GmailAPI:
     def message(self, identifier: str):
         if not identifier.isalnum():
             raise GmailUnavailable("FAILED", "Invalid Gmail message identifier")
+        if self.transport is None:  # Real provider only; test transports need no pacing.
+            time.sleep(MESSAGE_FETCH_PAUSE_SECONDS)
         return self.get("messages/" + identifier, {"format": "full"})

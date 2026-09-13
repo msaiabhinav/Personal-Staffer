@@ -47,3 +47,27 @@ def test_history_deduplicates_added_and_label_added_messages():
     api = GmailAPI("test", httpx.MockTransport(lambda req: httpx.Response(200, json=payload)))
     batch = api.history("100")
     assert batch.message_ids == ("a1", "a2") and batch.history_cursor == "300"
+
+
+def test_gmail_403_reason_codes_distinguish_quota_from_lost_grant():
+    quota = {"error": {"code": 403, "status": "PERMISSION_DENIED", "errors": [{"reason": "rateLimitExceeded"}]}}
+    api = GmailAPI("test", httpx.MockTransport(lambda req: httpx.Response(403, json=quota)))
+    with pytest.raises(GmailUnavailable) as caught:
+        api.profile()
+    assert caught.value.state == "RATE_LIMITED"  # Transient; the scheduler retries, no reconnect prompt.
+
+    scope = {
+        "error": {
+            "code": 403,
+            "status": "PERMISSION_DENIED",
+            "details": [
+                {"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "ACCESS_TOKEN_SCOPE_INSUFFICIENT"}
+            ],
+        }
+    }
+    api = GmailAPI("test", httpx.MockTransport(lambda req: httpx.Response(403, json=scope)))
+    with pytest.raises(GmailUnavailable) as caught:
+        api.profile()
+    assert caught.value.state == "RECONNECT_REQUIRED"
+    assert "ACCESS_TOKEN_SCOPE_INSUFFICIENT" in str(caught.value)
+    assert "Bearer" not in str(caught.value)  # Never the credential or body content.

@@ -48,6 +48,13 @@ def parser():
     resolve.add_argument(
         "--evidence", required=True, help="path to JSON with source_reference, quoted_text and reviewer"
     )
+    history = sub.add_parser(
+        "import-email-applications",
+        help="One-time: propose/create applications from open Gmail confirmation reviews (preview by default)",
+    )
+    history.add_argument("--apply", action="store_true", help="Create/link applications; default is preview only")
+    history.add_argument("--include-low", action="store_true", help="Also import LOW-confidence proposals")
+    history.add_argument("--user", type=UUID)
     sub.add_parser("schedule-once")
     sub.add_parser("dispatch-once")
     sub.add_parser("dispatch-loop")
@@ -208,6 +215,24 @@ def main(argv=None):
                 print(json.dumps({"dispatched": count}))
                 return
             time.sleep(5)
+    if args.command == "import-email-applications":
+        from app.email.import_history import apply as apply_import
+        from app.email.import_history import propose
+
+        with factory() as session, session.begin():
+            user_id = only_user(session, args.user).id
+            proposals = propose(session, user_id)
+            for p in proposals:
+                print(
+                    f"{p.received_at:%Y-%m-%d} | {p.confidence:<6} | {p.action:<6} | "
+                    f"{(p.company or '?')[:38]:<38} | {(p.title or '?')[:60]:<60} | {p.subject[:70]}"
+                )
+            print(f"{chr(10)}{len(proposals)} open confirmation review(s)")
+            if args.apply:
+                print(json.dumps(apply_import(session, user_id, proposals, include_low=args.include_low), indent=2))
+            else:
+                print("Preview only. Rerun with --apply (and --include-low to include LOW-confidence rows).")
+        return
     with factory() as session, session.begin():
         if args.command == "seed-registry":
             result = seed_registry(session)
