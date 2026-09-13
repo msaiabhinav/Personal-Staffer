@@ -4,6 +4,7 @@ import os
 
 from .amazon_jobs import AmazonJobsConnector
 from .ats import AshbyConnector, GreenhouseConnector, LeverConnector, SmartRecruitersConnector
+from .career_sites import EightfoldConnector, RadancyConnector, TalemetryConnector
 from .direct import DirectConnector
 from .jobspy_adapter import JobSpyConnector
 from .usajobs import USAJobsConnector
@@ -16,6 +17,17 @@ CATALOG = [
         "configuration": "COUNTRY_REQUIRED",
     },
     {"source_type": "ashby", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
+    {
+        "source_type": "eightfold",
+        "implementation": "PUBLIC_CAREER_SITE_CONNECTOR",
+        "configuration": "SITE_URL_REQUIRED",
+    },
+    {
+        "source_type": "talemetry",
+        "implementation": "PUBLIC_CAREER_SITE_CONNECTOR",
+        "configuration": "SITE_URL_REQUIRED",
+    },
+    {"source_type": "radancy", "implementation": "PUBLIC_CAREER_SITE_CONNECTOR", "configuration": "SITE_URL_REQUIRED"},
     {"source_type": "greenhouse", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
     {"source_type": "lever", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
     {
@@ -63,6 +75,9 @@ def get_connector(source_type: str, **kwargs):
     factories = {
         "amazon_jobs": AmazonJobsConnector,
         "ashby": AshbyConnector,
+        "eightfold": EightfoldConnector,
+        "talemetry": TalemetryConnector,
+        "radancy": RadancyConnector,
         "greenhouse": GreenhouseConnector,
         "lever": LeverConnector,
         "smartrecruiters": SmartRecruitersConnector,

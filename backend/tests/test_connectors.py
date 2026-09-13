@@ -771,3 +771,156 @@ def test_amazon_jobs_bad_paths_and_unknown_dates_are_not_invented():
     )
     result = failed.discover("analyst", "USA")
     assert result.errors and result.coverage["complete_listing"] is False and failed.health().state == "FAILED"
+
+
+def _ldjson_page(posting: dict) -> HTTPResult:
+    body = (
+        "<html><head><script type='application/ld+json'>" + json.dumps(posting) + "</script></head>"
+        "<body><h1>" + posting["title"] + "</h1><a href='https://apply.example/x'>Apply now</a></body></html>"
+    ).encode()
+    return HTTPResult(200, body, posting.get("url", "https://careers.example/jobs/1"), {})
+
+
+def test_eightfold_search_detail_and_verification():
+    tenant = "https://apply.careers.microsoft.com/?domain=microsoft.com&location=United%20States"
+    search = {
+        "status": 200,
+        "data": {
+            "count": 2,
+            "positions": [
+                {
+                    "id": 1970393556994516,
+                    "displayJobId": "200055151",
+                    "name": "Data Center Critical Environment Business Analyst",
+                    "locations": ["United States, Virginia, Boydton"],
+                    "postedTs": 1789154717,
+                    "positionUrl": "/careers/job/1970393556994516",
+                    "workLocationOption": "onsite",
+                },
+                {"id": "bad", "name": "ignored"},
+            ],
+        },
+    }
+    detail = {
+        "id": 1970393556994516,
+        "name": "Data Center Critical Environment Business Analyst",
+        "location": "United States, Virginia, Boydton",
+        "locations": ["United States, Virginia, Boydton"],
+        "job_description": "<b>Overview</b><p>Build SQL dashboards for capacity planning.</p>",
+        "t_create": 1789066017,
+        "t_update": 1789155020,
+        "ats_job_id": "200055151",
+        "work_location_option": "onsite",
+        "canonicalPositionUrl": "https://apply.careers.microsoft.com/careers/job/1970393556994516",
+        "isPrivate": False,
+    }
+    connector = get_connector("eightfold", client=FakeClient([search, detail]))
+    discovery = connector.discover("analyst", tenant)
+    first_call = connector.client.calls[0][0]
+    assert "domain=microsoft.com" in first_call and "location=United+States" in first_call
+    assert [c.external_id for c in discovery.candidates] == ["1970393556994516"]
+    assert discovery.next_cursor is None and discovery.coverage["total_hits"] == 2
+    job = connector.normalize(connector.fetch(discovery.candidates[0]))
+    assert connector.client.calls[1][0].endswith("/api/apply/v2/jobs/1970393556994516?domain=microsoft.com")
+    assert job.country_codes == ["US"] and job.work_arrangement == "ONSITE"
+    assert job.requisition_id == "200055151" and job.publication.precision == "EXACT"
+    assert job.publication.earliest == datetime.fromtimestamp(1789066017, tz=UTC)
+    assert "Build SQL dashboards" in job.description_text and job.description_complete
+    connector.client = FakeClient([detail])
+    assert connector.verify_opening(job).status == "ACTIVE"
+    connector.client = FakeClient([HTTPResult(404, b"", "https://apply.careers.microsoft.com/x", {})])
+    assert connector.verify_opening(job).status == "CLOSED"
+    assert connector.discover("analyst", "https://apply.careers.microsoft.com/").errors  # no ?domain
+
+
+def test_talemetry_listing_and_jsonld_job_page():
+    from app.connectors.career_sites import TalemetryConnector
+
+    tenant = "https://careers.hcahealthcare.com"
+    listing = {
+        "current_page": 1,
+        "per_page": 25,
+        "total_entries": 26,
+        "entries": [
+            {
+                "id": "17854336",
+                "title": "Technical Analyst",
+                "permalink": "technical-analyst",
+                "location": {"locality": "Asheville", "region_abbr": "NC", "country": "United States"},
+            }
+        ],
+    }
+    posting = {
+        "@type": "JobPosting",
+        "title": "Technical Analyst",
+        "datePosted": "2026-09-13",
+        "employmentType": "Full-time",
+        "description": "<p>Support Epic reporting with SQL.</p>",
+        "hiringOrganization": {"@type": "Organization", "name": "Mission Hospital"},
+        "jobLocation": {
+            "@type": "Place",
+            "address": {"addressLocality": "Asheville", "addressRegion": "NC", "addressCountry": "US"},
+        },
+        "url": "https://careers.hcahealthcare.com/jobs/17854336",
+    }
+    connector = TalemetryConnector(FakeClient([listing, _ldjson_page(posting)]))
+    discovery = connector.discover("analyst", tenant)
+    assert connector.client.calls[0][0] == "https://careers.hcahealthcare.com/jobs/search?q=analyst&page=1"
+    assert connector.client.calls[0][1] == {"Accept": "application/json"}
+    assert discovery.next_cursor == "2"  # 26 entries at 25 per page
+    candidate = discovery.candidates[0]
+    assert candidate.source_url == "https://careers.hcahealthcare.com/jobs/17854336"
+    job = connector.normalize(connector.fetch(candidate))
+    assert job.title == "Technical Analyst" and job.country_codes == ["US"] and job.workplace_states == ["NC"]
+    assert job.employment_type == "FULL_TIME" and job.publication.precision == "DATE"
+    assert job.application_url == "https://careers.hcahealthcare.com/jobs/17854336"
+    # A page whose URL does not carry the listing id is another opening.
+    other = dict(posting, url="https://careers.hcahealthcare.com/jobs/999")
+    connector.client = FakeClient([_ldjson_page(other)])
+    wrong = candidate.model_copy(
+        update={"external_id": "424242", "source_url": "https://careers.hcahealthcare.com/jobs/999"}
+    )
+    assert connector.fetch(wrong).outcome == "FAILED"
+
+
+def test_radancy_results_fragment_and_padded_dates():
+    from app.connectors.career_sites import RadancyConnector, _pad_date
+
+    tenant = "https://jobs.intuit.com/search-jobs?k=&l=United+States&orgIds=27595"
+    fragment = (
+        "<section data-total-results='77'><ul>"
+        "<li><a href='/job/frisco/quality-risk-analyst-2/27595/99361233136' data-job-id='22767'>"
+        "<h2>Quality Risk Analyst 2</h2><span class='job-location'>Frisco, Texas</span></a></li>"
+        "<li><a href='/job/nowhere/bad/27595/notanid'><h2>Bad</h2></a></li>"
+        "</ul></section>"
+    )
+    posting = {
+        "@type": "JobPosting",
+        "title": "Quality Risk Analyst 2",
+        "datePosted": "2026-7-21",
+        "employmentType": "Full-Time",
+        "description": "<p>Analyze risk data in SQL.</p>",
+        "jobLocation": [
+            {
+                "@type": "Place",
+                "address": {"addressLocality": "Frisco", "addressRegion": "Texas", "addressCountry": "United States"},
+            }
+        ],
+    }
+    page = _ldjson_page(
+        {**posting, "url": "https://jobs.intuit.com/job/frisco/quality-risk-analyst-2/27595/99361233136"}
+    )
+    connector = RadancyConnector(FakeClient([{"results": fragment, "hasJobs": True}, page]))
+    discovery = connector.discover("analyst", tenant)
+    url = connector.client.calls[0][0]
+    assert url.startswith("https://jobs.intuit.com/search-jobs/results?")
+    assert "OrgIds=27595" in url and "Location=United+States" in url and "Keywords=analyst" in url
+    assert [c.external_id for c in discovery.candidates] == ["99361233136"]
+    assert discovery.candidates[0].title == "Quality Risk Analyst 2"
+    assert discovery.next_cursor == "2" and discovery.coverage["total_hits"] == 77
+    job = connector.normalize(connector.fetch(discovery.candidates[0]))
+    assert job.publication.precision == "DATE" and job.publication.earliest.date().isoformat() == "2026-07-20"
+    assert job.country_codes == ["US"] and job.locations == ["Frisco, Texas, United States"]
+    assert _pad_date("2026-7-21") == "2026-07-21" and _pad_date("July 21") == "July 21"
+    for source_type in ("eightfold", "talemetry", "radancy"):
+        assert get_connector(source_type).source_type == source_type
