@@ -9,7 +9,8 @@ Next executable action, in order:
 1. Done: two complete verification loops passed; branch pushed; CI green except the deferred Android job.
 2. Owner: remaining physical checks - tray Open/Exit from the hidden-icons flyout, startup behaviour after sign-in, toast click (turn Windows Do Not Disturb off first), 150 % text size, a Pending save during an API outage and its reconnect. Record outcomes in TEST_RESULTS.md.
 3. Watch for the intermittent blank window surface; `e45f10f` forces a frame on show/activate as a first mitigation. If it recurs, capture the `flutter run` log and consider the Skia backend.
-4. Owner decision: configure Google OAuth for local testing (redirect `http://127.0.0.1:5555/api/v1/auth/google/callback`) and/or start the HTTPS deployment phase (Phase G) - an installed release build only works against HTTPS.
+4. Done: Google sign-in works in live-local mode; nine real sources registered and scanning; E-Verify informational (ADR 0003). Next: owner connects Gmail (Settings > Gmail connection); watch the first daily report at 11:00 America/New_York; review withheld counts per source in Settings > Source health and Search run history; consider more boards with analyst-family roles.
+5. Then the HTTPS deployment phase (Phase G) so the installed release build can be used day-to-day.
 5. Then Phase F: diagnose the Android CI compile failure (log requires repository access) before any Samsung work.
 
 ## First executable steps
