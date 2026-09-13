@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from collections import Counter
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 from sqlalchemy import select
@@ -155,7 +156,56 @@ def _profile_rules(evaluation, profile, now):
     return evaluation
 
 
-def reevaluate_job(session: Session, job_id: UUID, user_id: UUID, *, now=None) -> JobEvaluation:
+REEVALUATION_REUSE_HOURS = 24
+_TIMESTAMP_KEYS = {"fetched_at", "checked_at", "observed_at", "evaluated_at"}
+
+
+def _stable(value):
+    """Drop observation timestamps so identical evidence hashes identically across scans."""
+    if isinstance(value, dict):
+        return {k: _stable(v) for k, v in value.items() if k not in _TIMESTAMP_KEYS}
+    if isinstance(value, list):
+        return [_stable(v) for v in value]
+    return value
+
+
+def evaluation_input_hash(facts, policy, profile_version: int) -> str:
+    payload = {
+        "facts": _stable(facts.model_dump(mode="json")),
+        "policy": policy.model_dump(mode="json"),
+        "profile_version": profile_version,
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def _retained_for_user(session: Session, job, snapshot, user_id: UUID, input_hash: str, *, now):
+    """The latest evaluation of this exact snapshot for this owner when every input it was
+    computed from is unchanged (same evidence and policy hash) and its own validity deadline
+    has not passed. Delivery passes run after every source run; re-evaluating every retained
+    job each time appended hundreds of identical evaluations per job."""
+    latest = session.scalar(
+        select(JobEvaluation)
+        .where(
+            JobEvaluation.job_id == job.id,
+            JobEvaluation.snapshot_id == snapshot.id,
+            JobEvaluation.user_id == user_id,
+        )
+        .order_by(JobEvaluation.evaluated_at.desc(), JobEvaluation.id)
+        .limit(1)
+    )
+    if latest is None or (latest.evidence or {}).get("input_sha256") != input_hash:
+        return None
+    evaluated_at = latest.evaluated_at if latest.evaluated_at.tzinfo else latest.evaluated_at.replace(tzinfo=UTC)
+    if evaluated_at < now - timedelta(hours=REEVALUATION_REUSE_HOURS):
+        return None
+    if latest.valid_until is not None:
+        valid_until = latest.valid_until if latest.valid_until.tzinfo else latest.valid_until.replace(tzinfo=UTC)
+        if valid_until <= now:
+            return None
+    return latest
+
+
+def reevaluate_job(session: Session, job_id: UUID, user_id: UUID, *, now=None, reuse: bool = True) -> JobEvaluation:
     now = now or datetime.now(UTC)
     job = session.scalar(select(Job).where(Job.id == job_id).with_for_update())
     if job is None:
@@ -213,15 +263,21 @@ def reevaluate_job(session: Session, job_id: UUID, user_id: UUID, *, now=None) -
     updates["startup_pool"] = _verified_startup_pool(group)
     facts = facts.model_copy(update=updates)
     settings = get_settings()
+    policy = Policy(
+        skill_vocabulary=profile.skills if profile else None,
+        preferred_salary_usd=settings.preferred_salary_usd,
+        everify_recheck_days=settings.everify_recheck_days,
+        everify_gate=settings.everify_gate,
+    )
+    input_hash = evaluation_input_hash(facts, policy, profile.version if profile else 1)
+    if reuse:
+        retained = _retained_for_user(session, job, snapshot, user_id, input_hash, now=now)
+        if retained is not None:
+            return retained
     evaluation = evaluate_job(
         facts,
         now=now,
-        policy=Policy(
-            skill_vocabulary=profile.skills if profile else None,
-            preferred_salary_usd=settings.preferred_salary_usd,
-            everify_recheck_days=settings.everify_recheck_days,
-            everify_gate=settings.everify_gate,
-        ),
+        policy=policy,
         allow_synthetic=settings.app_env == "local" and settings.demo_mode,
     )
     pool_evidence = (group.grouping_evidence or {}).get("pool_evidence", {}) if group else {}
@@ -295,7 +351,7 @@ def reevaluate_job(session: Session, job_id: UUID, user_id: UUID, *, now=None) -
         evaluated_at=now,
         decision=evaluation.decision,
         valid_until=evaluation.valid_until,
-        evidence=evaluation.model_dump(mode="json"),
+        evidence={**evaluation.model_dump(mode="json"), "input_sha256": input_hash},
     )
     session.add(row)
     session.flush()

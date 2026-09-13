@@ -125,7 +125,11 @@ GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
       builder: (context, state, child) =>
           AppShell(location: state.uri.path, child: child),
       routes: [
-        GoRoute(path: '/home', builder: (_, state) => const HomePage()),
+        GoRoute(
+          path: '/home',
+          builder: (_, state) =>
+              HomePage(tab: state.uri.queryParameters['tab'] ?? 'feed'),
+        ),
         GoRoute(
           path: '/notifications',
           builder: (_, state) => const NotificationsPage(),

@@ -9,30 +9,81 @@ import '../core/theme.dart';
 import 'dashboard.dart';
 import 'shared.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+const homeTabs = ['feed', 'dashboard'];
+
+/// Homepage tabs are part of the location (`/home?tab=dashboard`) so browser-style
+/// Back returns to the tab that was on screen before, not only to another page.
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, this.tab = 'feed'});
+  final String tab;
   @override
-  Widget build(BuildContext context) => DefaultTabController(
-    length: 2,
-    child: Column(
-      children: [
-        Material(
-          color: Theme.of(context).colorScheme.surface,
-          child: const TabBar(
-            tabAlignment: TabAlignment.start,
-            isScrollable: true,
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            tabs: [
-              Tab(text: 'Job Feed'),
-              Tab(text: 'Application Dashboard'),
-            ],
-          ),
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late final TabController controller = TabController(
+    length: homeTabs.length,
+    vsync: this,
+    initialIndex: _indexOf(widget.tab),
+  );
+
+  static int _indexOf(String tab) {
+    final index = homeTabs.indexOf(tab);
+    return index < 0 ? 0 : index;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(_onTab);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomePage old) {
+    super.didUpdateWidget(old);
+    if (old.tab != widget.tab && controller.index != _indexOf(widget.tab)) {
+      controller.animateTo(_indexOf(widget.tab));
+    }
+  }
+
+  void _onTab() {
+    if (controller.indexIsChanging) return;
+    final tab = homeTabs[controller.index];
+    if (tab == widget.tab) return;
+    context.go(tab == 'feed' ? '/home' : '/home?tab=$tab');
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_onTab);
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Material(
+        color: Theme.of(context).colorScheme.surface,
+        child: TabBar(
+          controller: controller,
+          tabAlignment: TabAlignment.start,
+          isScrollable: true,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          tabs: const [
+            Tab(text: 'Job Feed'),
+            Tab(text: 'Application Dashboard'),
+          ],
         ),
-        const Expanded(
-          child: TabBarView(children: [JobsPage(), DashboardPage()]),
+      ),
+      Expanded(
+        child: TabBarView(
+          controller: controller,
+          children: const [JobsPage(), DashboardPage()],
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 

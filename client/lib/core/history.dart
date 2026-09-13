@@ -20,8 +20,14 @@ class NavigationHistory extends ChangeNotifier {
   bool get canGoForward => index >= 0 && index < entries.length - 1;
   String? get current => index >= 0 ? entries[index] : null;
 
-  String _currentLocation() =>
-      router.routerDelegate.currentConfiguration.uri.toString();
+  String _currentLocation() {
+    final config = router.routerDelegate.currentConfiguration;
+    // A pushed (imperative) page is the one on screen; the configuration's own uri
+    // still names the declarative page underneath it.
+    final top = config.matches.isEmpty ? null : config.last;
+    if (top is ImperativeRouteMatch) return top.matches.uri.toString();
+    return config.uri.toString();
+  }
 
   void _onRouteChanged() {
     if (_traversing) return;

@@ -325,3 +325,36 @@ def test_finalized_report_membership_and_partial_failure_are_real(pg_engine):
             )
         )
         session.flush()
+
+
+def test_delivery_passes_reuse_valid_evaluations_instead_of_appending(pg_engine):
+    # Regression: deliver_priority runs after every source run and re-evaluated every retained
+    # job each time; 2,895 jobs accumulated 638,675 evaluations in a day.
+    from datetime import timedelta
+
+    with Session(pg_engine) as session, session.begin():
+        owner = seed_owner(session)
+        source, entity = seed_source(session)
+        job_a, _, _, _ = ingest(session, owner, source, entity, "REUSE-A")
+        ingest(session, owner, source, entity, "REUSE-B")
+        user_id = owner.id
+        # The fixture links E-Verify evidence after ingest, so the first delivery pass legitimately
+        # evaluates again; every later pass with unchanged inputs must reuse that evaluation.
+        service.deliver_priority(session, user_id, now=NOW)
+        before = session.scalar(select(func.count()).select_from(JobEvaluation))
+        service.deliver_priority(session, user_id, now=NOW + timedelta(minutes=30))
+        service.build_report(session, user_id, now=NOW + timedelta(minutes=45))
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == before
+        # Direct re-evaluation with unchanged inputs is also reused ...
+        first = pipeline.reevaluate_job(session, job_a.id, user_id, now=NOW + timedelta(hours=1))
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == before
+        # ... until the evaluation's own validity deadline passes or a day elapses ...
+        later = pipeline.reevaluate_job(session, job_a.id, user_id, now=NOW + timedelta(hours=25))
+        assert later.id != first.id
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == before + 1
+        # ... and a changed profile version always evaluates again.
+        profile = session.scalar(select(SearchProfile).where(SearchProfile.user_id == user_id))
+        profile.version += 1
+        session.flush()
+        pipeline.reevaluate_job(session, job_a.id, user_id, now=NOW + timedelta(hours=25, minutes=1))
+        assert session.scalar(select(func.count()).select_from(JobEvaluation)) == before + 2

@@ -345,6 +345,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Add a company'), findsOneWidget);
     expect(history.canGoForward, isFalse);
+    // Switching a Homepage tab is a history step: Back returns to the previous tab.
+    await tester.tap(find.text('Homepage').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Application Dashboard'));
+    await tester.pumpAndSettle();
+    expect(history.current, '/home?tab=dashboard');
+    await tester.tap(find.byTooltip('Back (Alt+Left)'));
+    await tester.pumpAndSettle();
+    expect(history.current, '/home');
+    expect(find.text('No qualifying jobs delivered yet'), findsOneWidget);
+    await tester.tap(find.text('Watchlist').first);
+    await tester.pumpAndSettle();
+    // A pushed secondary page (a watched company) goes back to the page it came from.
+    router.push('/watchlist/abc');
+    await tester.pumpAndSettle();
+    expect(history.entries.last, '/watchlist/abc');
+    await tester.tap(find.byTooltip('Back (Alt+Left)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add a company'), findsOneWidget);
+    expect(history.current, '/watchlist');
     // The provider container disposes the history notifier itself.
     router.dispose();
   });
