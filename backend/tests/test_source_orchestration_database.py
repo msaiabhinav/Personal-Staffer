@@ -192,3 +192,28 @@ def test_rescan_of_unchanged_postings_appends_no_snapshot_or_evaluation(pg_engin
         # Changed content still produces a new immutable snapshot and evaluation per job.
         assert session.scalar(select(func.count()).select_from(JobSnapshot)) == 4
         assert session.scalar(select(func.count()).select_from(JobEvaluation)) == 4
+
+
+def test_scheduler_runs_one_bounded_search_per_reviewed_query(pg_engine):
+    from app.db.models import SourceRegistry
+    from app.workers.schedule import source_queries
+
+    _user, source, _tenant, _group = seeded(pg_engine)
+    with Session(pg_engine) as session, session.begin():
+        row = session.get(SourceRegistry, source)
+        row.enabled = True
+        row.capabilities = {**(row.capabilities or {}), "queries": [" analyst ", "data", "analyst", "", 7]}
+        assert source_queries(row) == ["analyst", "data", "7"]
+    with Session(pg_engine) as session, session.begin():
+        schedule_due(session, now=datetime(2026, 9, 13, 12, tzinfo=UTC))
+        items = session.scalars(select(WorkItem).where(WorkItem.task_type == "SEARCH_SOURCE")).all()
+        by_query = {item.payload.get("query"): item.task_key for item in items}
+        assert set(by_query) == {"analyst", "data", "7"}
+        assert by_query["analyst"].endswith(str(source)) is False  # bucket suffix present
+        assert not by_query["analyst"].endswith(":1") and by_query["data"].endswith(":1")
+        assert by_query["7"].endswith(":2")
+        assert all(item.payload["source_id"] == str(source) for item in items)
+    with Session(pg_engine) as session, session.begin():
+        row = session.get(SourceRegistry, source)
+        row.capabilities = {"registered_by": "TEST"}
+        assert source_queries(row) == [""]  # board sources: one run, no query key

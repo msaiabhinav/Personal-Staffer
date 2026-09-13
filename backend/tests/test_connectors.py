@@ -583,3 +583,123 @@ def test_ashby_verify_opening_uses_posting_api_listing():
     missing = connector.verify_opening(job.model_copy(update={"external_id": "never"}))
     assert missing.status == "CLOSED"
     assert len(connector.client.calls) == 1  # Board snapshot reused within the run window.
+
+
+def _amazon_hit(identifier="10536521", **extra):
+    return {
+        "id": "2f4ff30f-a8fd-4575-b2e6-10e90fd48c3b",
+        "id_icims": identifier,
+        "title": "Business Analyst, Talent Acquisition Analytics",
+        "company_name": "Amazon.com Services LLC",
+        "job_path": f"/en/jobs/{identifier}/business-analyst-talent-acquisition-analytics",
+        "url_next_step": f"https://account.amazon.jobs/jobs/{identifier}/apply",
+        "posted_date": "September 10, 2026",
+        "updated_time": "2 days",
+        "job_schedule_type": "full-time",
+        "country_code": "USA",
+        "state": "WA",
+        "city": "Seattle",
+        "normalized_location": "Seattle, Washington, USA",
+        "locations": [
+            json.dumps(
+                {
+                    "normalizedStateName": "Washington",
+                    "countryIso2a": "US",
+                    "city": "Seattle",
+                    "type": "ONSITE",
+                    "normalizedLocation": "Seattle, Washington, USA",
+                    "region": "WA",
+                }
+            )
+        ],
+        "description": "<p>Build dashboards in SQL and Tableau.</p><script>alert(1)</script>",
+        "basic_qualifications": "- 2+ years of SQL experience",
+        "preferred_qualifications": "- Tableau",
+        **extra,
+    }
+
+
+def test_amazon_jobs_search_hit_is_complete_posting_with_date_only_publication():
+    from app.connectors.amazon_jobs import AmazonJobsConnector, search_url
+
+    hit = _amazon_hit()
+    client = FakeClient([{"hits": 1, "jobs": [hit]}])
+    connector = get_connector("amazon_jobs", client=client)
+    assert connector.source_type == connector.health().source_type == "amazon_jobs"
+    discovery = connector.discover("business analyst", "USA")
+    assert client.calls[0][0] == search_url("business analyst", "USA", 0)
+    assert "normalized_country_code%5B%5D=USA" in client.calls[0][0]
+    assert discovery.next_cursor is None and discovery.coverage["complete_listing"]
+    candidate = discovery.candidates[0]
+    assert candidate.external_id == "10536521"
+    assert (
+        candidate.source_url == "https://www.amazon.jobs/en/jobs/10536521/business-analyst-talent-acquisition-analytics"
+    )
+    fetched = connector.fetch(candidate)  # Reuses the run-local search observation: no second request.
+    assert fetched.outcome == "SUCCESS" and len(client.calls) == 1
+    job = connector.normalize(fetched)
+    assert job.employer_name == "Amazon.com Services LLC"
+    assert job.requisition_id == "10536521"
+    assert job.country_codes == ["US"] and job.workplace_states == ["WA"]
+    assert job.locations == ["Seattle, Washington, USA"]
+    assert job.work_arrangement == "ONSITE"
+    assert job.employment_type == "FULL_TIME"
+    assert job.application_url == "https://account.amazon.jobs/jobs/10536521/apply"
+    assert "Basic qualifications" in job.description_text and "2+ years of SQL" in job.description_text
+    assert "<script" not in job.description_html and job.description_complete
+    assert job.publication.kind == "ORIGINAL" and job.publication.precision == "DATE"
+    assert job.publication.earliest == datetime(2026, 9, 9, 10, tzinfo=UTC)
+    assert job.publication.latest < datetime(2026, 9, 11, 12, tzinfo=UTC)
+    assert job.field_evidence["publication"][0].value == "September 10, 2026"
+    assert isinstance(connector, AmazonJobsConnector)
+
+
+def test_amazon_jobs_pagination_lookup_and_delisting():
+    from app.connectors.amazon_jobs import AmazonJobsConnector
+
+    page = [_amazon_hit(str(10000000 + i)) for i in range(100)]
+    connector = AmazonJobsConnector(client=FakeClient([{"hits": 150, "jobs": page}]))
+    first = connector.discover("analyst", "USA")
+    assert first.next_cursor == "100" and first.coverage["complete_listing"] is False
+    assert len(first.candidates) == 100
+    # A stale run-local entry is re-looked-up by exact id; identity must match.
+    connector._seen.clear()
+    connector.client = FakeClient([{"hits": 1, "jobs": [_amazon_hit("10000001")]}])
+    fetched = connector.fetch(first.candidates[1])
+    assert fetched.outcome == "SUCCESS" and "base_query=10000001" in connector.client.calls[0][0]
+    connector.client = FakeClient([{"hits": 1, "jobs": [_amazon_hit("99999999")]}])
+    assert connector.fetch(first.candidates[2]).outcome == "CLOSED"  # no longer listed under its id
+    job = connector.normalize(fetched)
+    connector.client = FakeClient([{"hits": 0, "jobs": []}])
+    closed = connector.verify_opening(job)
+    assert closed.status == "CLOSED" and "no longer returns" in closed.evidence_text
+    connector.client = FakeClient([{"hits": 1, "jobs": [_amazon_hit("10000001")]}])
+    active = connector.verify_opening(job)
+    assert active.status == "ACTIVE" and active.actionable and active.identity_match
+    connector.client = FakeClient(
+        [HTTPResult(429, b"", "https://www.amazon.jobs/en/search.json", {"retry-after": "30"})]
+    )
+    assert connector.verify_opening(job).status == "UNKNOWN"
+
+
+def test_amazon_jobs_bad_paths_and_unknown_dates_are_not_invented():
+    from app.connectors.amazon_jobs import AmazonJobsConnector, posted_date
+
+    hits = [
+        _amazon_hit("10000002", job_path="/en/jobs/../etc"),
+        _amazon_hit("bad-id"),
+        _amazon_hit("10000003", locations=["not json"], posted_date="2 days ago", job_schedule_type=None),
+    ]
+    connector = AmazonJobsConnector(client=FakeClient([{"hits": 3, "jobs": hits}]))
+    discovery = connector.discover("", "USA")
+    assert [c.external_id for c in discovery.candidates] == ["10000003"]
+    job = connector.normalize(connector.fetch(discovery.candidates[0]))
+    assert job.publication.kind == "ORIGINAL" and job.publication.precision == "UNKNOWN"
+    assert job.locations == ["Seattle, Washington, USA"]  # normalized_location fallback
+    assert job.country_codes == ["US"] and job.work_arrangement == "UNKNOWN" and job.employment_type is None
+    assert posted_date("February 30, 2026").precision == "UNKNOWN"
+    failed = AmazonJobsConnector(
+        client=FakeClient([SourceHTTPError("SOURCE_HTTP_ERROR", "down", status=503, retryable=True)])
+    )
+    result = failed.discover("analyst", "USA")
+    assert result.errors and result.coverage["complete_listing"] is False and failed.health().state == "FAILED"

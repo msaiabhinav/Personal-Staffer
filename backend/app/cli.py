@@ -32,9 +32,18 @@ def parser():
         "--pool-evidence", type=Path, help="Reviewed JSON evidence for company pools; plain labels remain unverified"
     )
     source.add_argument("--enable", action="store_true")
+    source.add_argument(
+        "--query",
+        action="append",
+        default=[],
+        help="Search term for search-style sources (SmartRecruiters, amazon.jobs); repeat for several. "
+        "Each becomes its own bounded scheduled run. Board sources ignore it.",
+    )
+    source.add_argument("--career-url", help="Public careers page for the owner's reference")
     search = sub.add_parser("run-search")
     search.add_argument("--source", required=True, help="registered source UUID")
     search.add_argument("--user", type=UUID)
+    search.add_argument("--query", default="", help="Search term for search-style sources (one bounded run)")
     report = sub.add_parser("build-report")
     report.add_argument("--date", type=date.fromisoformat)
     report.add_argument("--user", type=UUID)
@@ -199,7 +208,7 @@ def main(argv=None):
 
         with factory() as session:
             user_id = only_user(session, args.user).id
-        run = run_source_batched(factory, UUID(args.source), user_id)
+        run = run_source_batched(factory, UUID(args.source), user_id, query=args.query)
         print(
             json.dumps(
                 {"run_id": str(run.id), "state": run.state, "counts": run.counts, "errors": run.errors},
@@ -295,29 +304,48 @@ def main(argv=None):
             if source:
                 raise ValueError("Source already exists; do not silently replace its employer mapping")
             verified_pools, pool_evidence = validate_pool_evidence(args.employer, args.pool, args.pool_evidence)
-            group = EmployerGroup(
-                canonical_name=args.employer,
-                normalized_name=args.employer.casefold(),
-                pool_tags=args.pool + verified_pools,
-                grouping_evidence={"method": "ADMIN_SOURCE_REGISTRATION", "pool_evidence": pool_evidence},
+            # A watched or previously seen employer already has a group; a second group with the
+            # same name would split its jobs away from the watchlist entry and company page.
+            group = session.scalar(
+                select(EmployerGroup).where(EmployerGroup.normalized_name == args.employer.casefold())
             )
-            session.add(group)
+            if group:
+                group.pool_tags = list(dict.fromkeys([*(group.pool_tags or []), *args.pool, *verified_pools]))
+                group.grouping_evidence = {
+                    **(group.grouping_evidence or {}),
+                    "source_registration": {"method": "ADMIN_SOURCE_REGISTRATION", "pool_evidence": pool_evidence},
+                }
+            else:
+                group = EmployerGroup(
+                    canonical_name=args.employer,
+                    normalized_name=args.employer.casefold(),
+                    pool_tags=args.pool + verified_pools,
+                    grouping_evidence={"method": "ADMIN_SOURCE_REGISTRATION", "pool_evidence": pool_evidence},
+                )
+                session.add(group)
             session.flush()
             source = SourceRegistry(
                 connector_type=args.type,
                 tenant=args.tenant,
                 employer_group_id=group.id,
                 board_identifier=args.tenant,
+                career_url=args.career_url,
                 enabled=args.enable,
                 pool_tags=args.pool,
                 configuration_state="NOT_CONFIGURED",
-                capabilities={"registered_by": "ADMIN_CLI"},
+                capabilities={
+                    "registered_by": "ADMIN_CLI",
+                    **({"queries": [q.strip() for q in args.query if q.strip()][:10]} if args.query else {}),
+                },
             )
             session.add(source)
             session.flush()
             result = {
                 "source_id": str(source.id),
                 "group_id": str(group.id),
+                "group_reused": group.grouping_evidence.get("method") != "ADMIN_SOURCE_REGISTRATION"
+                or "source_registration" in group.grouping_evidence,
+                "queries": (source.capabilities or {}).get("queries", []),
                 "enabled": source.enabled,
                 "verified_pools": verified_pools,
                 "note": "Plain pool tags are search requests, not verified institution/startup membership. Registration is not E-Verify or legal-employer confirmation",

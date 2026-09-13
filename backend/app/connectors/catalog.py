@@ -2,6 +2,7 @@
 
 import os
 
+from .amazon_jobs import AmazonJobsConnector
 from .ats import AshbyConnector, GreenhouseConnector, LeverConnector, SmartRecruitersConnector
 from .direct import DirectConnector
 from .jobspy_adapter import JobSpyConnector
@@ -9,6 +10,11 @@ from .usajobs import USAJobsConnector
 from .workday import WorkdayConnector
 
 CATALOG = [
+    {
+        "source_type": "amazon_jobs",
+        "implementation": "PUBLIC_SEARCH_JSON_CONNECTOR",
+        "configuration": "COUNTRY_REQUIRED",
+    },
     {"source_type": "ashby", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
     {"source_type": "greenhouse", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
     {"source_type": "lever", "implementation": "PUBLIC_ATS_CONNECTOR", "configuration": "EMPLOYER_BOARD_REQUIRED"},
@@ -55,6 +61,7 @@ CATALOG = [
 
 def get_connector(source_type: str, **kwargs):
     factories = {
+        "amazon_jobs": AmazonJobsConnector,
         "ashby": AshbyConnector,
         "greenhouse": GreenhouseConnector,
         "lever": LeverConnector,

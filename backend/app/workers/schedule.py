@@ -18,6 +18,19 @@ def source_interval(source):
     return 28800 if source.connector_type == "jobspy" or source.connector_type.startswith("jobspy:") else 14400
 
 
+def source_queries(source) -> list[str]:
+    """Reviewed search terms for a source, or a single empty query (the whole board)."""
+    queries = (source.capabilities or {}).get("queries")
+    if not isinstance(queries, list):
+        return [""]
+    cleaned = []
+    for query in queries:
+        text = str(query).strip()
+        if text and text not in cleaned and len(cleaned) < 10:
+            cleaned.append(text)
+    return cleaned or [""]
+
+
 def schedule_due(session, *, now=None):
     now = now or datetime.now(UTC)
     today = now.astimezone(EASTERN).date()
@@ -58,23 +71,25 @@ def schedule_due(session, *, now=None):
             # Stable per-source phase keeps subsequent polling distributed.
             phase = int(source.id.hex[:8], 16) % seconds
             bucket = (int(now.timestamp()) - phase) // seconds
-            enqueue(
-                session,
-                "SEARCH_SOURCE",
-                {"source_id": str(source.id), "user_id": str(user.id)},
-                f"source:{user.id}:{source.id}:{bucket}",
-            )
-            counts += 1
-            # Start a dedicated preparation pass at 10:30 Eastern, regardless
-            # of the ordinary source cadence. Unique date keys survive restarts.
-            if now >= release_at(today) - timedelta(minutes=30):
-                enqueue(
-                    session,
-                    "SEARCH_SOURCE",
-                    {"source_id": str(source.id), "user_id": str(user.id), "report_preparation": str(today)},
-                    f"report-prep:{user.id}:{source.id}:{today}",
-                )
+            # Search-style sources (SmartRecruiters, amazon.jobs) are too large to walk whole;
+            # each reviewed query becomes its own bounded run. Board sources keep one run.
+            for index, query in enumerate(source_queries(source)):
+                suffix = f":{index}" if index else ""
+                payload = {"source_id": str(source.id), "user_id": str(user.id)}
+                if query:
+                    payload["query"] = query
+                enqueue(session, "SEARCH_SOURCE", payload, f"source:{user.id}:{source.id}:{bucket}{suffix}")
                 counts += 1
+                # Start a dedicated preparation pass at 10:30 Eastern, regardless
+                # of the ordinary source cadence. Unique date keys survive restarts.
+                if now >= release_at(today) - timedelta(minutes=30):
+                    enqueue(
+                        session,
+                        "SEARCH_SOURCE",
+                        {**payload, "report_preparation": str(today)},
+                        f"report-prep:{user.id}:{source.id}:{today}{suffix}",
+                    )
+                    counts += 1
         # Schedule release after searches in this transaction. The report domain
         # re-evaluates retained evidence at commit; slow/failed sources remain
         # explicitly partial. No indefinite provider wait delays valid results.
