@@ -411,6 +411,7 @@ def watchlist_entry(entry_id: UUID, user: User = USER_DEPENDENCY, session: Sessi
         ],
         "open_postings": open_postings or 0,
         "delivered": delivered or 0,
+        "breakdown": _posting_breakdown(session, user.id, entry.employer_group_id) if group else None,
     }
 
 
@@ -496,6 +497,68 @@ def employer_groups(
     )
 
 
+def _latest_evaluations(user_id):
+    """Subquery of each job's most recent evaluation id visible to this owner."""
+    return (
+        select(JobEvaluation.id)
+        .where(or_(JobEvaluation.user_id == user_id, JobEvaluation.user_id.is_(None)))
+        .distinct(JobEvaluation.job_id)
+        .order_by(JobEvaluation.job_id, JobEvaluation.evaluated_at.desc(), JobEvaluation.id)
+    )
+
+
+def _posting_breakdown(session, user_id, employer_group_id):
+    """How the owner's gates treated a company's open postings: counts and the top
+    withheld reasons among the postings whose role was relevant."""
+    open_ids = list(
+        session.scalars(
+            select(Job.id).where(
+                Job.employer_group_id == employer_group_id,
+                Job.canonical_redirect_id.is_(None),
+                Job.availability != "CLOSED",
+            )
+        )
+    )
+    result = {"open": len(open_ids), "relevant": 0, "qualifying": 0, "needs_review": 0, "withheld_reasons": []}
+    if not open_ids:
+        return result
+    latest = _latest_evaluations(user_id)
+    rows = session.execute(
+        select(JobEvaluation.job_id, JobEvaluation.decision, RuleResult.rule_code, RuleResult.reason_code)
+        .join(RuleResult, RuleResult.evaluation_id == JobEvaluation.id)
+        .where(JobEvaluation.id.in_(latest), JobEvaluation.job_id.in_(open_ids), RuleResult.decision != "PASS")
+    ).all()
+    decisions = dict(
+        session.execute(
+            select(JobEvaluation.job_id, JobEvaluation.decision).where(
+                JobEvaluation.id.in_(latest), JobEvaluation.job_id.in_(open_ids)
+            )
+        ).all()
+    )
+    failed_by_job: dict = {}
+    for job_id, _decision, rule_code, reason_code in rows:
+        failed_by_job.setdefault(job_id, {})[rule_code] = reason_code
+    reasons: dict = {}
+    for job_id, decision in decisions.items():
+        failed = failed_by_job.get(job_id, {})
+        if failed.get("role_relevance") == "ROLE_UNRELATED":
+            continue
+        result["relevant"] += 1
+        if decision == "ELIGIBLE":
+            result["qualifying"] += 1
+        elif decision == "NEEDS_REVIEW":
+            result["needs_review"] += 1
+        else:
+            for rule_code, reason_code in failed.items():
+                if rule_code != "role_relevance":
+                    reasons[reason_code] = reasons.get(reason_code, 0) + 1
+    result["withheld_reasons"] = [
+        {"reason": reason, "count": count}
+        for reason, count in sorted(reasons.items(), key=lambda item: (-item[1], item[0]))[:6]
+    ]
+    return result
+
+
 @router.get("/jobs")
 def jobs(
     scope: Literal["today", "history", "priority", "scanned"] = "today",
@@ -505,6 +568,7 @@ def jobs(
     company: str | None = None,
     employer_group_id: UUID | None = None,
     relevant_only: bool = False,
+    qualifying_only: bool = False,
     source: str | None = None,
     keyword: str | None = None,
     cursor: str | None = None,
@@ -535,16 +599,24 @@ def jobs(
         )
     if employer_group_id:
         stmt = stmt.where(Job.employer_group_id == employer_group_id)
-    if relevant_only:
+    if relevant_only or qualifying_only:
+        latest = _latest_evaluations(user.id)
+    if qualifying_only:
+        # The owner's normal search: every gate (relevance, skills, experience, geography,
+        # employment type, freshness, live opening) as decided by the latest evaluation.
+        # NEEDS_REVIEW is kept because the owner may resolve it; INELIGIBLE and unevaluated
+        # postings drop out.
+        stmt = stmt.where(
+            Job.id.in_(
+                select(JobEvaluation.job_id).where(
+                    JobEvaluation.id.in_(latest), JobEvaluation.decision.in_(("ELIGIBLE", "NEEDS_REVIEW"))
+                )
+            )
+        )
+    elif relevant_only:
         # Keep postings whose latest evaluation found the role relevant to the owner's
         # profile (or could not rule it out from the title); unrelated and never-evaluated
         # postings drop out. Other withheld reasons (experience, country) remain visible.
-        latest = (
-            select(JobEvaluation.id)
-            .where(or_(JobEvaluation.user_id == user.id, JobEvaluation.user_id.is_(None)))
-            .distinct(JobEvaluation.job_id)
-            .order_by(JobEvaluation.job_id, JobEvaluation.evaluated_at.desc(), JobEvaluation.id)
-        )
         stmt = stmt.where(
             Job.id.in_(
                 select(JobEvaluation.job_id)

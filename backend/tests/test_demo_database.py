@@ -224,6 +224,12 @@ def test_scanned_scope_lists_undelivered_postings_without_delivering(demo_client
         for row in relevant["items"]:
             rules = {r["rule_code"]: r["reason_code"] for r in row["eligibility"]["rules"]}
             assert rules["role_relevance"] != "ROLE_UNRELATED"
+        qualifying = demo_client.get(
+            "/api/v1/jobs?scope=scanned&qualifying_only=true&limit=100", headers=headers
+        ).json()
+        assert all(row["eligibility"]["decision"] in {"ELIGIBLE", "NEEDS_REVIEW"} for row in qualifying["items"])
+        assert delivered_id in {row["id"] for row in qualifying["items"]}  # it was delivered, so it qualified
+        assert hidden_id not in {row["id"] for row in qualifying["items"]}
         # The watchlist entry for the demo employer reports its sources and open postings.
         entries = demo_client.get("/api/v1/watchlist?limit=100", headers=headers).json()["items"]
         entry = next(e for e in entries if e["employer_group_id"] == str(group_id))
@@ -235,6 +241,10 @@ def test_scanned_scope_lists_undelivered_postings_without_delivering(demo_client
             {row["id"] for row in feed["items"] if row["employer_group_id"] == str(group_id)}
         )
         assert detail["delivered"] >= 1
+        breakdown = detail["breakdown"]
+        assert breakdown["open"] == detail["open_postings"] and breakdown["qualifying"] >= 1
+        assert breakdown["relevant"] >= breakdown["qualifying"] + breakdown["needs_review"]
+        assert isinstance(breakdown["withheld_reasons"], list)
         assert demo_client.get(f"/api/v1/watchlist/{uuid4()}", headers=headers).status_code == 404
     finally:
         with Session(pg_engine) as session, session.begin():

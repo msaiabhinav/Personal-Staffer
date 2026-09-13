@@ -235,7 +235,7 @@ class WatchlistCompanyPage extends ConsumerWidget {
           PageHeader(
             title: label(entry['company']),
             subtitle: registered
-                ? '${label(entry['open_postings'], '0')} open posting(s) collected · ${label(entry['delivered'], '0')} delivered to you · only roles relevant to your profile are listed'
+                ? '${label(entry['open_postings'], '0')} open posting(s) collected · ${label(object(entry['breakdown'])['relevant'], '0')} in your role families · ${label(object(entry['breakdown'])['qualifying'], '0')} pass every rule · ${label(entry['delivered'], '0')} delivered'
                 : 'Awaiting employer identity resolution; no career site can be scanned yet.',
           ),
           Padding(
@@ -281,16 +281,24 @@ class WatchlistCompanyPage extends ConsumerWidget {
                   )
                 : ResourceView(
                     route:
-                        '/jobs?scope=scanned&relevant_only=true&employer_group_id=$groupId&limit=25',
+                        '/jobs?scope=scanned&qualifying_only=true&employer_group_id=$groupId&limit=25',
                     builder: (data) {
                       final rows = objects(data['items']);
                       if (rows.isEmpty) {
+                        final b = object(entry['breakdown']);
+                        final reasons = objects(b['withheld_reasons'])
+                            .map(
+                              (r) => '${friendly(r['reason'])} (${r['count']})',
+                            )
+                            .join(', ');
                         return EmptyMessage(
                           icon: Icons.work_outline,
-                          title: 'No relevant open postings',
+                          title:
+                              'No posting passes your search rules right now',
                           message: sources.isEmpty
                               ? 'Register a career-site source for this employer to start collecting its postings.'
-                              : 'Of ${label(entry['open_postings'], '0')} open posting(s) collected, none currently matches your role families. Unrelated roles are not listed.',
+                              : '${label(b['open'], '0')} open posting(s) collected · ${label(b['relevant'], '0')} match your role families · none passes every rule.'
+                                    '${reasons.isEmpty ? '' : '\nWithheld for: $reasons.'}',
                         );
                       }
                       return ListView.builder(
