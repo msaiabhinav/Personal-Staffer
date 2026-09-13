@@ -490,6 +490,60 @@ class SmartRecruitersConnector(BaseConnector):
         except (SourceHTTPError, ValueError, KeyError, TypeError) as exc:
             return self._fetch_failed(candidate, exc)
 
+    def verify_opening(self, job_source):
+        # SmartRecruiters-hosted job pages render client-side; the public postings API is the
+        # authoritative opening state: an active posting with an applyUrl is live, a 404 or
+        # active=false is closed.
+        target = job_source.application_url
+        try:
+            url = (
+                f"https://api.smartrecruiters.com/v1/companies/{token(job_source.tenant)}/postings/"
+                f"{token(job_source.external_id)}"
+            )
+            result, p = self._json(url)
+        except SourceHTTPError as exc:
+            if exc.status in (404, 410):
+                return OpeningVerification(
+                    status="CLOSED",
+                    application_url=target,
+                    evidence_text="SmartRecruiters postings API no longer lists this posting id",
+                    http_status=exc.status,
+                )
+            return OpeningVerification(
+                status="UNKNOWN", application_url=target, evidence_text=exc.code, http_status=exc.status
+            )
+        except (ValueError, KeyError, TypeError):
+            return OpeningVerification(status="UNKNOWN", application_url=target, evidence_text="Detail unreadable")
+        identity = str(p.get("id")) == str(job_source.external_id)
+        if identity and p.get("active") is False:
+            return OpeningVerification(
+                status="CLOSED",
+                identity_match=True,
+                application_url=target,
+                final_url=result.final_url,
+                evidence_text="SmartRecruiters postings API marks the posting inactive",
+                http_status=result.status_code,
+            )
+        apply_url = p.get("applyUrl") or target
+        if identity and p.get("active") is not False and apply_url:
+            return OpeningVerification(
+                status="ACTIVE",
+                identity_match=True,
+                actionable=True,
+                application_url=apply_url,
+                final_url=result.final_url,
+                evidence_text=f"SmartRecruiters postings API lists posting {job_source.external_id} as active with an apply URL",
+                http_status=result.status_code,
+            )
+        return OpeningVerification(
+            status="UNKNOWN",
+            identity_match=identity,
+            application_url=target,
+            final_url=result.final_url,
+            evidence_text="SmartRecruiters detail did not confirm identity and an apply URL",
+            http_status=result.status_code,
+        )
+
     def normalize(self, payload):
         p = payload.payload
         sections = p.get("jobAd", {}).get("sections", {})

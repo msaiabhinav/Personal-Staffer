@@ -883,6 +883,28 @@ def correction(
     )
 
 
+@router.get("/companies")
+def companies(
+    q: str = Query(..., min_length=1, max_length=120),
+    user: User = USER_DEPENDENCY,
+    session: Session = SESSION_DEPENDENCY,
+):
+    from app.email.companies import search_companies
+
+    return {"items": search_companies(session, user.id, q)}
+
+
+@router.get("/companies/view")
+def company_view(
+    name: str = Query(..., min_length=1, max_length=200),
+    user: User = USER_DEPENDENCY,
+    session: Session = SESSION_DEPENDENCY,
+):
+    from app.email.companies import company_view as build
+
+    return build(session, user.id, name)
+
+
 @router.get("/dashboard")
 def dashboard(user: User = USER_DEPENDENCY, session: Session = SESSION_DEPENDENCY):
     apps = list(

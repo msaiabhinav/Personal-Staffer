@@ -74,6 +74,11 @@ def parser():
     )
     void.add_argument("--company", action="append", required=True)
     void.add_argument("--user", type=UUID)
+    rebackfill = sub.add_parser(
+        "gmail-rebackfill",
+        help="Reset the Gmail sync cursor so the scheduled sync re-walks the backfill window with the current query",
+    )
+    rebackfill.add_argument("--user", type=UUID)
     sub.add_parser("schedule-once")
     sub.add_parser("dispatch-once")
     sub.add_parser("dispatch-loop")
@@ -251,6 +256,26 @@ def main(argv=None):
                 print(json.dumps(apply_import(session, user_id, proposals, include_low=args.include_low), indent=2))
             else:
                 print("Preview only. Rerun with --apply (and --include-low to include LOW-confidence rows).")
+        return
+    if args.command == "gmail-rebackfill":
+        from app.db.models import GmailConnection, GmailSyncState
+
+        with factory() as session, session.begin():
+            user_id = only_user(session, args.user).id
+            connection = session.scalar(select(GmailConnection).where(GmailConnection.user_id == user_id))
+            state = (
+                session.scalar(select(GmailSyncState).where(GmailSyncState.connection_id == connection.id))
+                if connection
+                else None
+            )
+            if connection is None or state is None:
+                raise ValueError("Gmail is not connected for this owner")
+            previous = {"history_cursor": state.history_cursor, "progress": state.reconciliation_progress}
+            # Already-stored messages are skipped by Gmail message id; only new matches are added.
+            state.history_cursor = None
+            state.reconciliation_progress = {}
+            connection.sync_health = "SYNCING"
+            print(json.dumps({"reset": True, "previous": previous}, indent=2, default=str))
         return
     if args.command == "void-imported-applications":
         from app.email.import_history import void_imported

@@ -13,6 +13,11 @@ def test_gmail_api_uses_get_readonly_and_job_bounded_search():
         assert request.url.host == "gmail.googleapis.com"
         query = request.url.params["q"]
         assert "after:" in query and "application" in query
+        # ADR 0006: the wider capture set, as one Gmail OR-group, without spam/trash.
+        assert query.count("{") == 1 and query.endswith("}")
+        for needle in ("applying", "candidacy", '"next steps"', "from:greenhouse.io", "from:myworkdayjobs.com"):
+            assert needle in query
+        assert request.url.params["includeSpamTrash"] == "false"
         assert request.url.params["labelIds"] == "Label_1"
         return httpx.Response(200, json={"messages": [{"id": "abc123"}], "nextPageToken": "page2"})
 

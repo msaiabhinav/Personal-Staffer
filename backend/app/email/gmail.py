@@ -52,6 +52,58 @@ def _error_reason(response, status) -> str:
         return f"HTTP {status} non-JSON error"
 
 
+# Words employers actually use in application mail plus applicant-tracking sender domains.
+# The original seven-term query captured 325 of 438 relevant messages on the first real
+# mailbox (ADR 0006); anything unrelated that still matches is classified UNRELATED and
+# never stored.
+BACKFILL_TERMS = (
+    "application",
+    "applying",
+    "applied",
+    "interview",
+    "assessment",
+    "recruiter",
+    "recruiting",
+    "candidacy",
+    "candidate",
+    '"your interest"',
+    '"next steps"',
+    '"offer of employment"',
+    '"position closed"',
+    '"thank you for"',
+    "resume",
+    "hiring",
+    "talent",
+    "opportunity",
+)
+BACKFILL_SENDER_DOMAINS = (
+    "greenhouse.io",
+    "lever.co",
+    "myworkday.com",
+    "myworkdayjobs.com",
+    "icims.com",
+    "smartrecruiters.com",
+    "ashbyhq.com",
+    "jobvite.com",
+    "taleo.net",
+    "successfactors.com",
+    "workable.com",
+    "bamboohr.com",
+    "phenom.com",
+    "eightfold.ai",
+    "brassring.com",
+    "ultipro.com",
+    "paylocity.com",
+    "adp.com",
+    "governmentjobs.com",
+)
+
+
+def backfill_query(after: datetime) -> str:
+    terms = " ".join([*BACKFILL_TERMS, *("from:" + domain for domain in BACKFILL_SENDER_DOMAINS)])
+    return f"after:{int(after.timestamp())} {{{terms}}}"
+
+
 class GmailAPI:
     def __init__(self, access_token: str, transport=None):
         self.access_token, self.transport = access_token, transport
@@ -114,7 +166,7 @@ class GmailAPI:
     def backfill(self, after: datetime, page_token=None, label=None):
         # A bounded job-related search, never a full mailbox import. Labels narrow
         # processing but do not narrow the provider's gmail.readonly grant.
-        query = f'after:{int(after.timestamp())} {{application interview assessment recruiter recruiting "offer of employment" "position closed"}}'
+        query = backfill_query(after)
         params = {"q": query, "maxResults": 100, "includeSpamTrash": "false"}
         if page_token:
             params["pageToken"] = page_token

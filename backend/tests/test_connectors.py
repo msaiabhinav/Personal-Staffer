@@ -346,7 +346,75 @@ def test_workday_selected_tenant_validation_and_rounded_date_not_publication():
         }
     }
     job = WorkdayConnector().normalize(fetched("workday", p))
-    assert job.publication.precision == "UNKNOWN" and job.country_codes == ["US"]
+    # startDate alone is not publication evidence; here postedOn ("Today") corroborates it.
+    assert job.publication.precision == "DATE" and job.publication.kind == "ORIGINAL"
+    assert job.publication.earliest == NOW.replace(hour=0) - timedelta(hours=14)
+    assert "WORKDAY_START_DATE_SEMANTICS_REQUIRE_TENANT_VERIFICATION" not in job.warnings
+    assert job.country_codes == ["US"]
+    disagreeing = dict(p["jobPostingInfo"], postedOn="Posted 9 Days Ago")
+    job = WorkdayConnector().normalize(fetched("workday", {"jobPostingInfo": disagreeing}))
+    assert job.publication.precision == "UNKNOWN"
+    assert "WORKDAY_START_DATE_SEMANTICS_REQUIRE_TENANT_VERIFICATION" in job.warnings
+    old = dict(p["jobPostingInfo"], startDate="2026-07-01", postedOn="Posted 30+ Days Ago", remoteType="Hybrid")
+    job = WorkdayConnector().normalize(fetched("workday", {"jobPostingInfo": old}))
+    assert job.publication.precision == "DATE" and job.publication.earliest.date().isoformat() == "2026-06-30"
+    assert job.work_arrangement == "HYBRID"
+    rounded = dict(p["jobPostingInfo"], postedOn="Posted 30+ Days Ago")  # start today, label says 30+
+    assert (
+        WorkdayConnector().normalize(fetched("workday", {"jobPostingInfo": rounded})).publication.precision == "UNKNOWN"
+    )
+
+
+def test_workday_and_smartrecruiters_verify_openings_through_their_public_apis():
+    detail = {
+        "jobPostingInfo": {
+            "title": "Analyst",
+            "jobReqId": "R1",
+            "jobDescription": "SQL",
+            "startDate": "2026-09-12",
+            "postedOn": "Posted Today",
+            "canApply": "True",
+            "posted": "True",
+            "externalUrl": "https://example.wd5.myworkdayjobs.com/External/job/Boston/Analyst_R1/apply",
+        }
+    }
+    connector = WorkdayConnector(FakeClient([detail]))
+    fetched_detail = fetched("workday", detail, tenant="https://example.wd5.myworkdayjobs.com/External")
+    fetched_detail.candidate.source_url = "https://example.wd5.myworkdayjobs.com/External/job/Boston/Analyst_R1"
+    job = connector.normalize(fetched_detail)
+    active = connector.verify_opening(job)
+    assert active.status == "ACTIVE" and active.identity_match and active.actionable
+    assert (
+        connector.client.calls[0][0]
+        == "https://example.wd5.myworkdayjobs.com/wday/cxs/example/External/job/Boston/Analyst_R1"
+    )
+    connector.client = FakeClient([HTTPResult(404, b"", "https://example.wd5.myworkdayjobs.com/x", {})])
+    assert connector.verify_opening(job).status == "CLOSED"
+    unposted = {"jobPostingInfo": dict(detail["jobPostingInfo"], posted="false")}
+    connector.client = FakeClient([unposted])
+    assert connector.verify_opening(job).status == "CLOSED"
+    other = {"jobPostingInfo": dict(detail["jobPostingInfo"], jobReqId="R2", title="Other")}
+    connector.client = FakeClient([other])
+    assert connector.verify_opening(job).status == "UNKNOWN"
+
+    posting = {
+        "id": "j1",
+        "name": "Analyst",
+        "active": True,
+        "applyUrl": "https://jobs.smartrecruiters.com/Example/j1/apply",
+        "jobAd": {"sections": {"jobDescription": {"title": "Job", "text": "<p>SQL</p>"}}},
+        "location": {"city": "Troy", "region": "MI", "country": "us"},
+        "releasedDate": "2026-09-12T10:00:00.000Z",
+    }
+    sr = SmartRecruitersConnector(FakeClient([posting]))
+    sr_job = sr.normalize(fetched("smartrecruiters", posting))
+    assert sr.verify_opening(sr_job).status == "ACTIVE"
+    sr.client = FakeClient([dict(posting, active=False)])
+    assert sr.verify_opening(sr_job).status == "CLOSED"
+    sr.client = FakeClient([HTTPResult(404, b"", "https://api.smartrecruiters.com/x", {})])
+    assert sr.verify_opening(sr_job).status == "CLOSED"
+    sr.client = FakeClient([HTTPResult(503, b"", "https://api.smartrecruiters.com/x", {})])
+    assert sr.verify_opening(sr_job).status == "UNKNOWN"
 
 
 def test_jobspy_never_defaults_to_all_sources_or_combines_incompatible_indeed_filters():
