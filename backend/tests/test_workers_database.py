@@ -48,7 +48,7 @@ def test_broker_loss_and_crash_reconcile_both_work_and_outbox(pg_engine):
             event_type="NOTIFICATION",
             payload={},
             state="DISPATCHED",
-            dispatched_at=now - timedelta(minutes=3),
+            dispatched_at=now - timedelta(minutes=11),
         )
         session.add(lost)
         assert reconcile(session, now=now) == 1

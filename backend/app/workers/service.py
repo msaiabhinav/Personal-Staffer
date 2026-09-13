@@ -36,12 +36,19 @@ def enqueue(session: Session, task_type: str, payload: dict, key: str) -> WorkIt
     return session.get(WorkItem, identifier)
 
 
+LOST_MESSAGE_MINUTES = 10
+
+
 def reconcile(session: Session, *, now=None) -> int:
     """Requeue lost messages as well as expired leases; Redis is never authoritative."""
     now = now or datetime.now(UTC)
+    # A published message can legitimately wait behind long source runs; re-publishing it
+    # every couple of minutes only floods the broker with duplicates of the same work.
     lost_events = session.scalars(
         select(OutboxEvent)
-        .where(OutboxEvent.state == "DISPATCHED", OutboxEvent.dispatched_at < now - timedelta(minutes=2))
+        .where(
+            OutboxEvent.state == "DISPATCHED", OutboxEvent.dispatched_at < now - timedelta(minutes=LOST_MESSAGE_MINUTES)
+        )
         .with_for_update(skip_locked=True)
         .limit(100)
     ).all()
@@ -61,7 +68,8 @@ def reconcile(session: Session, *, now=None) -> int:
         if row.attempts >= 3 and row.state != "DEFERRED":
             row.state, row.last_error = "FAILED", "ATTEMPT_LIMIT"
             continue
-        row.state, row.lease_owner, row.lease_expires_at = "QUEUED", None, now + timedelta(minutes=2)
+        row.state, row.lease_owner = "QUEUED", None
+        row.lease_expires_at = now + timedelta(minutes=LOST_MESSAGE_MINUTES)
         # A new dispatch event is okay: work key remains the business-effect boundary.
         event_key = f"reconcile:{row.id}:{int(now.timestamp()) // 60}"
         session.execute(
