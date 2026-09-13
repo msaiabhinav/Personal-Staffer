@@ -637,9 +637,8 @@ class Sidebar extends ConsumerWidget {
     final colors = context.colors;
     final scheme = Theme.of(context).colorScheme;
     final repo = ref.watch(repositoryProvider);
-    final accent = Theme.of(context).brightness == Brightness.dark
-        ? scheme.primary
-        : const Color(0xff3fc1cb);
+    // The sidebar is the logo badge in both modes, so the gold accent works on it directly.
+    final accent = scheme.primary;
     return Container(
       width: 248,
       decoration: BoxDecoration(
@@ -825,7 +824,7 @@ class SidebarItem extends StatelessWidget {
                     child: Text(
                       '$badge',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: const Color(0xff04262a),
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

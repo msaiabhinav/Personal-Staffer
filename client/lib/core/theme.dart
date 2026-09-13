@@ -30,33 +30,33 @@ class StafferPalette {
       warning,
       danger;
 
-  /// "Harbor": cool paper background, white surfaces, navy ink, deep teal accent.
+  /// "Parchment": the logo's cream canvas, warm white cards, espresso ink, gold accent.
   static const light = StafferPalette(
-    background: Color(0xfff3f6fa),
-    surface: Color(0xffffffff),
-    surfaceLow: Color(0xffedf1f6),
-    surfaceHigh: Color(0xffe1e8f0),
-    text: Color(0xff0f1e33),
-    muted: Color(0xff5a6b80),
-    accent: Color(0xff0b7a83),
-    onAccent: Color(0xffffffff),
-    border: Color(0xffdbe3ec),
-    warning: Color(0xffb86e00),
+    background: Color(0xfff8f5ee),
+    surface: Color(0xfffffdf9),
+    surfaceLow: Color(0xfff1ece2),
+    surfaceHigh: Color(0xffe8e0d2),
+    text: Color(0xff2b211b),
+    muted: Color(0xff6f6157),
+    accent: Color(0xffb8861f),
+    onAccent: Color(0xff2b211b),
+    border: Color(0xffe2d9c9),
+    warning: Color(0xffa85d00),
     danger: Color(0xffb3261e),
   );
 
-  /// "Midnight": deep navy canvas, layered slate surfaces, bright teal accent.
+  /// "Espresso": the logo's dark roast canvas, layered warm-brown surfaces, gold accent.
   static const dark = StafferPalette(
-    background: Color(0xff0a111c),
-    surface: Color(0xff111a28),
-    surfaceLow: Color(0xff172233),
-    surfaceHigh: Color(0xff1f2c3f),
-    text: Color(0xffe9eff6),
-    muted: Color(0xff93a3b6),
-    accent: Color(0xff3fc1cb),
-    onAccent: Color(0xff04262a),
-    border: Color(0xff263447),
-    warning: Color(0xfff5b14a),
+    background: Color(0xff1a1411),
+    surface: Color(0xff241c18),
+    surfaceLow: Color(0xff2e2521),
+    surfaceHigh: Color(0xff3a2f2a),
+    text: Color(0xfff5efe5),
+    muted: Color(0xffb5a696),
+    accent: Color(0xffd6a548),
+    onAccent: Color(0xff2b211b),
+    border: Color(0xff453830),
+    warning: Color(0xfff2b95a),
     danger: Color(0xffff8a80),
   );
 }
@@ -81,29 +81,32 @@ class StafferColors extends ThemeExtension<StafferColors> {
   final Color blue, violet, green, amber, coral;
   final Color sidebar, sidebarLow, onSidebar, onSidebarMuted, shadow;
 
+  // Semantic hues are kept distinct from the gold accent so status colour coding still
+  // reads at a glance; they are warmed slightly to sit with the espresso/gold brand.
   static const light = StafferColors(
-    blue: Color(0xff2563eb),
-    violet: Color(0xff6d4aff),
-    green: Color(0xff15803d),
+    blue: Color(0xff2f5fc4),
+    violet: Color(0xff7048c8),
+    green: Color(0xff2e7d32),
     amber: Color(0xffb45309),
-    coral: Color(0xffdc2626),
-    sidebar: Color(0xff0f1e33),
-    sidebarLow: Color(0xff16284a),
-    onSidebar: Color(0xffe9eff6),
-    onSidebarMuted: Color(0xff9db0c7),
-    shadow: Color(0x140f1e33),
+    coral: Color(0xffc62828),
+    // The logo badge colour: espresso sidebar with cream text and a gold selection bar.
+    sidebar: Color(0xff2b211b),
+    sidebarLow: Color(0xff382c25),
+    onSidebar: Color(0xfff5efe5),
+    onSidebarMuted: Color(0xffbfae9c),
+    shadow: Color(0x142b211b),
   );
   static const dark = StafferColors(
-    blue: Color(0xff7aa7ff),
-    violet: Color(0xffb39dff),
-    green: Color(0xff5ddc8f),
-    amber: Color(0xfff5b14a),
+    blue: Color(0xff8fb1ff),
+    violet: Color(0xffbea6ff),
+    green: Color(0xff6fd39a),
+    amber: Color(0xfff2b95a),
     coral: Color(0xffff8a80),
-    // Deep slate-indigo, clearly lifted from the near-black canvas.
-    sidebar: Color(0xff162238),
-    sidebarLow: Color(0xff0f1a2c),
-    onSidebar: Color(0xffeef3f9),
-    onSidebarMuted: Color(0xff9fb0c6),
+    // A shade darker than the cards so the navigation reads as the logo badge.
+    sidebar: Color(0xff130e0c),
+    sidebarLow: Color(0xff1f1815),
+    onSidebar: Color(0xfff5efe5),
+    onSidebarMuted: Color(0xffb5a696),
     shadow: Color(0x00000000),
   );
 
@@ -164,11 +167,11 @@ ThemeData stafferThemeFor(Brightness brightness) {
         primaryContainer: p.accent.withValues(alpha: 0.14),
         onPrimaryContainer: brightness == Brightness.dark
             ? p.accent
-            : const Color(0xff05545c),
+            : const Color(0xff7a5410),
         secondaryContainer: p.accent.withValues(alpha: 0.14),
         onSecondaryContainer: brightness == Brightness.dark
             ? p.accent
-            : const Color(0xff05545c),
+            : const Color(0xff7a5410),
         tertiary: p.warning,
       );
   final base = ThemeData(
