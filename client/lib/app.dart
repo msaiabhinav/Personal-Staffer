@@ -53,6 +53,24 @@ final navSelectedIcons = [
 ];
 ThemeData stafferTheme() => stafferThemeFor(Brightness.light);
 
+/// Header title for the current location. Primary destinations use their
+/// sidebar label; secondary pages name themselves instead of borrowing the
+/// nearest destination's label.
+String shellTitle(String location) {
+  final uri = Uri.parse(location);
+  final path = uri.path;
+  final index = navPaths.indexWhere((p) => path == p || path.startsWith('$p/'));
+  if (index >= 0) return navLabels[index];
+  if (path == '/settings') return 'Settings';
+  if (path == '/collection') return uri.queryParameters['title'] ?? 'Records';
+  if (path.startsWith('/jobs/')) return 'Job';
+  if (path.startsWith('/evidence/')) return 'Evidence';
+  if (path.startsWith('/reports/')) return 'Daily report';
+  if (path.startsWith('/reviews/')) return 'Review';
+  if (path.startsWith('/search-runs/')) return 'Search run';
+  return navLabels[1];
+}
+
 GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
   initialLocation: initial,
   refreshListenable: session,
@@ -243,7 +261,7 @@ class AppShell extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        navLabels[selected],
+                        shellTitle(location),
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),

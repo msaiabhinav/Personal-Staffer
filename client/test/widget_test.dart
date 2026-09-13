@@ -251,6 +251,19 @@ void main() {
     expect(find.text('Keep an opportunity for later'), findsOneWidget);
     router.dispose();
   });
+  test('shell header names secondary pages instead of a destination', () {
+    expect(shellTitle('/home'), 'Homepage');
+    expect(shellTitle('/applications/abc'), 'Applied Jobs');
+    expect(shellTitle('/settings'), 'Settings');
+    expect(shellTitle('/jobs/abc'), 'Job');
+    expect(shellTitle('/reviews/abc'), 'Review');
+    expect(
+      shellTitle(
+        '/collection?route=%2Freviews&title=Review%20ambiguous%20updates',
+      ),
+      'Review ambiguous updates',
+    );
+  });
   testWidgets('Watchlist destination lists companies with resolution state', (
     tester,
   ) async {
