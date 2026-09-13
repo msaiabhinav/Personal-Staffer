@@ -55,6 +55,16 @@ def parser():
     history.add_argument("--apply", action="store_true", help="Create/link applications; default is preview only")
     history.add_argument("--include-low", action="store_true", help="Also import LOW-confidence proposals")
     history.add_argument("--user", type=UUID)
+    rematch = sub.add_parser(
+        "rematch-email-reviews", help="One-time: link open status emails to the single application at the named company"
+    )
+    rematch.add_argument("--apply", action="store_true")
+    rematch.add_argument("--user", type=UUID)
+    void = sub.add_parser(
+        "void-imported-applications", help="One-time: undo mis-imported Gmail applications by company"
+    )
+    void.add_argument("--company", action="append", required=True)
+    void.add_argument("--user", type=UUID)
     sub.add_parser("schedule-once")
     sub.add_parser("dispatch-once")
     sub.add_parser("dispatch-loop")
@@ -232,6 +242,28 @@ def main(argv=None):
                 print(json.dumps(apply_import(session, user_id, proposals, include_low=args.include_low), indent=2))
             else:
                 print("Preview only. Rerun with --apply (and --include-low to include LOW-confidence rows).")
+        return
+    if args.command == "void-imported-applications":
+        from app.email.import_history import void_imported
+
+        with factory() as session, session.begin():
+            print(json.dumps(void_imported(session, only_user(session, args.user).id, args.company), indent=2))
+        return
+    if args.command == "rematch-email-reviews":
+        from app.email.import_history import apply_links, propose_links
+
+        with factory() as session, session.begin():
+            user_id = only_user(session, args.user).id
+            proposals = propose_links(session, user_id)
+            for p in proposals:
+                print(
+                    f"{p.received_at:%Y-%m-%d} | {(p.status or 'evidence'):<12} | {p.company[:38]:<38} | {p.subject[:80]}"
+                )
+            print(f"{chr(10)}{len(proposals)} linkable status email(s)")
+            if args.apply:
+                print(json.dumps(apply_links(session, user_id, proposals), indent=2))
+            else:
+                print("Preview only. Rerun with --apply.")
         return
     with factory() as session, session.begin():
         if args.command == "seed-registry":

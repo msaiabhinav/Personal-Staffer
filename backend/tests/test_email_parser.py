@@ -145,3 +145,12 @@ def test_html_email_no_scripts_images_attachments_or_quoted_status():
     assert "steal" not in message.body
     assert "rejected" not in message.body
     assert classify(message).status == "APPLIED"
+
+
+def test_not_selected_and_invited_to_interview_phrasings_classify():
+    from app.email.parser import classify_text
+
+    assert classify_text("You were not selected for Sr. Analyst, Commercial Analytics at Example") == "REJECTED"
+    assert classify_text("You are invited to interview with Example") == "INTERVIEWING"
+    assert classify_text("Reminder about your interview with Example") is None  # No new stage.
+    assert classify_text("Thank you for applying to Example") is None  # Confirmations are not a stage.

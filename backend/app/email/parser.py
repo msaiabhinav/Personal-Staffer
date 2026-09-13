@@ -377,7 +377,7 @@ _TEMPLATES = [
     (
         "REJECTION",
         "REJECTED",
-        r"(?:we (?:have )?(?:decided|will|are unable) (?:not to (?:move|proceed)|to (?:move forward with other|pursue other)|to offer)|we (?:will not|won't) be (?:moving|proceeding)|your application (?:was|has been) (?:unsuccessful|rejected)|unfortunately[^\n.]{0,100}(?:not (?:be )?(?:moving forward|selected)|other candidates))",
+        r"(?:we (?:have )?(?:decided|will|are unable) (?:not to (?:move|proceed)|to (?:move forward with other|pursue other)|to offer)|we (?:will not|won't) be (?:moving|proceeding)|your application (?:was|has been) (?:unsuccessful|rejected)|you (?:were|have) not (?:been )?selected|unfortunately[^\n.]{0,100}(?:not (?:be )?(?:moving forward|selected)|other candidates))",
     ),
     (
         "OFFER",
@@ -387,7 +387,7 @@ _TEMPLATES = [
     (
         "INTERVIEW",
         "INTERVIEWING",
-        r"(?:invite you to (?:an? |the |a final )?interview|schedule (?:an? |your |the )interview|interview (?:invitation|has been scheduled)|selected (?:you )?for (?:an? |the )interview)",
+        r"(?:invite you to (?:an? |the |a final )?interview|you are invited to (?:an? |the )?interview|schedule (?:an? |your |the )interview|interview (?:invitation|has been scheduled)|selected (?:you )?for (?:an? |the )interview)",
     ),
     (
         "ASSESSMENT",
@@ -407,6 +407,13 @@ _TEMPLATES = [
     ("INFORMATION_NEEDED", None, r"(?:additional information|more information|additional documents)"),
     ("STATUS_CHANGED", None, r"(?:your (?:application )?status has (?:been )?(?:changed|updated)|application update)"),
 ]
+
+
+def classify_text(text: str) -> str | None:
+    """Status implied by subject/excerpt text alone (no MIME context); None when unclear."""
+    matches = [(kind, status) for kind, status, pattern in _TEMPLATES if re.search(pattern, text, re.IGNORECASE)]
+    stages = {status for kind, status in matches if status and kind != "CONFIRMATION"}
+    return next(iter(stages)) if len(stages) == 1 else None
 
 
 def classify(message: MailEvidence) -> Meaning:

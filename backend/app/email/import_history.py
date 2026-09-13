@@ -380,3 +380,166 @@ def apply(session, user_id: UUID, proposals: list[Proposal], *, include_low: boo
         created[str(proposal.review_id)] = result["resolution"]["application_id"]
         counts["created"] += 1
     return counts
+
+
+# ---------------------------------------------------------------------------------------------
+# One-time re-match of open status emails against the applications created above.
+
+_COMPANY_NOISE = re.compile(
+    r"\b(?:inc|llc|ltd|corp|corporation|company|co|group|plc|pty|holdings|system|systems|services)\b\.?",
+    re.IGNORECASE,
+)
+
+
+@dataclass
+class LinkProposal:
+    review_id: UUID
+    review_revision: int
+    received_at: object
+    subject: str
+    application_id: str
+    company: str
+    status: str | None
+    reason: str
+
+
+def _company_key(name: str) -> str:
+    return _norm(_COMPANY_NOISE.sub(" ", name or ""))
+
+
+def propose_links(session, user_id: UUID) -> list[LinkProposal]:
+    """Link open UNMATCHED status reviews to the single application at the company they name."""
+    from app.db.models import Application
+
+    apps = session.scalars(
+        select(Application).where(Application.user_id == user_id, Application.voided_at.is_(None))
+    ).all()
+    by_company: dict[str, list] = {}
+    for app in apps:
+        key = _company_key(app.company)
+        if len(key) >= 3:
+            by_company.setdefault(key, []).append(app)
+    rows = session.execute(
+        select(ReviewItem, EmailMessage)
+        .join(EmailMessage, EmailMessage.id == ReviewItem.target_id)
+        .where(
+            ReviewItem.user_id == user_id,
+            ReviewItem.review_type == "EMAIL_APPLICATION",
+            ReviewItem.reason == "UNMATCHED",
+            ReviewItem.state == "OPEN",
+        )
+        .order_by(EmailMessage.received_at)
+    ).all()
+    proposals: list[LinkProposal] = []
+    for review, mail in rows:
+        text = _norm((mail.subject or "") + " " + (mail.excerpt or "") + " " + (mail.sender or ""))
+        text = _COMPANY_NOISE.sub(" ", text)
+        text = re.sub(r"\s+", " ", text)
+        hits = [
+            (key, candidates)
+            for key, candidates in by_company.items()
+            if re.search(r"(?<![a-z0-9])" + re.escape(key) + r"(?![a-z0-9])", text)
+        ]
+        # Prefer the longest company name when one contains another ("UNC Health" vs "UNC").
+        hits.sort(key=lambda item: len(item[0]), reverse=True)
+        if not hits:
+            continue
+        key, candidates = hits[0]
+        if len(hits) > 1 and len(hits[1][0]) == len(key):
+            continue  # Two different companies of equal specificity: leave for the owner.
+        dated = [a for a in candidates if a.applied_at and a.applied_at <= mail.received_at]
+        if len(dated) != 1:
+            continue  # Zero or several applications at that company: ambiguous.
+        status = (review.evidence or {}).get("proposed_status")
+        if not status:
+            from app.email.parser import classify_text
+
+            status = classify_text((mail.subject or "") + "\n" + (mail.excerpt or ""))
+        if status == "APPLIED":
+            status = None  # A confirmation adds evidence only; never re-applies.
+        proposals.append(
+            LinkProposal(
+                review_id=review.id,
+                review_revision=review.revision,
+                received_at=mail.received_at,
+                subject=re.sub(r"\s+", " ", mail.subject or "").strip(),
+                application_id=str(dated[0].id),
+                company=dated[0].company,
+                status=status,
+                reason="COMPANY_NAMED_WITH_SINGLE_APPLICATION",
+            )
+        )
+    return proposals
+
+
+def apply_links(session, user_id: UUID, proposals: list[LinkProposal]) -> dict:
+    from app.db.models import Application
+    from app.email.router import ResolveReview, resolve
+
+    counts = {"linked": 0, "status_events": 0}
+    for proposal in proposals:  # Chronological: the latest email decides the current status.
+        app = session.get(Application, UUID(proposal.application_id))
+        if app is None or app.voided_at is not None:
+            continue
+        status = proposal.status if proposal.status and proposal.status != app.current_status else None
+        payload = ResolveReview(
+            action="LINK",
+            expected_revision=proposal.review_revision,
+            application_id=app.id,
+            application_revision=app.revision,
+            status=status,
+            reason="One-time Gmail history import: email names a company with a single application",
+        )
+        resolve(
+            session, SimpleNamespace(id=user_id), proposal.review_id, payload, f"gmail-import-link:{proposal.review_id}"
+        )
+        session.flush()
+        counts["linked"] += 1
+        if status:
+            counts["status_events"] += 1
+    return counts
+
+
+def void_imported(session, user_id: UUID, companies: list[str]) -> dict:
+    """Undo mis-imported applications (wrong company parsed) and reopen their reviews."""
+    from app.api.schemas import CorrectionInput
+    from app.applications.service import correct_event
+    from app.db.models import Application, ApplicationEvent, EmailApplicationLink
+
+    wanted = {_norm(c) for c in companies}
+    counts = {"voided": 0, "reopened_reviews": 0}
+    for app in session.scalars(
+        select(Application).where(Application.user_id == user_id, Application.voided_at.is_(None))
+    ).all():
+        if _norm(app.company) not in wanted or not (app.notes or "").startswith("Imported from Gmail"):
+            continue
+        applied = session.scalar(
+            select(ApplicationEvent).where(
+                ApplicationEvent.application_id == app.id, ApplicationEvent.event_type == "APPLIED"
+            )
+        )
+        if applied is None:
+            continue
+        correct_event(
+            session,
+            user_id,
+            app.id,
+            CorrectionInput(
+                event_id=applied.id,
+                expected_revision=app.revision,
+                action="UNDO_APPLIED",
+                reason="One-time Gmail import: company was mis-read from the email; record voided for manual entry",
+            ),
+            f"gmail-import-void:{app.id}",
+        )
+        counts["voided"] += 1
+        for link in session.scalars(select(EmailApplicationLink).where(EmailApplicationLink.application_id == app.id)):
+            review = session.scalar(
+                select(ReviewItem).where(
+                    ReviewItem.target_id == link.email_id, ReviewItem.review_type == "EMAIL_APPLICATION"
+                )
+            )
+            if review and review.state != "OPEN":
+                review.state, review.resolved_at, review.revision = "OPEN", None, review.revision + 1
+                counts["reopened_reviews"] += 1
+    return counts
