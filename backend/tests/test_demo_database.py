@@ -217,6 +217,13 @@ def test_scanned_scope_lists_undelivered_postings_without_delivering(demo_client
         }
         filtered = demo_client.get(f"/api/v1/jobs?scope=scanned&employer_group_id={other_group_id}", headers=headers)
         assert filtered.status_code == 200 and filtered.json()["items"] == []
+        relevant = demo_client.get("/api/v1/jobs?scope=scanned&relevant_only=true&limit=100", headers=headers).json()
+        relevant_ids = {row["id"] for row in relevant["items"]}
+        assert delivered_id in relevant_ids  # evaluated as a relevant analyst role
+        assert hidden_id not in relevant_ids  # never evaluated: cannot be called relevant
+        for row in relevant["items"]:
+            rules = {r["rule_code"]: r["reason_code"] for r in row["eligibility"]["rules"]}
+            assert rules["role_relevance"] != "ROLE_UNRELATED"
         # The watchlist entry for the demo employer reports its sources and open postings.
         entries = demo_client.get("/api/v1/watchlist?limit=100", headers=headers).json()["items"]
         entry = next(e for e in entries if e["employer_group_id"] == str(group_id))

@@ -509,6 +509,16 @@
             }
           },
           {
+            "name": "relevant_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Relevant Only"
+            }
+          },
+          {
             "name": "source",
             "in": "query",
             "required": false,

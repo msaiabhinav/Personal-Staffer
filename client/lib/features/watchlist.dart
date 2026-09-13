@@ -235,7 +235,7 @@ class WatchlistCompanyPage extends ConsumerWidget {
           PageHeader(
             title: label(entry['company']),
             subtitle: registered
-                ? '${label(entry['open_postings'], '0')} open posting(s) collected · ${label(entry['delivered'], '0')} delivered to you'
+                ? '${label(entry['open_postings'], '0')} open posting(s) collected · ${label(entry['delivered'], '0')} delivered to you · only roles relevant to your profile are listed'
                 : 'Awaiting employer identity resolution; no career site can be scanned yet.',
           ),
           Padding(
@@ -281,16 +281,16 @@ class WatchlistCompanyPage extends ConsumerWidget {
                   )
                 : ResourceView(
                     route:
-                        '/jobs?scope=scanned&employer_group_id=$groupId&limit=25',
+                        '/jobs?scope=scanned&relevant_only=true&employer_group_id=$groupId&limit=25',
                     builder: (data) {
                       final rows = objects(data['items']);
                       if (rows.isEmpty) {
                         return EmptyMessage(
                           icon: Icons.work_outline,
-                          title: 'No open postings collected',
+                          title: 'No relevant open postings',
                           message: sources.isEmpty
                               ? 'Register a career-site source for this employer to start collecting its postings.'
-                              : 'The registered source has not returned any open postings yet. Check Source health in Settings.',
+                              : 'Of ${label(entry['open_postings'], '0')} open posting(s) collected, none currently matches your role families. Unrelated roles are not listed.',
                         );
                       }
                       return ListView.builder(

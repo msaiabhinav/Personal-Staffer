@@ -504,6 +504,7 @@ def jobs(
     family: str | None = None,
     company: str | None = None,
     employer_group_id: UUID | None = None,
+    relevant_only: bool = False,
     source: str | None = None,
     keyword: str | None = None,
     cursor: str | None = None,
@@ -534,6 +535,27 @@ def jobs(
         )
     if employer_group_id:
         stmt = stmt.where(Job.employer_group_id == employer_group_id)
+    if relevant_only:
+        # Keep postings whose latest evaluation found the role relevant to the owner's
+        # profile (or could not rule it out from the title); unrelated and never-evaluated
+        # postings drop out. Other withheld reasons (experience, country) remain visible.
+        latest = (
+            select(JobEvaluation.id)
+            .where(or_(JobEvaluation.user_id == user.id, JobEvaluation.user_id.is_(None)))
+            .distinct(JobEvaluation.job_id)
+            .order_by(JobEvaluation.job_id, JobEvaluation.evaluated_at.desc(), JobEvaluation.id)
+        )
+        stmt = stmt.where(
+            Job.id.in_(
+                select(JobEvaluation.job_id)
+                .join(RuleResult, RuleResult.evaluation_id == JobEvaluation.id)
+                .where(
+                    JobEvaluation.id.in_(latest),
+                    RuleResult.rule_code == "role_relevance",
+                    RuleResult.reason_code != "ROLE_UNRELATED",
+                )
+            )
+        )
     if scope == "today":
         today = datetime.now(ZoneInfo("America/New_York")).date()
         stmt = stmt.join(Report, Report.id == InitialDelivery.report_id).where(Report.report_date == today)

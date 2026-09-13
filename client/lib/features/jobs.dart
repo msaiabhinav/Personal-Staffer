@@ -53,7 +53,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
       queryParameters: {
         'scope': scope,
         if (scope != 'history' && !preview) 'posted_within_hours': hours,
-        if (preview) 'limit': '5',
+        if (preview) ...{'limit': '5', 'relevant_only': 'true'},
         if (keyword.isNotEmpty) 'keyword': keyword,
         if (arrangement.isNotEmpty) 'work_arrangement': arrangement,
       },
@@ -150,7 +150,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
         if (!widget.saved && scope == 'today') const ReportSummary(),
         if (!widget.saved && preview)
           const StatusStrip(
-            'Preview: the 5 newest open postings your career-site sources collected, delivered or not. Each card says whether it was delivered or why it was withheld.',
+            'Preview: the 5 newest open postings your career-site sources collected that match your role families, delivered or not. Each card says whether it qualifies or why it was withheld.',
           ),
         Expanded(
           child: ResourceView(
@@ -167,7 +167,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                       : scope == 'priority'
                       ? 'No new priority opportunities'
                       : preview
-                      ? 'Nothing scanned yet'
+                      ? 'No relevant postings scanned yet'
                       : 'No qualifying jobs delivered yet',
                   message: widget.saved
                       ? 'Save a job from the feed. It stays here until you unsave it or record your application.'
@@ -248,6 +248,43 @@ class ReportSummary extends ConsumerWidget {
       );
 }
 
+/// Role-relevance label from the latest evaluation's `role_relevance` rule.
+/// Returns null when the posting was never evaluated.
+Widget? relevancePill(Json job) {
+  final eligibility = object(job['eligibility']);
+  if (eligibility.isEmpty) return null;
+  final rule = objects(eligibility['rules']).cast<Json?>().firstWhere(
+    (r) => r?['rule_code'] == 'role_relevance',
+    orElse: () => null,
+  );
+  if (rule == null) return null;
+  final reason = label(rule['reason_code'], '');
+  if (reason == 'ROLE_RELEVANT') {
+    final match = label(
+      object(object(job['snapshot'])['structured_fields'])['match_reason'],
+      '',
+    );
+    final family = match.split(';').first.trim();
+    return StatusPill(
+      family.isEmpty ? 'Relevant role' : 'Relevant · $family',
+      icon: Icons.thumb_up_outlined,
+      tone: PillTone.positive,
+    );
+  }
+  if (reason == 'ROLE_RESPONSIBILITIES_UNRESOLVED') {
+    return const StatusPill(
+      'Title matches · responsibilities unclear',
+      icon: Icons.help_outline,
+      tone: PillTone.warning,
+    );
+  }
+  return const StatusPill(
+    'Unrelated role',
+    icon: Icons.thumb_down_outlined,
+    tone: PillTone.neutral,
+  );
+}
+
 /// Delivered / withheld label for a posting, from its latest evaluation.
 /// Never colours an unevaluated or withheld posting as a match.
 Widget decisionPill(Json job) {
@@ -269,6 +306,7 @@ Widget decisionPill(Json job) {
   }
   final failed = objects(eligibility['rules'])
       .where((rule) => rule['decision'] != 'PASS')
+      .where((rule) => rule['rule_code'] != 'role_relevance')
       .map((rule) => friendly(rule['reason_code'] ?? rule['rule_code']))
       .toList();
   final reason = failed.isEmpty
@@ -403,7 +441,7 @@ class JobRow extends ConsumerWidget {
                       icon: Icons.history,
                       tone: PillTone.warning,
                     ),
-                  if (showDecision) decisionPill(job),
+                  if (showDecision) ...[?relevancePill(job), decisionPill(job)],
                 ],
               ),
               const SizedBox(height: 10),
