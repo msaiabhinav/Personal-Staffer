@@ -96,9 +96,23 @@ def _accessible_job(session, user_id, job_id):
         select(UserJobState.id).where(UserJobState.user_id == user_id, UserJobState.job_id == job.id)
     )
     app = session.scalar(select(Application.id).where(Application.user_id == user_id, Application.job_id == job.id))
-    if not (delivered or state or app):
+    if not (delivered or state or app or _scanned(session, job.id)):
         raise DomainError("NOT_FOUND", "Job not found.", 404)
     return job
+
+
+def _scanned(session, job_id):
+    """A posting collected by an enabled registered source (ADR 0005).
+
+    Delivery gates decide what is *alerted*; the owner may still open any posting their own
+    career-site sources collected, with its withheld reasons shown honestly.
+    """
+    return session.scalar(
+        select(JobSource.id)
+        .join(SourceRegistry, SourceRegistry.id == JobSource.source_registry_id)
+        .where(JobSource.job_id == job_id, SourceRegistry.enabled.is_(True))
+        .limit(1)
+    )
 
 
 def _job(session, user_id, job, snapshot_id=None):
@@ -314,8 +328,90 @@ def watchlist(
             if entry.employer_group_id
             else entry.requested_name,
             "resolution_state": "REGISTERED" if entry.employer_group_id else "PENDING",
+            "source_count": session.scalar(
+                select(func.count())
+                .select_from(SourceRegistry)
+                .where(SourceRegistry.employer_group_id == entry.employer_group_id, SourceRegistry.enabled.is_(True))
+            )
+            if entry.employer_group_id
+            else 0,
+            "open_postings": session.scalar(
+                select(func.count())
+                .select_from(Job)
+                .where(
+                    Job.employer_group_id == entry.employer_group_id,
+                    Job.canonical_redirect_id.is_(None),
+                    Job.availability != "CLOSED",
+                )
+            )
+            if entry.employer_group_id
+            else 0,
         },
     )
+
+
+@router.get("/watchlist/{entry_id}")
+def watchlist_entry(entry_id: UUID, user: User = USER_DEPENDENCY, session: Session = SESSION_DEPENDENCY):
+    entry = session.scalar(
+        select(WatchlistEntry).where(
+            WatchlistEntry.id == entry_id, WatchlistEntry.user_id == user.id, WatchlistEntry.enabled.is_(True)
+        )
+    )
+    if not entry:
+        raise DomainError("NOT_FOUND", "Watchlist entry not found.", 404)
+    group = session.get(EmployerGroup, entry.employer_group_id) if entry.employer_group_id else None
+    sources = (
+        list(
+            session.scalars(
+                select(SourceRegistry)
+                .where(SourceRegistry.employer_group_id == entry.employer_group_id, SourceRegistry.enabled.is_(True))
+                .order_by(SourceRegistry.id)
+            )
+        )
+        if group
+        else []
+    )
+    open_postings = (
+        session.scalar(
+            select(func.count())
+            .select_from(Job)
+            .where(
+                Job.employer_group_id == entry.employer_group_id,
+                Job.canonical_redirect_id.is_(None),
+                Job.availability != "CLOSED",
+            )
+        )
+        if group
+        else 0
+    )
+    delivered = (
+        session.scalar(
+            select(func.count())
+            .select_from(InitialDelivery)
+            .join(Job, Job.id == InitialDelivery.job_id)
+            .where(InitialDelivery.user_id == user.id, Job.employer_group_id == entry.employer_group_id)
+        )
+        if group
+        else 0
+    )
+    return {
+        **_columns(entry),
+        "company": group.canonical_name if group else entry.requested_name,
+        "resolution_state": "REGISTERED" if group else "PENDING",
+        "sources": [
+            {
+                "id": str(source.id),
+                "connector_type": source.connector_type,
+                "career_url": source.career_url,
+                "configuration_state": source.configuration_state,
+                "last_success": source.last_success.isoformat() if source.last_success else None,
+                "last_error": source.last_error,
+            }
+            for source in sources
+        ],
+        "open_postings": open_postings or 0,
+        "delivered": delivered or 0,
+    }
 
 
 @router.post("/watchlist")
@@ -402,11 +498,12 @@ def employer_groups(
 
 @router.get("/jobs")
 def jobs(
-    scope: Literal["today", "history", "priority"] = "today",
+    scope: Literal["today", "history", "priority", "scanned"] = "today",
     posted_within_hours: int | None = Query(None, description="Freshness window: 24, 48 or 72 hours"),
     work_arrangement: str | None = None,
     family: str | None = None,
     company: str | None = None,
+    employer_group_id: UUID | None = None,
     source: str | None = None,
     keyword: str | None = None,
     cursor: str | None = None,
@@ -417,7 +514,26 @@ def jobs(
     # Query strings arrive as text; an int Literal would reject the client's own "72" with 422.
     if posted_within_hours is not None and posted_within_hours not in (24, 48, 72):
         raise DomainError("VALIDATION_ERROR", "posted_within_hours must be 24, 48 or 72.", 422)
-    stmt = select(Job).join(InitialDelivery, InitialDelivery.job_id == Job.id).where(InitialDelivery.user_id == user.id)
+    if scope == "scanned":
+        # Every open posting the owner's enabled sources collected, delivered or not (ADR 0005).
+        # Nothing here is a delivery: no InitialDelivery row is created and gates are unchanged.
+        stmt = select(Job).where(
+            Job.canonical_redirect_id.is_(None),
+            Job.availability != "CLOSED",
+            Job.id.in_(
+                select(JobSource.job_id)
+                .join(SourceRegistry, SourceRegistry.id == JobSource.source_registry_id)
+                .where(SourceRegistry.enabled.is_(True))
+            ),
+        )
+    else:
+        stmt = (
+            select(Job)
+            .join(InitialDelivery, InitialDelivery.job_id == Job.id)
+            .where(InitialDelivery.user_id == user.id)
+        )
+    if employer_group_id:
+        stmt = stmt.where(Job.employer_group_id == employer_group_id)
     if scope == "today":
         today = datetime.now(ZoneInfo("America/New_York")).date()
         stmt = stmt.join(Report, Report.id == InitialDelivery.report_id).where(Report.report_date == today)

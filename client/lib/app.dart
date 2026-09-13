@@ -147,6 +147,11 @@ GoRouter createRouter(Session session, {String initial = '/home'}) => GoRouter(
           builder: (_, state) => const WatchlistPage(),
         ),
         GoRoute(
+          path: '/watchlist/:id',
+          builder: (_, state) =>
+              WatchlistCompanyPage(id: state.pathParameters['id']!),
+        ),
+        GoRoute(
           path: '/collection',
           builder: (_, state) => CollectionPage(
             route: state.uri.queryParameters['route'] ?? '/reports',

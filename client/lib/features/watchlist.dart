@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/api.dart';
 import '../core/models.dart';
 import '../core/providers.dart';
 import '../core/theme.dart';
+import 'jobs.dart';
 import 'shared.dart';
 
 /// Priority employers the user watches. Entries are additional to the daily
@@ -168,19 +170,39 @@ class _WatchlistPageState extends ConsumerState<WatchlistPage> {
                                   ? PillTone.positive
                                   : PillTone.warning,
                             ),
+                            // Counts come from the live API; the offline snapshot omits them.
+                            if (registered && entry['source_count'] == 0)
+                              const StatusPill(
+                                'No career site registered',
+                                icon: Icons.link_off,
+                                tone: PillTone.neutral,
+                              ),
+                            if (registered && (entry['source_count'] ?? 0) > 0)
+                              StatusPill(
+                                '${label(entry['open_postings'], '0')} open posting(s)',
+                                icon: Icons.work_outline,
+                                tone: PillTone.info,
+                              ),
                             Text(
                               registered
-                                  ? 'Employer identity verified · priority alerts active'
+                                  ? 'Priority alerts active · tap to see postings'
                                   : 'Awaiting employer identity resolution',
                               style: theme.textTheme.bodySmall,
                             ),
                           ],
                         ),
                       ),
-                      trailing: IconButton(
-                        tooltip: 'Remove from watchlist',
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => remove(entry),
+                      onTap: () => context.push('/watchlist/${entry['id']}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            tooltip: 'Remove from watchlist',
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () => remove(entry),
+                          ),
+                          const Icon(Icons.chevron_right),
+                        ],
                       ),
                     ),
                   );
@@ -192,4 +214,100 @@ class _WatchlistPageState extends ConsumerState<WatchlistPage> {
       ],
     );
   }
+}
+
+/// One watched employer: which career sites are scanned for it and every open
+/// posting those sites collected, with the delivered/withheld verdict on each.
+class WatchlistCompanyPage extends ConsumerWidget {
+  const WatchlistCompanyPage({super.key, required this.id});
+  final String id;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => ResourceView(
+    route: '/watchlist/$id',
+    builder: (entry) {
+      final theme = Theme.of(context);
+      final sources = objects(entry['sources']);
+      final groupId = entry['employer_group_id'];
+      final registered = entry['resolution_state'] == 'REGISTERED';
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PageHeader(
+            title: label(entry['company']),
+            subtitle: registered
+                ? '${label(entry['open_postings'], '0')} open posting(s) collected · ${label(entry['delivered'], '0')} delivered to you'
+                : 'Awaiting employer identity resolution; no career site can be scanned yet.',
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (sources.isEmpty)
+                  const StatusPill(
+                    'No career site registered for this company',
+                    icon: Icons.link_off,
+                    tone: PillTone.warning,
+                  ),
+                for (final source in sources)
+                  StatusPill(
+                    '${friendly(source['connector_type'])} · ${friendly(source['configuration_state'])}'
+                    '${source['last_success'] != null ? ' · last scan ${dateLabel(source['last_success'])}' : ''}',
+                    icon: Icons.travel_explore_outlined,
+                    tone: source['configuration_state'] == 'HEALTHY'
+                        ? PillTone.positive
+                        : PillTone.warning,
+                  ),
+              ],
+            ),
+          ),
+          if (sources.isEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+              child: Text(
+                'Jobs appear here once a career-site source for this employer is registered and scanned. Watching alone does not fetch postings.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          Expanded(
+            child: groupId == null
+                ? const EmptyMessage(
+                    icon: Icons.hourglass_empty,
+                    title: 'Identity still pending',
+                    message: 'Postings are listed once the employer is resolved to a registered identity.',
+                  )
+                : ResourceView(
+                    route:
+                        '/jobs?scope=scanned&employer_group_id=$groupId&limit=25',
+                    builder: (data) {
+                      final rows = objects(data['items']);
+                      if (rows.isEmpty) {
+                        return EmptyMessage(
+                          icon: Icons.work_outline,
+                          title: 'No open postings collected',
+                          message: sources.isEmpty
+                              ? 'Register a career-site source for this employer to start collecting its postings.'
+                              : 'The registered source has not returned any open postings yet. Check Source health in Settings.',
+                        );
+                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                        itemCount: rows.length,
+                        itemBuilder: (context, index) => JobRow(
+                          job: rows[index],
+                          showDecision: true,
+                          onOpen: () =>
+                              context.push('/jobs/${rows[index]['id']}'),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -236,6 +236,47 @@
       }
     },
     "/api/v1/watchlist/{entry_id}": {
+      "get": {
+        "summary": "Watchlist Entry",
+        "operationId": "watchlist_entry_api_v1_watchlist__entry_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "entry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Entry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "summary": "Delete Watchlist",
         "operationId": "delete_watchlist_api_v1_watchlist__entry_id__delete",
@@ -376,7 +417,8 @@
               "enum": [
                 "today",
                 "history",
-                "priority"
+                "priority",
+                "scanned"
               ],
               "type": "string",
               "default": "today",
@@ -447,6 +489,23 @@
                 }
               ],
               "title": "Company"
+            }
+          },
+          {
+            "name": "employer_group_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Employer Group Id"
             }
           },
           {

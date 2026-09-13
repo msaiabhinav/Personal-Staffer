@@ -48,10 +48,12 @@ class _JobsPageState extends ConsumerState<JobsPage> {
   String? selected;
   @override
   Widget build(BuildContext context) {
+    final preview = scope == 'scanned';
     final query = Uri(
       queryParameters: {
         'scope': scope,
-        if (scope != 'history') 'posted_within_hours': hours,
+        if (scope != 'history' && !preview) 'posted_within_hours': hours,
+        if (preview) 'limit': '5',
         if (keyword.isNotEmpty) 'keyword': keyword,
         if (arrangement.isNotEmpty) 'work_arrangement': arrangement,
       },
@@ -90,24 +92,29 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                       value: 'history',
                       label: 'Previously delivered',
                     ),
+                    DropdownMenuEntry(
+                      value: 'scanned',
+                      label: 'Scanned postings (preview)',
+                    ),
                   ],
                   onSelected: (v) => setState(() => scope = v ?? scope),
                 ),
-                DropdownMenu<String>(
-                  width: 230,
-                  initialSelection: hours,
-                  leadingIcon: const Icon(Icons.schedule_outlined),
-                  label: const Text('Freshness'),
-                  dropdownMenuEntries: ['24', '48', '72']
-                      .map(
-                        (h) => DropdownMenuEntry(
-                          value: h,
-                          label: 'Within $h hours',
-                        ),
-                      )
-                      .toList(),
-                  onSelected: (v) => setState(() => hours = v ?? hours),
-                ),
+                if (!preview)
+                  DropdownMenu<String>(
+                    width: 230,
+                    initialSelection: hours,
+                    leadingIcon: const Icon(Icons.schedule_outlined),
+                    label: const Text('Freshness'),
+                    dropdownMenuEntries: ['24', '48', '72']
+                        .map(
+                          (h) => DropdownMenuEntry(
+                            value: h,
+                            label: 'Within $h hours',
+                          ),
+                        )
+                        .toList(),
+                    onSelected: (v) => setState(() => hours = v ?? hours),
+                  ),
                 DropdownMenu<String>(
                   width: 240,
                   initialSelection: arrangement,
@@ -141,6 +148,10 @@ class _JobsPageState extends ConsumerState<JobsPage> {
             ),
           ),
         if (!widget.saved && scope == 'today') const ReportSummary(),
+        if (!widget.saved && preview)
+          const StatusStrip(
+            'Preview: the 5 newest open postings your career-site sources collected, delivered or not. Each card says whether it was delivered or why it was withheld.',
+          ),
         Expanded(
           child: ResourceView(
             route: route,
@@ -155,6 +166,8 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                       ? 'Keep an opportunity for later'
                       : scope == 'priority'
                       ? 'No new priority opportunities'
+                      : preview
+                      ? 'Nothing scanned yet'
                       : 'No qualifying jobs delivered yet',
                   message: widget.saved
                       ? 'Save a job from the feed. It stays here until you unsave it or record your application.'
@@ -174,6 +187,7 @@ class _JobsPageState extends ConsumerState<JobsPage> {
                 itemBuilder: (context, index) {
                   return JobRow(
                     job: rows[index],
+                    showDecision: preview,
                     onOpen: () {
                       if (MediaQuery.sizeOf(context).width >= 1200) {
                         setState(() => selected = rows[index]['id']);
@@ -234,10 +248,53 @@ class ReportSummary extends ConsumerWidget {
       );
 }
 
+/// Delivered / withheld label for a posting, from its latest evaluation.
+/// Never colours an unevaluated or withheld posting as a match.
+Widget decisionPill(Json job) {
+  final eligibility = object(job['eligibility']);
+  if (eligibility.isEmpty) {
+    return const StatusPill(
+      'Not evaluated yet',
+      icon: Icons.help_outline,
+      tone: PillTone.neutral,
+    );
+  }
+  final decision = label(eligibility['decision'], '');
+  if (decision == 'ELIGIBLE') {
+    return const StatusPill(
+      'Qualifies',
+      icon: Icons.verified_outlined,
+      tone: PillTone.positive,
+    );
+  }
+  final failed = objects(eligibility['rules'])
+      .where((rule) => rule['decision'] != 'PASS')
+      .map((rule) => friendly(rule['reason_code'] ?? rule['rule_code']))
+      .toList();
+  final reason = failed.isEmpty
+      ? friendly(decision)
+      : failed.take(2).join(', ');
+  return StatusPill(
+    decision == 'NEEDS_REVIEW'
+        ? 'Needs review · $reason'
+        : 'Withheld · $reason',
+    icon: Icons.block,
+    tone: decision == 'NEEDS_REVIEW' ? PillTone.warning : PillTone.danger,
+  );
+}
+
 class JobRow extends ConsumerWidget {
-  const JobRow({super.key, required this.job, required this.onOpen});
+  const JobRow({
+    super.key,
+    required this.job,
+    required this.onOpen,
+    this.showDecision = false,
+  });
   final Json job;
   final VoidCallback onOpen;
+
+  /// Show the delivered/withheld verdict (scanned previews and company pages).
+  final bool showDecision;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fields = object(object(job['snapshot'])['structured_fields']);
@@ -346,6 +403,7 @@ class JobRow extends ConsumerWidget {
                       icon: Icons.history,
                       tone: PillTone.warning,
                     ),
+                  if (showDecision) decisionPill(job),
                 ],
               ),
               const SizedBox(height: 10),

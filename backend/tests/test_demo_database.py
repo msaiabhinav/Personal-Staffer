@@ -146,3 +146,89 @@ def test_dashboard_reports_activity_and_attention_counts(demo_client):
     # Reading the dashboard never mutates state: unread count matches the inbox endpoint.
     unread = demo_client.get("/api/v1/notifications/unread-count", headers=headers).json()["unread_count"]
     assert dashboard["unread_notifications"] == unread
+
+
+def test_scanned_scope_lists_undelivered_postings_without_delivering(demo_client, pg_engine):
+    from app.db.models import EmployerGroup, Job, JobSource, SourceRegistry
+
+    login = demo_client.post("/api/v1/auth/demo", json={"device_id": str(uuid4()), "platform": "WINDOWS"}).json()
+    headers = {"Authorization": "Bearer " + login["access_token"]}
+    with Session(pg_engine) as session, session.begin():
+        source = session.scalar(select(SourceRegistry).where(SourceRegistry.tenant == "local-demo"))
+        group_id = source.employer_group_id
+        delivered_job = session.scalar(select(Job).where(Job.employer_group_id == group_id).order_by(Job.id))
+        # A collected posting that no gate delivered: only the scanned scope may show it.
+        hidden = Job(
+            employer_group_id=group_id,
+            title="Withheld Analyst (never delivered)",
+            availability="ACTIVE",
+            synthetic=True,
+            locations=["DEMO"],
+        )
+        session.add(hidden)
+        session.flush()
+        session.add(
+            JobSource(
+                job_id=hidden.id,
+                source_registry_id=source.id,
+                external_id="hidden",
+                source_url="https://demo.invalid/hidden",
+                availability="ACTIVE",
+            )
+        )
+        closed = Job(
+            employer_group_id=group_id, title="Closed posting", availability="CLOSED", synthetic=True, locations=[]
+        )
+        session.add(closed)
+        session.flush()
+        session.add(
+            JobSource(
+                job_id=closed.id,
+                source_registry_id=source.id,
+                external_id="closed",
+                source_url="https://demo.invalid/closed",
+                availability="CLOSED",
+            )
+        )
+        hidden_id, closed_id, delivered_id = str(hidden.id), str(closed.id), str(delivered_job.id)
+        other_group = EmployerGroup(
+            canonical_name="Unwatched Co", normalized_name="unwatched co", grouping_evidence={"test": True}
+        )
+        session.add(other_group)
+        session.flush()
+        other_group_id = str(other_group.id)
+    try:
+        # The demo source is registered but disabled: nothing is "scanned" and the hidden job is private.
+        empty = demo_client.get("/api/v1/jobs?scope=scanned", headers=headers)
+        assert empty.status_code == 200 and empty.json()["items"] == []
+        assert demo_client.get(f"/api/v1/jobs/{hidden_id}", headers=headers).status_code == 404
+        with Session(pg_engine) as session, session.begin():
+            session.scalar(select(SourceRegistry).where(SourceRegistry.tenant == "local-demo")).enabled = True
+        feed = demo_client.get("/api/v1/jobs?scope=scanned&limit=100", headers=headers).json()
+        ids = {row["id"] for row in feed["items"]}
+        assert hidden_id in ids and delivered_id in ids
+        assert closed_id not in ids  # closed postings are not "available"
+        hidden_row = next(row for row in feed["items"] if row["id"] == hidden_id)
+        assert hidden_row["eligibility"] is None  # never evaluated: shown honestly, not as a match
+        # Opening a scanned posting works; listing never created a delivery for it.
+        assert demo_client.get(f"/api/v1/jobs/{hidden_id}", headers=headers).status_code == 200
+        assert hidden_id not in {
+            row["id"] for row in demo_client.get("/api/v1/jobs?scope=history", headers=headers).json()["items"]
+        }
+        filtered = demo_client.get(f"/api/v1/jobs?scope=scanned&employer_group_id={other_group_id}", headers=headers)
+        assert filtered.status_code == 200 and filtered.json()["items"] == []
+        # The watchlist entry for the demo employer reports its sources and open postings.
+        entries = demo_client.get("/api/v1/watchlist?limit=100", headers=headers).json()["items"]
+        entry = next(e for e in entries if e["employer_group_id"] == str(group_id))
+        assert entry["source_count"] == 1 and entry["open_postings"] >= 2
+        detail = demo_client.get(f"/api/v1/watchlist/{entry['id']}", headers=headers).json()
+        assert detail["company"] == entry["company"] and detail["resolution_state"] == "REGISTERED"
+        assert [s["connector_type"] for s in detail["sources"]] == ["fixture"]
+        assert detail["open_postings"] == len(
+            {row["id"] for row in feed["items"] if row["employer_group_id"] == str(group_id)}
+        )
+        assert detail["delivered"] >= 1
+        assert demo_client.get(f"/api/v1/watchlist/{uuid4()}", headers=headers).status_code == 404
+    finally:
+        with Session(pg_engine) as session, session.begin():
+            session.scalar(select(SourceRegistry).where(SourceRegistry.tenant == "local-demo")).enabled = False
