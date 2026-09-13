@@ -76,6 +76,51 @@ class AshbyConnector(BaseConnector):
             self._failure(error)
             return DiscoverResult(errors=[error], coverage={"complete_listing": False})
 
+    def verify_opening(self, job_source):
+        # Ashby-hosted job pages render client-side, so the generic HTML check cannot see the
+        # posting. The public posting API is authoritative: a listed job with an applyUrl is the
+        # live, actionable opening; a job missing from a successfully fetched board is closed.
+        target = job_source.application_url
+        try:
+            result, jobs, observed = self._board(job_source.tenant)
+        except SourceHTTPError as exc:
+            return OpeningVerification(
+                status="UNKNOWN", application_url=target, evidence_text=exc.code, http_status=exc.status
+            )
+        except (ValueError, KeyError, TypeError):
+            return OpeningVerification(status="UNKNOWN", application_url=target, evidence_text="Board unreadable")
+        job = next((j for j in jobs if str(j.get("id")) == str(job_source.external_id)), None)
+        if job is None or job.get("isListed") is not True:
+            return OpeningVerification(
+                status="CLOSED",
+                application_url=target,
+                final_url=result.final_url,
+                checked_at=observed,
+                evidence_text="Ashby posting API no longer lists this job id",
+                http_status=result.status_code,
+            )
+        apply_url = job.get("applyUrl") or job.get("jobUrl")
+        if not apply_url:
+            return OpeningVerification(
+                status="UNKNOWN",
+                identity_match=True,
+                application_url=target,
+                final_url=result.final_url,
+                checked_at=observed,
+                evidence_text="Listed posting has no application URL",
+                http_status=result.status_code,
+            )
+        return OpeningVerification(
+            status="ACTIVE",
+            identity_match=True,
+            actionable=True,
+            application_url=apply_url,
+            final_url=result.final_url,
+            checked_at=observed,
+            evidence_text=f"Ashby posting API lists job {job_source.external_id} as isListed with an application URL",
+            http_status=result.status_code,
+        )
+
     def fetch(self, candidate):
         # Run-local snapshots reuse the full public board for at most 60 seconds.
         # Preserve the network observation time; reuse is never presented as a new fetch.

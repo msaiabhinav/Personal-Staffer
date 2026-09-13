@@ -13,6 +13,7 @@ from app.connectors import (
     SmartRecruitersConnector,
     get_connector,
 )
+from app.connectors.base import BaseConnector
 from app.connectors.direct import DirectConnector, DirectoryDiscovery, jobpostings
 from app.connectors.jobspy_adapter import JobSpyConnector
 from app.connectors.parsing import publication, readable_html, sanitized_html
@@ -224,14 +225,15 @@ def test_smartrecruiters_full_sections_and_explicit_country():
     ],
 )
 def test_active_verification_requires_identity_and_action_not_200(body, expected):
+    # Generic HTML verification (BaseConnector); ATS connectors override it with their APIs.
     job = AshbyConnector().normalize(fetched("ashby", ASHBY))
-    connector = AshbyConnector(FakeClient([HTTPResult(200, body.encode(), job.application_url, {})]))
+    connector = BaseConnector(FakeClient([HTTPResult(200, body.encode(), job.application_url, {})]))
     assert connector.verify_opening(job).status == expected
 
 
 def test_generic_careers_redirect_with_matching_job_title_not_active():
     job = AshbyConnector().normalize(fetched("ashby", ASHBY))
-    connector = AshbyConnector(
+    connector = BaseConnector(
         FakeClient([HTTPResult(200, b"Data Analyst apply now", "https://example.com/careers", {})])
     )
     result = connector.verify_opening(job)
@@ -265,7 +267,7 @@ def test_safe_html_retains_legitimate_links_but_drops_handlers_scripts_and_priva
 
 def test_inactive_structured_posting_and_expired_deadline_do_not_pass_on_live_apply_button():
     job = AshbyConnector().normalize(fetched("ashby", ASHBY))
-    connector = AshbyConnector(FakeClient([]))
+    connector = BaseConnector(FakeClient([]))
     assert connector.verify_opening(job.model_copy(update={"source_active": False})).status == "CLOSED"
     assert (
         connector.verify_opening(job.model_copy(update={"valid_through": datetime(2000, 1, 1, tzinfo=UTC)})).status
@@ -568,3 +570,16 @@ def test_greenhouse_location_name_supplies_country_evidence():
     assert job.field_evidence["country_codes"][0].field_path == "location.name"
     remote = GreenhouseConnector().normalize(fetched("greenhouse", {**data, "location": {"name": "Remote"}}))
     assert remote.country_codes == [] and "country_codes" not in remote.field_evidence
+
+
+def test_ashby_verify_opening_uses_posting_api_listing():
+    connector = AshbyConnector(FakeClient([{"jobs": [ASHBY, dict(ASHBY, id="gone", isListed=False)]}]))
+    job = connector.normalize(fetched("ashby", ASHBY))
+    check = connector.verify_opening(job)
+    assert check.status == "ACTIVE" and check.identity_match and check.actionable
+    assert check.application_url == ASHBY["applyUrl"]
+    unlisted = connector.verify_opening(job.model_copy(update={"external_id": "gone"}))
+    assert unlisted.status == "CLOSED"
+    missing = connector.verify_opening(job.model_copy(update={"external_id": "never"}))
+    assert missing.status == "CLOSED"
+    assert len(connector.client.calls) == 1  # Board snapshot reused within the run window.
