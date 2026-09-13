@@ -84,7 +84,10 @@ class GoogleProvider:
         return dict(claims), dict(token)
 
     def refresh(self, encrypted_refresh: str, box):
-        with self.client(self.settings.gmail_redirect_uri) as client:
+        # No scope on refresh: Authlib would otherwise send the client's default sign-in scope
+        # and Google would downscope the access token, dropping gmail.readonly
+        # (ACCESS_TOKEN_SCOPE_INSUFFICIENT on every mailbox call).
+        with self.client(self.settings.gmail_redirect_uri, scope=None) as client:
             return dict(client.refresh_token(TOKEN_URL, refresh_token=box.decrypt(encrypted_refresh)))
 
     def revoke(self, refresh_token: str):

@@ -26,6 +26,22 @@ class MessageBatch:
     history_cursor: str | None
 
 
+def _error_reason(response, status) -> str:
+    """Return Google's error `status`/`reason` codes only; never the message body or headers."""
+    try:
+        error = response.json().get("error", {})
+        codes = {error.get("status")} | {d.get("reason") for d in error.get("errors", []) if isinstance(d, dict)}
+        codes |= {
+            d.get("reason")
+            for d in error.get("details", [])
+            if isinstance(d, dict) and d.get("@type", "").endswith("ErrorInfo")
+        }
+        codes.discard(None)
+        return f"HTTP {status} " + ("/".join(sorted(str(c) for c in codes)) if codes else "no reason code")
+    except ValueError:
+        return f"HTTP {status} non-JSON error"
+
+
 class GmailAPI:
     def __init__(self, access_token: str, transport=None):
         self.access_token, self.transport = access_token, transport
@@ -39,8 +55,12 @@ class GmailAPI:
                     params=params,
                 )
             if response.status_code in {401, 403}:
+                # Google's structured reason (e.g. insufficientPermissions, accessNotConfigured,
+                # dailyLimitExceeded) is operational diagnosis, not mailbox content or a credential.
                 raise GmailUnavailable(
-                    "RECONNECT_REQUIRED", "Gmail authorization needs reconnection or permission review"
+                    "RECONNECT_REQUIRED",
+                    "Gmail authorization needs reconnection or permission review: "
+                    + _error_reason(response, response.status_code),
                 )
             if response.status_code == 404 and route == "history":
                 raise HistoryExpired()

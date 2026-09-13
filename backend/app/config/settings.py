@@ -45,7 +45,8 @@ class Settings(BaseSettings):
     # Owner decision (ADR 0003): INFORMATIONAL shows E-Verify evidence honestly without withholding.
     everify_gate: Literal["REQUIRED", "INFORMATIONAL"] = "REQUIRED"
     gmail_sync_interval_seconds: int = Field(default=300, ge=60)
-    gmail_backfill_days: int = Field(default=30, ge=1, le=90)
+    # Default 30 days; a longer window is allowed for a one-time history import (owner request).
+    gmail_backfill_days: int = Field(default=30, ge=1, le=730)
     worker_concurrency: int = Field(default=2, ge=1, le=8)
     browser_concurrency: int = Field(default=1, ge=1, le=2)
     source_connect_timeout: int = Field(default=10, ge=1, le=30)

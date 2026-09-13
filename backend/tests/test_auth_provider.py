@@ -104,3 +104,28 @@ def test_oauth_mismatched_state_never_calls_token_endpoint():
             "nonce",
             "a" * 64,
         )
+
+
+def test_refresh_requests_full_granted_scope_not_signin_subset():
+    # Regression: refresh sent scope=openid email profile, so Google downscoped the access token
+    # and Gmail answered 403 ACCESS_TOKEN_SCOPE_INSUFFICIENT on the first live mailbox sync.
+    seen = {}
+
+    def handler(request):
+        seen["body"] = parse_qs(request.content.decode())
+        return httpx.Response(
+            200,
+            json={
+                "access_token": "fresh",
+                "token_type": "Bearer",
+                "expires_in": 3600,
+                "scope": "openid email profile https://www.googleapis.com/auth/gmail.readonly",
+            },
+        )
+
+    box = SecretBox(Fernet.generate_key().decode())
+    token = GoogleProvider(config(), httpx.MockTransport(handler)).refresh(box.encrypt("stored-refresh"), box)
+    assert seen["body"]["grant_type"] == ["refresh_token"]
+    assert seen["body"]["refresh_token"] == ["stored-refresh"]
+    assert "scope" not in seen["body"]
+    assert "gmail.readonly" in token["scope"]
