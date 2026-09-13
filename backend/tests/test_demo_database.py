@@ -105,3 +105,23 @@ def test_demo_route_unavailable_when_demo_disabled(demo_client, monkeypatch):
     get_settings.cache_clear()
     result = demo_client.post("/api/v1/auth/demo", json={"device_id": str(uuid4()), "platform": "WINDOWS"})
     assert result.status_code == 404
+
+
+def test_notification_bulk_actions_over_http_are_idempotent(demo_client):
+    login = demo_client.post("/api/v1/auth/demo", json={"device_id": str(uuid4()), "platform": "WINDOWS"}).json()
+    headers = {"Authorization": "Bearer " + login["access_token"]}
+    before = demo_client.get("/api/v1/notifications?limit=100", headers=headers).json()
+    assert before["unread_count"] > 0
+    key = {**headers, "Idempotency-Key": f"read-all-{uuid4()}"}
+    first = demo_client.post("/api/v1/notifications/read-all", headers=key)
+    assert first.status_code == 200, first.text
+    assert first.json()["updated"] == before["unread_count"]
+    assert demo_client.post("/api/v1/notifications/read-all", headers=key).json() == first.json()  # replay
+    assert demo_client.get("/api/v1/notifications/unread-count", headers=headers).json()["unread_count"] == 0
+    key = {**headers, "Idempotency-Key": f"delete-all-{uuid4()}"}
+    removed = demo_client.post("/api/v1/notifications/delete-all", json={"read_only": True}, headers=key)
+    assert removed.status_code == 200, removed.text
+    assert removed.json()["deleted"] == len(before["items"])
+    assert demo_client.get("/api/v1/notifications", headers=headers).json()["items"] == []
+    missing = demo_client.post("/api/v1/notifications/delete-all", json={}, headers=headers)
+    assert missing.status_code == 422  # Idempotency-Key is mandatory for every mutation.

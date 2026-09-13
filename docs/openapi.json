@@ -390,19 +390,16 @@
             "schema": {
               "anyOf": [
                 {
-                  "enum": [
-                    24,
-                    48,
-                    72
-                  ],
                   "type": "integer"
                 },
                 {
                   "type": "null"
                 }
               ],
+              "description": "Freshness window: 24, 48 or 72 hours",
               "title": "Posted Within Hours"
-            }
+            },
+            "description": "Freshness window: 24, 48 or 72 hours"
           },
           {
             "name": "work_arrangement",
@@ -1711,6 +1708,100 @@
             "HTTPBearer": []
           }
         ]
+      }
+    },
+    "/api/v1/notifications/read-all": {
+      "post": {
+        "summary": "Read All Notifications",
+        "operationId": "read_all_notifications_api_v1_notifications_read_all_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/delete-all": {
+      "post": {
+        "summary": "Delete All Notifications",
+        "operationId": "delete_all_notifications_api_v1_notifications_delete_all_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteNotificationsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/notifications/{notification_id}/read": {
@@ -3502,6 +3593,18 @@
           "action"
         ],
         "title": "CorrectionInput"
+      },
+      "DeleteNotificationsInput": {
+        "properties": {
+          "read_only": {
+            "type": "boolean",
+            "title": "Read Only",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DeleteNotificationsInput"
       },
       "DemoInput": {
         "properties": {

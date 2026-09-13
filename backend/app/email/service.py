@@ -194,6 +194,20 @@ def process_message(session, connection, payload):
                 },
             )
             links[match.application_id].event_id = UUID(result["event_id"])
+            if not allowed:
+                # A status change already notifies through add_status_event; evidence-only
+                # mail still deserves an alert because the owner asked to hear about every
+                # employer email, and it opens the application it was filed under.
+                create_notification(
+                    session,
+                    connection.user_id,
+                    "APPLICATION_EMAIL",
+                    "applications",
+                    application.id,
+                    f"{application.company}: new email"[:250],
+                    (mail.subject or "")[:160],
+                    f"email:{row.id}",
+                )
             return "APPLIED" if allowed else "EVIDENCE_ONLY"
         if not security["trusted"]:
             reason = security["reason"]
@@ -228,11 +242,18 @@ def process_message(session, connection, payload):
         "EMAIL_REVIEW",
         "reviews",
         review.id,
-        "Application email needs review",
-        row.subject[:160],
+        _email_title(mail.sender, row.subject),
+        f"{row.subject[:160]} · needs your review",
         f"email-review:{row.id}",
     )
     return "REVIEW"
+
+
+def _email_title(sender: str | None, subject: str | None) -> str:
+    """Toast/list title that names who wrote, so the owner can triage without opening."""
+    name = (sender or "").split("<", 1)[0].strip(" \"'") or (sender or "").strip()
+    name = name or "Employer"
+    return f"Email from {name}"[:250]
 
 
 def synchronize(session, user_id, settings, api=None, provider=None, frozen_now=None):

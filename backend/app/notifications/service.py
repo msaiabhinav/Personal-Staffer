@@ -6,10 +6,10 @@ All functions participate in the caller's transaction and never commit.
 from datetime import UTC, datetime
 from uuid import UUID
 
-from sqlalchemy import func, select, tuple_
+from sqlalchemy import delete, func, select, tuple_
 from sqlalchemy.orm import Session
 
-from app.db.models import Notification, OutboxEvent
+from app.db.models import Notification, NotificationDelivery, OutboxEvent
 from app.notifications.contracts import COLLECTIONS, NotificationError, destination, target
 from app.sync.contracts import validate_limit
 from app.sync.service import lock_user, record_change
@@ -148,6 +148,43 @@ def set_read(
         record_change(session, user_id, "notifications", row.id, row.revision)
         session.flush()
     return {"notification": as_dict(row), "unread_count": unread_count(session, user_id)}
+
+
+def mark_all_read(session: Session, user_id: UUID) -> dict:
+    """Read every unread notification in one operation; each row keeps its own revision history."""
+    lock_user(session, user_id)
+    now = datetime.now(UTC)
+    rows = list(
+        session.scalars(select(Notification).where(Notification.user_id == user_id, Notification.read_at.is_(None)))
+    )
+    for row in rows:
+        row.read_at = now
+        row.revision += 1
+        record_change(session, user_id, "notifications", row.id, row.revision)
+    session.flush()
+    return {"updated": len(rows), "unread_count": 0}
+
+
+def delete_all(session: Session, user_id: UUID, *, read_only: bool = False) -> dict:
+    """Remove the owner's notifications (optionally only read ones).
+
+    Deletion is a tombstone in the sync feed so every device drops its copy. Undelivered
+    push events for removed rows resolve as MISSING; the underlying jobs, applications,
+    reviews and reports are untouched.
+    """
+    lock_user(session, user_id)
+    query = select(Notification).where(Notification.user_id == user_id)
+    if read_only:
+        query = query.where(Notification.read_at.is_not(None))
+    rows = list(session.scalars(query))
+    if rows:
+        ids = [row.id for row in rows]
+        session.execute(delete(NotificationDelivery).where(NotificationDelivery.notification_id.in_(ids)))
+        for row in rows:
+            record_change(session, user_id, "notifications", row.id, row.revision + 1, tombstone=True)
+            session.delete(row)
+    session.flush()
+    return {"deleted": len(rows), "unread_count": unread_count(session, user_id)}
 
 
 def open_notification(session: Session, user_id: UUID, notification_id: UUID) -> dict:

@@ -102,6 +102,10 @@ class ReadInput(Input):
     read: bool = True
 
 
+class DeleteNotificationsInput(Input):
+    read_only: bool = False
+
+
 class SyncOperation(Input):
     operation_id: str = Field(min_length=8, max_length=128)
     command: Literal["save", "apply", "correction", "notes", "status", "dismiss"]

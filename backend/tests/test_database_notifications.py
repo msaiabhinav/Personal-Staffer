@@ -194,3 +194,42 @@ def test_inbox_cursor_has_stable_order_and_is_user_scoped(engine, users):
         with pytest.raises(NotificationError) as err:
             list_notifications(session, users[0], cursor=foreign_id)
         assert err.value.status_code == 404
+
+
+def test_bulk_read_and_delete_stay_owner_scoped_and_sync_as_tombstones(engine, users):
+    from app.db.models import Notification, NotificationDelivery, UserChange
+    from app.notifications.service import delete_all, list_notifications, mark_all_read, unread_count
+
+    mine, theirs = users
+    with Session(engine) as session, session.begin():
+        first = make_notification(session, mine, "one")
+        make_notification(session, mine, "two")
+        make_notification(session, theirs, "other")
+        first_id = first.id
+    with Session(engine) as session, session.begin():
+        result = mark_all_read(session, mine)
+        assert result == {"updated": 2, "unread_count": 0}
+        assert unread_count(session, theirs) == 1  # The other owner's inbox is untouched.
+        assert mark_all_read(session, mine)["updated"] == 0  # Replay is a no-op, not a new revision.
+        assert session.get(Notification, first_id).revision == 2
+    with Session(engine) as session, session.begin():
+        device_id = uuid4()
+        # A recorded delivery attempt must not block removal.
+        from app.db.models import Device
+
+        session.add(Device(id=device_id, user_id=mine, platform="android"))
+        session.flush()
+        session.add(NotificationDelivery(notification_id=first_id, device_id=device_id, channel="FCM", attempts=1))
+    with Session(engine) as session, session.begin():
+        make_notification(session, mine, "three")  # unread, survives a read-only sweep
+        assert delete_all(session, mine, read_only=True) == {"deleted": 2, "unread_count": 1}
+        assert len(list_notifications(session, mine)["items"]) == 1
+        assert session.get(Notification, first_id) is None
+        assert delete_all(session, mine) == {"deleted": 1, "unread_count": 0}
+        assert list_notifications(session, mine)["items"] == []
+        assert len(list_notifications(session, theirs)["items"]) == 1
+        tombstones = session.scalars(
+            select(UserChange).where(UserChange.user_id == mine, UserChange.tombstone.is_(True))
+        ).all()
+        assert len(tombstones) == 3
+        assert {str(row.entity_id) for row in tombstones} >= {str(first_id)}

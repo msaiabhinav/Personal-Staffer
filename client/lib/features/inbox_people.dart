@@ -14,31 +14,173 @@ class NotificationsPage extends ConsumerStatefulWidget {
   ConsumerState<NotificationsPage> createState() => _NotificationsState();
 }
 
+/// Coarse groups for the type filter. Server types stay exact in each row.
+enum _Kind { all, jobs, emails, reports }
+
+_Kind _kindOf(Json n) => switch (label(n['type'], '')) {
+  'PRIORITY_JOB' || 'JOB_ALERT' => _Kind.jobs,
+  'EMAIL_REVIEW' || 'APPLICATION_EMAIL' || 'APPLICATION_STATUS' => _Kind.emails,
+  'DAILY_REPORT' => _Kind.reports,
+  _ => _Kind.all,
+};
+
 class _NotificationsState extends ConsumerState<NotificationsPage> {
   bool unread = false;
+  _Kind kind = _Kind.all;
+  bool busy = false;
+
+  Future<void> _bulk(
+    BuildContext context,
+    String route, {
+    Json? body,
+    required String done,
+  }) async {
+    setState(() => busy = true);
+    try {
+      final repo = ref.read(repositoryProvider);
+      final result = await repo.session.request('POST', route, body: body);
+      repo.changed();
+      if (context.mounted) {
+        final n = result['updated'] ?? result['deleted'] ?? 0;
+        showMessage(context, '$n $done');
+      }
+    } on ApiError catch (e) {
+      if (context.mounted) showMessage(context, e.message);
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context, {
+    required bool readOnly,
+  }) async {
+    final go = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          readOnly ? 'Delete read notifications?' : 'Delete all notifications?',
+        ),
+        content: const Text(
+          'Only the alerts are removed. Jobs, applications, reviews and reports stay exactly as they are.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (go == true && context.mounted) {
+      await _bulk(
+        context,
+        '/notifications/delete-all',
+        body: {'read_only': readOnly},
+        done: 'notification(s) deleted',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Column(
     children: [
       PageHeader(
         title: 'Notifications',
-        subtitle:
-            'Every alert opens its exact job, application, report or review.',
-        trailing: FilterChip(
-          label: const Text('Unread only'),
-          selected: unread,
-          onSelected: (v) => setState(() => unread = v),
+        subtitle: 'Watchlist job matches, employer emails and reports. Every alert opens its exact record.',
+        trailing: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            FilterChip(
+              label: const Text('Unread only'),
+              selected: unread,
+              onSelected: (v) => setState(() => unread = v),
+            ),
+            FilledButton.tonalIcon(
+              onPressed: busy
+                  ? null
+                  : () => _bulk(
+                      context,
+                      '/notifications/read-all',
+                      done: 'marked as read',
+                    ),
+              icon: const Icon(Icons.done_all, size: 18),
+              label: const Text('Mark all read'),
+            ),
+            MenuAnchor(
+              builder: (context, controller, _) => IconButton(
+                tooltip: 'Delete notifications',
+                onPressed: busy
+                    ? null
+                    : () => controller.isOpen
+                          ? controller.close()
+                          : controller.open(),
+                icon: const Icon(Icons.delete_sweep_outlined),
+              ),
+              menuChildren: [
+                MenuItemButton(
+                  leadingIcon: const Icon(Icons.delete_outline),
+                  onPressed: () => _confirmDelete(context, readOnly: true),
+                  child: const Text('Delete read notifications'),
+                ),
+                MenuItemButton(
+                  leadingIcon: const Icon(Icons.delete_forever_outlined),
+                  onPressed: () => _confirmDelete(context, readOnly: false),
+                  child: const Text('Delete all notifications'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: SegmentedButton<_Kind>(
+            showSelectedIcon: false,
+            style: const ButtonStyle(visualDensity: VisualDensity.compact),
+            segments: const [
+              ButtonSegment(value: _Kind.all, label: Text('All')),
+              ButtonSegment(
+                value: _Kind.jobs,
+                label: Text('Watchlist jobs'),
+                icon: Icon(Icons.work_outline, size: 16),
+              ),
+              ButtonSegment(
+                value: _Kind.emails,
+                label: Text('Job emails'),
+                icon: Icon(Icons.mail_outline, size: 16),
+              ),
+              ButtonSegment(
+                value: _Kind.reports,
+                label: Text('Reports'),
+                icon: Icon(Icons.summarize_outlined, size: 16),
+              ),
+            ],
+            selected: {kind},
+            onSelectionChanged: (v) => setState(() => kind = v.first),
+          ),
         ),
       ),
       Expanded(
         child: ResourceView(
           route: '/notifications${unread ? '?unread_only=true' : ''}',
           builder: (data) {
-            final items = objects(data['items']);
+            final items = objects(data['items'])
+                .where((n) => kind == _Kind.all || _kindOf(n) == kind)
+                .toList();
             if (items.isEmpty) {
               return const EmptyMessage(
                 icon: Icons.notifications_none,
                 title: 'You’re caught up',
-                message: 'Job alerts, application updates and reports will appear here. Every alert opens its specific record.',
+                message: 'Relevant jobs from your watchlist companies, employer emails about your applications and daily reports will appear here.',
               );
             }
             return ListView.builder(

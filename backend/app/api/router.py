@@ -861,6 +861,41 @@ def unread_count(user: User = USER_DEPENDENCY, session: Session = SESSION_DEPEND
     return {"unread_count": notification_service.unread_count(session, user.id)}
 
 
+@router.post("/notifications/read-all")
+def read_all_notifications(
+    user: User = USER_DEPENDENCY,
+    session: Session = SESSION_DEPENDENCY,
+    key: str = Header(alias="Idempotency-Key"),
+):
+    return _mutation(
+        session,
+        user,
+        key,
+        "notification.read_all",
+        user.id,
+        {},
+        lambda: notification_service.mark_all_read(session, user.id),
+    )
+
+
+@router.post("/notifications/delete-all")
+def delete_all_notifications(
+    payload: DeleteNotificationsInput,
+    user: User = USER_DEPENDENCY,
+    session: Session = SESSION_DEPENDENCY,
+    key: str = Header(alias="Idempotency-Key"),
+):
+    return _mutation(
+        session,
+        user,
+        key,
+        "notification.delete_all",
+        user.id,
+        payload.model_dump(),
+        lambda: notification_service.delete_all(session, user.id, read_only=payload.read_only),
+    )
+
+
 @router.put("/notifications/{notification_id}/read")
 def read_notification(
     notification_id: UUID,
