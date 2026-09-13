@@ -439,8 +439,15 @@ def classify(message: MailEvidence) -> Meaning:
         if re.search(r"\b(?:if|not|never)\b.{0,40}" + re.escape(evidence), text, re.IGNORECASE):
             return Meaning("CONDITIONAL_OR_NEGATED", None, evidence, True)
         return Meaning(kind, status, evidence, status is None)
+    # Employer mail about the owner's own candidacy is retained for review even when no
+    # template matched; marketing and job-alert mail that only says "opportunity" is not.
     related = bool(
-        re.search(r"\b(application|interview|recruiter|assessment|hiring|requisition)\b", text, re.IGNORECASE)
+        re.search(
+            r"\b(application|applied|applying|interview|recruiter|assessment|hiring|requisition|"
+            r"candidacy|candidate|resume|next steps)\b",
+            text,
+            re.IGNORECASE,
+        )
     )
     return Meaning("UNKNOWN_TEMPLATE" if related else "UNRELATED", None, message.subject, related)
 

@@ -154,3 +154,23 @@ def test_not_selected_and_invited_to_interview_phrasings_classify():
     assert classify_text("You are invited to interview with Example") == "INTERVIEWING"
     assert classify_text("Reminder about your interview with Example") is None  # No new stage.
     assert classify_text("Thank you for applying to Example") is None  # Confirmations are not a stage.
+
+
+def test_candidacy_wording_is_retained_for_review_but_marketing_is_not():
+    from app.email.parser import MailEvidence, classify
+
+    def mail(subject, body):
+        return MailEvidence(
+            message_id="m",
+            thread_id="t",
+            sender="Careers <careers@example.test>",
+            subject=subject,
+            body=body,
+            received_at=datetime(2026, 9, 12, tzinfo=UTC),
+        )
+
+    assert (
+        classify(mail("Update on your candidacy", "We will be in touch about next steps.")).kind == "UNKNOWN_TEMPLATE"
+    )
+    assert classify(mail("You applied to Example", "Your resume is with the team.")).kind == "UNKNOWN_TEMPLATE"
+    assert classify(mail("New opportunities near you", "Explore 20 new listings this week.")).kind == "UNRELATED"
