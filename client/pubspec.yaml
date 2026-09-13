@@ -34,3 +34,6 @@ hooks:
       source: sqlite3mc
 flutter:
   uses-material-design: true
+  assets:
+    - assets/brand/app_icon_256.png
+    - assets/brand/logo.png

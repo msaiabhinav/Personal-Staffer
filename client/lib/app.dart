@@ -54,6 +54,34 @@ final navSelectedIcons = [
 ];
 ThemeData stafferTheme() => stafferThemeFor(Brightness.light);
 
+/// The owner's logo badge (assets/brand), the same artwork as the window icon.
+class BrandMark extends StatelessWidget {
+  const BrandMark({super.key, this.size = 40});
+  final double size;
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(size * 0.24),
+    child: Image.asset(
+      'assets/brand/app_icon_256.png',
+      width: size,
+      height: size,
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (context, error, stack) => Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(size * 0.24),
+        ),
+        child: Icon(
+          Icons.auto_awesome,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+      ),
+    ),
+  );
+}
+
 /// Header title for the current location. Primary destinations use their
 /// sidebar label; secondary pages name themselves instead of borrowing the
 /// nearest destination's label.
@@ -486,22 +514,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           children: [
                             Row(
                               children: [
-                                Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color: scheme.primary,
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Icon(
-                                    Icons.auto_awesome,
-                                    color: scheme.onPrimary,
-                                  ),
-                                ),
+                                const BrandMark(size: 56),
                                 const SizedBox(width: 16),
-                                Text(
-                                  'Personal Staffer',
-                                  style: theme.textTheme.headlineSmall,
+                                Flexible(
+                                  child: Text(
+                                    'Personal Staffer',
+                                    style: theme.textTheme.headlineSmall,
+                                  ),
                                 ),
                               ],
                             ),
@@ -637,21 +656,7 @@ class Sidebar extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
             child: Row(
               children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [accent, accent.withValues(alpha: 0.7)],
-                    ),
-                    borderRadius: BorderRadius.circular(11),
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    size: 20,
-                    color: Color(0xff04262a),
-                  ),
-                ),
+                const BrandMark(size: 40),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

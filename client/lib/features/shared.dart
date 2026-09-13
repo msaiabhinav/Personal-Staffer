@@ -305,25 +305,35 @@ class StatusPill extends StatelessWidget {
           background = scheme.surfaceContainerHigh;
       }
     }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 14, color: foreground),
-            const SizedBox(width: 5),
+    // Long evidence (an extracted experience clause) is capped and ellipsised; the full
+    // text is available on hover and on the detail page, so nothing overflows the card.
+    return Tooltip(
+      message: text.length > 60 ? text : '',
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        constraints: const BoxConstraints(maxWidth: 520),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 14, color: foreground),
+              const SizedBox(width: 5),
+            ],
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium
+                    ?.copyWith(color: foreground, fontWeight: FontWeight.w600),
+              ),
+            ),
           ],
-          Text(
-            text,
-            style: Theme.of(context).textTheme.labelMedium
-                ?.copyWith(color: foreground, fontWeight: FontWeight.w600),
-          ),
-        ],
+        ),
       ),
     );
   }
