@@ -61,3 +61,12 @@ Run the debug demo (`scripts\start_desktop_demo.ps1`) and tick each item, noting
 5. Windows Settings > Accessibility > Text size 150%: all screens remain usable; shrink the window below 1000 px wide: the bottom navigation bar appears.
 6. Disable Wi-Fi: the sidebar footer turns amber "Offline"; saved records still open; Save shows Pending; re-enable Wi-Fi and the change synchronizes.
 7. Sign out: the cache is cleared and the sign-in screen appears; sign back in with "Open local demo".
+
+
+## Docker Desktop on this laptop: the crash-on-start trap (13 September 2026)
+
+Docker Desktop 4.85 can leave AF_UNIX socket files behind after an unclean exit (`%LOCALAPPDATA%\Docker\run\*`, `%LOCALAPPDATA%\docker-secrets-engine\engine.sock`) that Windows reports as *"The file cannot be accessed by the system"*. On the next start the backend cannot delete them, dies with `initializing Inference manager / Secrets Engine: listening on unix://...: remove ...`, and shows a dialog whose only actions are **Quit** and **Reset to factory defaults**. The reset wipes every container and volume - the live Personal Staffer database. It was clicked once (13 September, 18:36); the data disk survived only because the backend died before the wipe ran. A verified copy of that disk was kept at `C:\Users\crick\DockerBackup\`.
+
+- **Never click "Reset to factory defaults".** Run `scripts\repair_docker_sockets.ps1` instead: it moves the stale socket directories aside (never deletes), disables the Docker AI / inference features that own them, and starts Docker Desktop.
+- The scheduled task **"Personal Staffer - repair and start Docker"** runs that script one minute after logon, so Docker and the backend (containers are `restart: unless-stopped`) come back after a reboot without any clicks.
+- The scheduled task **"Personal Staffer - nightly database backup"** runs `scripts\backup_local.ps1` at 02:00 (wake-to-run, catch-up if missed): a compressed `pg_dump` of the live database into `%USERPROFILE%\PersonalStafferBackups`, 14 kept, each verified as a pg_dump archive. Restore instructions are in the script header. The encrypted restic path in BACKUP_RESTORE.md remains the plan for the hosted phase.

@@ -183,3 +183,10 @@ Derivation for the owner ("you didn't show accurate numbers"):
 - Still open for the owner: **268 email reviews** — employer mail the matcher could not tie to exactly one application (companies with several applications, unnamed employers, partial content). The company page shows each of them under its company so they can be read in context.
 - Worker: the 2-minute lost-message window had flooded Redis with 2,672 duplicate messages while 12 sources scanned; window now 10 minutes, broker purged and re-published with priorities (inbox 0, Gmail 1, report 2, prep scans 3, scans 6). Gmail sync ran to completion twice afterwards.
 - Suite: **499 passed, 0 skipped**; Flutter analyzer clean, 25 tests.
+
+### Backend outage and recovery (13 September 2026, afternoon)
+
+- The daily report for 13 September was built and released at 11:00 ET with 0 jobs (2,886 postings evaluated; none new passed every rule; the 5 that qualify were already delivered as priority alerts on 12 September). The owner could not see it because Docker Desktop's backend died at 12:45 (event streamer EOF) and the API was down until 18:48.
+- Relaunching Docker Desktop hit the stale-socket crash; the "Reset to factory defaults" action was taken at 18:36. The 23 GB data disk was still present; it was copied and SHA-256-verified to `C:\Users\crick\DockerBackup\docker_data-2026-09-13.vhdx` before any further Docker start. Stale sockets moved aside, Docker AI/inference disabled again (the reset had re-enabled it), engine 29.6.2 up, all six containers healthy; live data verified intact (68 applications, 376 emails, 3,425 jobs, 14 enabled sources, today's report present).
+- Added `scripts/repair_docker_sockets.ps1` + logon task, and `scripts/backup_local.ps1` + nightly task (first dump 1,337 MB, `pg_restore -l` lists 50 tables of data).
+- Owner-supplied career sites: Microsoft (Eightfold) and Intuit (Radancy) scanning; HCA (Cloudflare challenge), Tesla (Akamai) and Walmart (undocumented AI search) not scannable - see SOURCE_CAPABILITIES.md.
