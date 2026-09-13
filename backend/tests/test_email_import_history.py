@@ -51,22 +51,78 @@ def _propose(subject, sender="Careers <no-reply@example-ats.com>"):
             "Business Performance Analyst",
             "HIGH",
         ),
-        ("Thank you for applying to Spring Example", "no-reply@springexample.com", "Spring Example", None, "LOW"),
+        ("Thank you for applying to Spring Example", "no-reply@springexample.com", "Spring Example", None, "MEDIUM"),
         (
             "Application received by Metro Transit Authority",
             "GovJobs <noreply@governmentjobs.com>",
             "Metro Transit Authority",
             None,
+            "MEDIUM",
+        ),
+        ("Contoso LLC-Thank you for your application, Sai", "ADP <noreply@adp.com>", "Contoso LLC", None, "MEDIUM"),
+        (
+            "Thank you for applying for Revenue Operations Analyst at Sitecore Example",
+            "no-reply@example-ats.com",
+            "Sitecore Example",
+            "Revenue Operations Analyst",
+            "HIGH",
+        ),
+        (
+            "Thank You for Applying to the role Supply Chain Analyst at Post Example",
+            "no-reply@example-ats.com",
+            "Post Example",
+            "Supply Chain Analyst",
+            "HIGH",
+        ),
+        (
+            "Sai Abhinav, Thank You for Applying to Brex Example!",
+            "no-reply@example-ats.com",
+            "Brex Example",
+            None,
+            "MEDIUM",
+        ),
+        (
+            "We have received your application for Data Solutions Analyst",
+            '"Liberty Example @" <jobs@libertyexample.com>',
+            "Liberty Example",
+            "Data Solutions Analyst",
+            "MEDIUM",
+        ),
+        (
+            "Your application for the Business Analytics Analyst position",
+            "Oracle <noreply@oracle.example>",
+            "Oracle",
+            "Business Analytics Analyst",
+            "MEDIUM",
+        ),
+        (
+            "UBC Careers | Sr. Data Analyst - Patient Access Services - Remote",
+            "no-reply@example-ats.com",
+            "UBC",
+            "Sr. Data Analyst",
+            "MEDIUM",
+        ),
+        (
+            "Nordstrom Example: Application Confirmation",
+            "no-reply@example-ats.com",
+            "Nordstrom Example",
+            None,
+            "MEDIUM",
+        ),
+        (
+            "Thank You for Applying at Business Services Building",
+            '"Uni Example" <uuhc+autoreply@icims.example>',
+            "Uni Example",
+            None,
             "LOW",
         ),
-        ("Contoso LLC-Thank you for your application, Sai", "ADP <noreply@adp.com>", "Contoso LLC", None, "LOW"),
     ],
 )
 def test_subject_rules_extract_company_and_title(subject, sender, company, title, confidence):
     proposal = _propose(subject, sender)
     assert proposal.company == company
     if title is None:
-        assert proposal.title == subject  # Subject kept verbatim when no title is readable.
+        assert proposal.title == import_history._PLACEHOLDER_TITLE
     else:
         assert proposal.title == title
     assert proposal.confidence == confidence
@@ -75,6 +131,8 @@ def test_subject_rules_extract_company_and_title(subject, sender, company, title
 def test_generic_subject_falls_back_to_sender_display_name_not_ats_domain():
     proposal = _propose("Thank you for applying!", '"Fabrikam Careers" <do-not-reply@mail.paylocity.com>')
     assert proposal.company == "Fabrikam" and proposal.confidence == "LOW"
+    assert proposal.title == import_history._PLACEHOLDER_TITLE
+    assert proposal.title == import_history._PLACEHOLDER_TITLE
     ats_only = _propose("Thank You for Your Application!", "noreply@myworkday.com")
     assert ats_only.company is None  # Never name the ATS as the employer.
 

@@ -98,17 +98,32 @@ def _norm(value: str | None) -> str:
     return re.sub(r"[^a-z0-9]+", " ", (value or "").lower()).strip()
 
 
+_PLACEHOLDER_TITLE = "Role not stated in confirmation email"
+_GREETING = re.compile(r"^(?:hi|hello|dear|hey)?\s*(?:sai(?: abhinav)?(?: mullapudi)?)\s*[,!:-]\s*", re.IGNORECASE)
+_TRAILING_PHRASES = re.compile(
+    r"\s*(?:has been received|is now with us|was received|received!?|application received!?|application confirmation|"
+    r"job application update|information)\s*$",
+    re.IGNORECASE,
+)
+
+
 def _clean(value: str | None) -> str | None:
     if not value:
         return None
-    value = re.sub(r"\s+", " ", value).strip(" -–—:,.|")
+    value = re.sub(r"\s+", " ", value).strip(" -–—:,.|!@\"'")
     value = _TRAILING_ID.sub("", value)
     value = re.sub(r"\s*\(\s*[A-Z0-9-]{3,}\s*\)\s*$", "", value)  # trailing "(63123)" style ids
     value = _STRIP_TITLE.sub("", value)
     value = re.sub(
         r"\s*\((?:full[- ]time|part[- ]time|remote|hybrid|onsite)[^)]*\)\s*$", "", value, flags=re.IGNORECASE
     )
-    return value.strip(" -–—:,.|") or None
+    value = _TRAILING_PHRASES.sub("", value)
+    value = re.sub(r"\s+position$", "", value, flags=re.IGNORECASE)
+    return value.strip(" -–—:,.|!@\"'") or None
+
+
+def _strip_greeting(subject: str) -> str:
+    return _GREETING.sub("", subject).strip()
 
 
 def _sender_company(sender: str) -> str | None:
@@ -116,8 +131,9 @@ def _sender_company(sender: str) -> str | None:
     domain = address.split("@")[-1].lower()
     if name:
         cleaned = re.sub(
-            r"\b(careers?|talent|recruiting|recruitment|hiring|team|hr|human resources|jobs|no[- ]?reply|"
-            r"do[- ]not[- ]reply|notifications?|applicant tracking|ats|via|icims|workday|greenhouse|lever|ashby)\b",
+            r"\b(talent acquisition|careers?|talent|recruiting|recruitment|hiring|team|hr|human resources|jobs|"
+            r"no[- ]?reply|do[- ]not[- ]reply|notifications?|applicant tracking|inbox|ats|via|icims|workday|"
+            r"greenhouse|lever|ashby|engineering)\b",
             "",
             name,
             flags=re.IGNORECASE,
@@ -135,20 +151,35 @@ _SUBJECT_RULES = [
     # "Simplot Company: Application received – Commercial Reporting and Analytics Analyst - Boise"
     (
         re.compile(
-            r"^(?P<company>[^:]{2,80}):\s*application received\s*[-–—:]\s*(?P<title>.+?)(?:\s+-\s+[^-]{2,40})?$",
+            r"^(?P<company>[^:|]{2,80}):\s*application received\s*[-–—:]\s*(?P<title>.+?)(?:\s+-\s+[^-]{2,40})?$",
             re.IGNORECASE,
+        ),
+        "HIGH",
+    ),
+    # "UNC Health Application Received - Business Intelligence Analyst, Requisition #123"
+    (
+        re.compile(
+            r"^(?P<company>.{2,60}?)\s+application received\s*[-–—:]\s*(?P<title>[^,]+?)(?:,.*)?$", re.IGNORECASE
         ),
         "HIGH",
     ),
     # "Your Application with Boston Scientific - Senior Sales Operations Analyst - Technology (63...)"
     (
-        re.compile(r"^your application (?:with|to|at|for)\s+(?P<company>.+?)\s*[-–—]\s*(?P<title>.+)$", re.IGNORECASE),
+        re.compile(r"^your application (?:with|to|at)\s+(?P<company>.+?)\s*[-–—]\s*(?P<title>.+)$", re.IGNORECASE),
         "HIGH",
     ),
-    # "Your application for the position Business Intelligence & Project Analyst at M. G. Newell"
+    # "Your application for the position Business Intelligence & Project Analyst at M. G. Newell has been received"
     (
         re.compile(
-            r"^(?:your )?application for (?:the )?(?:position|role)(?: of)?\s+(?P<title>.+?)\s+at\s+(?P<company>.+)$",
+            r"^(?:your )?(?:recent )?(?:job )?application for (?:the )?(?:position|role)(?: of)?\s+(?P<title>.+?)\s+at\s+(?P<company>.+)$",
+            re.IGNORECASE,
+        ),
+        "HIGH",
+    ),
+    # "Thank you for applying for Revenue Operations Analyst at Sitecore" / "...to the role Supply Chain Analyst at Post"
+    (
+        re.compile(
+            r"^thank you for applying (?:for|to)\s+(?:the (?:role|position)(?: of)?\s+)?(?P<title>.+?)\s+at\s+(?P<company>.+)$",
             re.IGNORECASE,
         ),
         "HIGH",
@@ -161,16 +192,36 @@ _SUBJECT_RULES = [
         ),
         "HIGH",
     ),
-    # "Thank you for applying to Spring Health" / "Your application to Workhelix"
+    # "Your recent job application for Business Analytics Analyst - Remote" / "...for the Business Analytics Analyst position"
     (
         re.compile(
-            r"^(?:thank you for (?:applying|your application)|your application|application received)\s+(?:to|at|by|with|for)\s+(?P<company>.+)$",
+            r"^(?:your )?(?:recent )?(?:job )?application for (?:the )?(?P<title>.+?)(?:\s+position)?(?:\s*[-–—|].*)?$",
+            re.IGNORECASE,
+        ),
+        "MEDIUM_TITLE",
+    ),
+    # "We have received your application for Data Solutions Analyst"
+    (re.compile(r"^we have received your application for\s+(?:the\s+)?(?P<title>.+)$", re.IGNORECASE), "MEDIUM_TITLE"),
+    # "Kearney Digital & Analytics Senior Business Analyst-006KF" is handled by the sender fallback.
+    # "The City of New York. We have received your application. Thank you"
+    (re.compile(r"^(?P<company>.{2,60}?)\.\s+we have received your application", re.IGNORECASE), "MEDIUM"),
+    # "Thank you for applying to Spring Health" / "Thank You for Your Application to Supermicro"
+    (
+        re.compile(
+            r"^(?:thank you for (?:applying|your (?:recent )?application|your interest)|your application|application received)"
+            r"\s+(?:to|at|by|with)\s+(?P<company>.+)$",
             re.IGNORECASE,
         ),
         "MEDIUM",
     ),
-    # "S&S Activewear LLC-Thank you for your application, Sai Abhinav"
-    (re.compile(r"^(?P<company>.+?)\s*[-–—:]\s*thank you for (?:your application|applying)", re.IGNORECASE), "MEDIUM"),
+    # "S&S Activewear LLC-Thank you for your application, Sai" / "Nordstrom: Application Confirmation"
+    (
+        re.compile(
+            r"^(?P<company>.+?)\s*[-–—:|]\s*(?:thank you for (?:your application|applying)|application (?:confirmation|received|submitted)|job application update|information)",
+            re.IGNORECASE,
+        ),
+        "MEDIUM",
+    ),
     # "Application received by Massachusetts Bay Transportation Authority"
     (
         re.compile(
@@ -178,9 +229,17 @@ _SUBJECT_RULES = [
         ),
         "MEDIUM",
     ),
-    # "<Title> at <Company>" / "<Title> - <Company>" when the title looks like a role
+    # "UBC Careers | Sr. Data Analyst - Patient Access Services - Remote"
+    (
+        re.compile(r"^(?P<company>[^|]{2,60}?)\s*\|\s*(?P<title>.+?)(?:\s+-\s+[^-]{2,40}){0,2}$", re.IGNORECASE),
+        "MEDIUM",
+    ),
+    # "<Title> at <Company>" when <Title> reads like a role
     (re.compile(r"^(?P<title>.+?)\s+at\s+(?P<company>.+)$", re.IGNORECASE), "MEDIUM"),
 ]
+
+_LOCATION_LIKE = re.compile(r"\b(?:building|campus|plaza|center|centre)\b|(?:-|,)\s*[A-Z]{2}$", re.IGNORECASE)
+_COMPANY_SUFFIX = re.compile(r"\s+(?:careers?|talent(?: acquisition)?|recruiting|jobs)$", re.IGNORECASE)
 
 
 def propose(session, user_id: UUID) -> list[Proposal]:
@@ -198,31 +257,42 @@ def propose(session, user_id: UUID) -> list[Proposal]:
     proposals: list[Proposal] = []
     for review, mail in rows:
         subject = re.sub(r"\s+", " ", mail.subject or "").strip()
+        working = _strip_greeting(subject)
         company = title = None
         confidence = "LOW"
         for pattern, level in _SUBJECT_RULES:
-            m = pattern.match(subject)
+            m = pattern.match(working)
             if not m:
                 continue
             groups = m.groupdict()
             candidate_title = _clean(groups.get("title"))
             candidate_company = _clean(groups.get("company"))
-            # The generic "<x> at <y>" rule only counts when <x> reads like a role.
-            if level == "MEDIUM" and candidate_title and not _ROLE_WORDS.search(candidate_title):
-                continue
-            company, title, confidence = candidate_company, candidate_title, level
+            if candidate_title and not _ROLE_WORDS.search(candidate_title):
+                if level in {"MEDIUM", "MEDIUM_TITLE"}:
+                    continue  # Generic shapes only count when the title reads like a role.
+                candidate_title = None
+            if candidate_company:
+                candidate_company = _clean(_COMPANY_SUFFIX.sub("", candidate_company))
+            if candidate_company and _LOCATION_LIKE.search(candidate_company):
+                candidate_company = None  # iCIMS "Thank You for Applying at <site>" names a location.
+            company, title = candidate_company, candidate_title
+            confidence = "MEDIUM" if level == "MEDIUM_TITLE" else level
+            if level == "MEDIUM_TITLE" or not company:
+                company = None  # Filled from the sender below.
             break
         notes = []
         if not company:
             company = _sender_company(mail.sender)
             if company:
                 notes.append("company inferred from sender")
-                confidence = "LOW"
-        if title and not _ROLE_WORDS.search(title):
-            confidence = "LOW"
+                if confidence == "HIGH":
+                    confidence = "MEDIUM"
+                elif not title:
+                    confidence = "LOW"
         if not title:
-            notes.append("title not found in subject; subject kept as title")
-            confidence = "LOW"
+            notes.append("no role readable in subject")
+            if confidence == "HIGH":
+                confidence = "MEDIUM"
         proposals.append(
             Proposal(
                 review_id=review.id,
@@ -232,7 +302,7 @@ def propose(session, user_id: UUID) -> list[Proposal]:
                 sender=mail.sender or "",
                 subject=subject,
                 company=company,
-                title=title or subject or "Application (see email)",
+                title=title or _PLACEHOLDER_TITLE,
                 confidence=confidence,
                 notes=notes,
                 title_extracted=bool(title),
